@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iJeep</title>
+    <!-- ======= Styles ====== -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    #map {
+      height: 665px;
+      width: 100%;
+    }
+  </style>
+
+</head>
+
+<body>
+    <!-- =============== Navigation ================ -->
+    <div class="container">
+        <div class="navigation">
+            <ul>
+                <li>
+                    <a href="#">
+                        <span class="icon">
+                            <ion-icon name="bus"></ion-icon>
+                        </span>
+                        <span class="title">iJeep</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="dashboard.html">
+                        <span class="icon">
+                            <ion-icon name="home-outline"></ion-icon>
+                        </span>
+                        <span class="title">Dashboard</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="map.html">
+                        <span class="icon">
+                            <ion-icon name="map-outline"></ion-icon>
+                        </span>
+                        <span class="title">Map</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="records.html">
+                        <span class="icon">
+                            <ion-icon name="server-outline"></ion-icon>
+                        </span>
+                        <span class="title">Mobility Data</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="charts.html">
+                        <span class="icon">
+                            <ion-icon name="analytics"></ion-icon>
+                        </span>
+                        <span class="title">Visualizations</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        <span class="icon">
+                            <ion-icon name="log-out-outline"></ion-icon>
+                        </span>
+                        <span class="title">Sign Out</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- ========================= Main ==================== -->
+        <div class="main">
+            <div class="topbar">
+                <div class="toggle">
+                    <ion-icon name="menu-outline"></ion-icon>
+                </div>
+            </div>
+            <h2 style="padding-left: 20px;">MAP</h2>
+            <div id="map"></div>
+
+            <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+            <script>
+          document.addEventListener('DOMContentLoaded', function () {
+            // Initialize the map
+            const map = L.map('map').setView([0, 0], 15);
+          
+            // Add a Tile Layer (OpenStreetMap)
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+              attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+          
+            // Try HTML5 geolocation to get the user's location
+            if (navigator.geolocation) {
+              navigator.geolocation.getCurrentPosition(
+                (position) => {
+                  const userLocation = [position.coords.latitude, position.coords.longitude];
+          
+                  // Center the map on the user's location
+                  map.setView(userLocation);
+          
+                  // Add a custom marker with the 'jeep.png' image
+                  const customIcon = L.icon({
+                    iconUrl: 'img/jeep.png', // Path to your custom marker image
+                    iconSize: [50, 50], // Size of the icon
+                    iconAnchor: [15, 30], // Anchor point of the icon, similar to the center
+                    popupAnchor: [0, -30] // Point from which the popup should open relative to the iconAnchor
+                  });
+          
+                  L.marker(userLocation, { icon: customIcon }).addTo(map)
+                    .bindPopup(`Your Location: ${position.coords.latitude}, ${position.coords.longitude}`)
+                    .openPopup();
+                },
+                () => {
+                  // Handle errors
+                  alert('Error: The Geolocation service failed.');
+                }
+              );
+            } else {
+              // Browser doesn't support Geolocation
+              alert('Error: Your browser doesn\'t support geolocation.');
+            }
+          });
+            </script>
+        </div>
+    </div>
+    
+    <!-- =========== Scripts =========  -->
+    <script src="assets/js/main.js"></script>
+    <!-- ====== ionicons ======= -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</script>
+</html>
