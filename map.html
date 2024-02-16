@@ -91,51 +91,128 @@
                 </div>
             </div>
             <h2 style="padding-left: 20px;">MAP</h2>
-            <div id="map"></div>
 
+            <!-- =============== MAP ============= -->
+            <div id="map"></div>
             <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
             <script>
-          document.addEventListener('DOMContentLoaded', function () {
-            // Initialize the map
-            const map = L.map('map').setView([0, 0], 15);
-          
-            // Add a Tile Layer (OpenStreetMap)
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-              attribution: '© OpenStreetMap contributors'
-            }).addTo(map);
-          
-            // Try HTML5 geolocation to get the user's location
-            if (navigator.geolocation) {
-              navigator.geolocation.getCurrentPosition(
-                (position) => {
-                  const userLocation = [position.coords.latitude, position.coords.longitude];
-          
-                  // Center the map on the user's location
-                  map.setView(userLocation);
-          
-                  // Add a custom marker with the 'jeep.png' image
-                  const customIcon = L.icon({
-                    iconUrl: 'img/jeep.png', // Path to your custom marker image
-                    iconSize: [50, 50], // Size of the icon
-                    iconAnchor: [15, 30], // Anchor point of the icon, similar to the center
-                    popupAnchor: [0, -30] // Point from which the popup should open relative to the iconAnchor
-                  });
-          
-                  L.marker(userLocation, { icon: customIcon }).addTo(map)
-                    .bindPopup(`Your Location: ${position.coords.latitude}, ${position.coords.longitude}`)
-                    .openPopup();
-                },
-                () => {
-                  // Handle errors
-                  alert('Error: The Geolocation service failed.');
+              document.addEventListener('DOMContentLoaded', function () {
+                // Initialize the map
+                const map = L.map('map').setView([8.308987, 124.257553], 15); // Adjust the center based on the polygon coordinates
+                
+                // Add a Tile Layer (OpenStreetMap)
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                  attribution: '© OpenStreetMap contributors'
+                }).addTo(map);
+                
+                // Add a polygon layer with the given coordinates
+                const DalipugaPolygon = [
+                  [
+                    [8.322986, 124.246573],
+                    [8.320077, 124.259316],
+                    [8.316186, 124.265528], // border misamis
+                    [8.316181, 124.277298], // border misamis
+                    [8.314578, 124.279212], // border bunawan
+                    [8.311374, 124.277434], // border bunawan
+                    [8.311374, 124.277434], // border kalubihon
+                    [8.305488, 124.267724], // border kalubihon
+                    [8.303171, 124.259586], // border kalubihon
+                    [8.302051, 124.256782], // border kalubihon
+                    [8.302698, 124.256052], // border kalubihon
+                    [8.302937, 124.255404], // border kalubihon
+                    [8.303043, 124.254294], // border sea
+                    [8.303744, 124.254487], // border sea
+                    [8.304731, 124.254482], // border sea
+                    [8.305480, 124.254179], // border sea
+                    [8.307075, 124.253116], // border sea
+                    [8.308736, 124.251500], // border sea
+                    [8.315119, 124.250697] // border sea
+                  ]
+                ];
+            
+                const polygon = L.polygon(DalipugaPolygon, {
+                  color: 'white', // Color of the polygon outline
+                  fillColor: 'orange', // Color to fill the polygon
+                  fillOpacity: 0.3, // Opacity of the filled area
+                  dashArray: '5, 5' // Pattern of dashes and gaps (5 pixels dash, 5 pixels gap)
+                }).addTo(map);
+
+                // Add a polygon layer with the given coordinates
+                const KalubihonPolygon = [
+                  [
+                  [8.311374, 124.277434], // border dalipuga
+                    [8.305488, 124.267724], // border dalipuga
+                    [8.303171, 124.259586], // border dalipuga
+                    [8.302051, 124.256782], // border dalipuga
+                    [8.302698, 124.256052], // border dalipuga
+                    [8.302937, 124.255404], // border dalipuga
+                    [8.303043, 124.254294], // border sea
+                    [8.302871, 124.254200], // border sea
+                    [8.301929, 124.254270], // border sea
+                    [8.298446, 124.254362], // border sea
+                    [8.299248, 124.255241], // border something
+                    [8.298438, 124.261290], // border something
+                    [8.299896, 124.265637], // border something
+                    [8.301093, 124.267876], // border something
+                    [8.300195, 124.272036], // border something falls
+                    [8.300132, 124.273687], // border something school start
+                    [8.299880, 124.274592], // border something
+                    [8.299444, 124.274506], // border something
+                    [8.299174, 124.275675], // border kiwalan
+                    [8.300830, 124.276226], // border kiwalan-bunawan
+                    [8.300832, 124.279633], // border kiwalan-bunawan
+                    [8.305039, 124.280995], // border bunawan
+                    [8.307460, 124.280904], // border bunawan
+                    [8.309145, 124.279100], // border bunawan
+                    [8.309145, 124.279100], // border bunawan
+                    [8.309742, 124.279659], // border bunawan
+                    [8.310177, 124.279686], // border bunawan
+                    [8.310119, 124.279091], // border bunawan
+                    [8.309822, 124.278641], // border bunawan
+                  ]
+                ];
+            
+                const KaPolygon = L.polygon(KalubihonPolygon, {
+                  color: 'white', // Color of the polygon outline
+                  fillColor: 'orange', // Color to fill the polygon
+                  fillOpacity: 0.3, // Opacity of the filled area
+                  dashArray: '5, 5' // Pattern of dashes and gaps (5 pixels dash, 5 pixels gap)
+                }).addTo(map);
+            
+                // Try HTML5 geolocation to get the user's location
+                if (navigator.geolocation) {
+                  navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                      const userLocation = [position.coords.latitude, position.coords.longitude];
+            
+                      // Center the map on the user's location
+                      map.setView(userLocation);
+            
+                      // Add a custom marker with the 'jeep.png' image
+                      const customIcon = L.icon({
+                        iconUrl: 'img/jeep.png', // Path to your custom marker image
+                        iconSize: [50, 50], // Size of the icon
+                        iconAnchor: [15, 30], // Anchor point of the icon, similar to the center
+                        popupAnchor: [0, -30] // Point from which the popup should open relative to the iconAnchor
+                      });
+            
+                      L.marker(userLocation, { icon: customIcon }).addTo(map)
+                        .bindPopup(`Your Location: ${position.coords.latitude}, ${position.coords.longitude}`)
+                        .openPopup();
+                    },
+                    () => {
+                      // Handle errors
+                      alert('Error: The Geolocation service failed.');
+                    }
+                  );
+                } else {
+                  // Browser doesn't support Geolocation
+                  alert('Error: Your browser doesn\'t support geolocation.');
                 }
-              );
-            } else {
-              // Browser doesn't support Geolocation
-              alert('Error: Your browser doesn\'t support geolocation.');
-            }
-          });
+              });
             </script>
+            
+
         </div>
     </div>
     
@@ -144,6 +221,9 @@
     <!-- ====== ionicons ======= -->
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+<!-- Coordinates
+
+-->
 </body>
 </script>
 </html>
