@@ -78,7 +78,48 @@ var baranggayData = {
                 ]
             ]
         }
-    },      
+    }, 
+
+    {
+        "type": "Feature",
+        "id": "72",
+        "properties": {
+          "name": "Tag-ibo",
+          "density": 1082
+        },
+        "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+                [
+                    [8.299248, 124.255241], // border something
+                    [8.298438, 124.261290], // border something
+                    [8.299896, 124.265637], // border something
+                    [8.301093, 124.267876], // border something
+                    [8.300195, 124.272036], // border something falls
+                    [8.300132, 124.273687], // border something school start
+                    [8.299880, 124.274592], // border something
+                    [8.299444, 124.274506], // border something
+                    [8.299174, 124.275675], // border kiwalan
+                    [8.298521, 124.275513], // border kiwalan
+                    [8.297571, 124.274692], // border kiwalan
+                    [8.295490, 124.271169], // border kiwalan
+                    [8.295150, 124.269577], // border kiwalan
+                    [8.295665, 124.269298], // border kiwalan
+                    [8.295840, 124.269100], // border kiwalan
+                    [8.295930, 124.268987], // border kiwalan
+                    [8.295978, 124.268771], // border kiwalan
+                    [8.295792, 124.268503], // border kiwalan
+                    [8.295261, 124.268460], // border kiwalan
+                    [8.294890, 124.268235], // border kiwalan
+                    [8.294646, 124.267110], // border kiwalan
+                    [8.293701, 124.265202], // border kiwalan
+                    [8.293324, 124.265091], // border kiwalan
+                    [8.293138, 124.265300], // border kiwalan
+                    
+                ]
+            ]
+        }
+    },     
       {
         "type": "Feature",
         "id": "72",
