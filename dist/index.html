@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Login and Signup Page</title>
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
+  <script defer src="./bundle.js"></script>
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+  <style>
+    body {
+      background-color: #f1e8e6;
+      font-family: "Ubuntu", sans-serif;
+      color: #361d32;
+      overflow: hidden;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      opacity: 0;
+      animation: appear 1s ease-out forwards;
+    }
+
+    @keyframes appear {
+      to {
+        opacity: 1;
+      }
+    }
+
+    .form-container {
+      background: linear-gradient(135deg, #e9a184 0%, #f55951 100%);
+      padding: 50px;
+      border-radius: 20px;
+      box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+      width: 80%;
+      max-width: 800px;
+      display: flex;
+      justify-content: space-around;
+      transform: translateY(20px);
+      animation: slideIn 1s ease-out forwards;
+    }
+
+    @keyframes slideIn {
+      to {
+        transform: translateY(0);
+      }
+    }
+
+    .form-container form {
+      background-color: #f1e8e6;
+      padding: 40px;
+      border-radius: 20px;
+      width: 50%;
+      transition: all 0.3s ease-out;
+      box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+      position: relative;
+      opacity: 0.6;
+      transform: scale(0.9);
+    }
+
+    .form-container form.active {
+      transform: scale(1);
+      box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+      opacity: 1;
+    }
+
+    .form-container h2 {
+      color: #f55951;
+      text-align: center;
+      font-weight: bold;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .form-container p {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .form-container label {
+      display: flex;
+      align-items: center;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .form-container ion-icon {
+      margin-right: 10px;
+    }
+
+    .form-container input {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 15px;
+      box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.1);
+      font-size: 16px;
+      transition: box-shadow 0.3s ease-out;
+    }
+
+    .form-container input:focus {
+      box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .form-container button {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 15px;
+      color: white;
+      background: linear-gradient(90deg, #f55951 0%, #f77171 100%);
+      box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+      margin-top: 30px;
+      font-size: 18px;
+      transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+    }
+
+    .form-container button:hover {
+      transform: scale(1.05);
+      box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .form-container button:active {
+      transform: scale(1);
+      box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-container .switch {
+      text-align: center;
+      color: #555;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    /* Pop-up message */
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+      border-radius: 5px;
+      z-index: 9999;
+      display: none;
+      opacity: 0;
+      animation: fadeIn 0.3s ease-out forwards;
+    }
+
+    .popup p {
+      text-align: center;
+      margin: 0;
+      font-size: 18px;
+      color: #333;
+    }
+
+    .popup.success {
+      border-color: #32CD32;
+      background-color: #DFF0D8;
+    }
+
+    .popup.error {
+      border-color: #DC143C;
+      background-color: #F2DEDE;
+    }
+
+    .popup.show {
+      display: block;
+      animation: fadeIn 0.3s ease-out forwards;
+    }
+
+    .popup.show.success {
+      animation: fadeIn 0.3s ease-out forwards, successAnimation 2s ease-out 0.3s forwards;
+    }
+
+    .popup.show.error {
+      animation: fadeIn 0.3s ease-out forwards, errorAnimation 2s ease-out 0.3s forwards;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes successAnimation {
+      0% {
+        transform: scale(1);
+      }
+
+      20% {
+        transform: scale(1.2);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    @keyframes errorAnimation {
+      0% {
+        transform: translateX(-10px);
+      }
+
+      20% {
+        transform: translateX(10px);
+      }
+
+      100% {
+        transform: translateX(0);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="form-container">
+      <form id="login-form" class="active">
+        <h2>Welcome Back</h2>
+        <p>Login to continue</p>
+        <label for="login-email">
+          <ion-icon name="person-outline"></ion-icon> Email
+        </label>
+        <input type="text" id="login-email" placeholder="Your email" required>
+        <label for="login-password">
+          <ion-icon name="lock-closed-outline"></ion-icon> Password
+        </label>
+        <div style="position: relative;">
+          <input type="password" id="login-password" placeholder="Your password" required>
+          <ion-icon name="eye" id="show-login-password"
+            style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;"></ion-icon>
+        </div>
+        <button type="button" id="login">Log in</button>
+        <p class="switch" onclick="switchToSignup()">Don't have an account? Signup here</p>
+        <p class="switch" onclick="forgotPassword()">Forgot password?</p>
+      </form>
+      <form id="signup-form">
+        <h2>Get Started</h2>
+        <p>Create a new account</p>
+        <label for="signup-email">
+          <ion-icon name="person-add-outline"></ion-icon> Email
+        </label>
+        <input type="text" id="signup-email" placeholder="Choose an email" required>
+        <label for="signup-password">
+          <ion-icon name="lock-closed-outline"></ion-icon> Password
+        </label>
+        <div style="position: relative;">
+          <input type="password" id="signup-password" placeholder="Choose a password" required>
+          <ion-icon name="eye" id="show-signup-password"
+            style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;"></ion-icon>
+        </div>
+        <button type="button" id="signup">Sign up</button>
+        <p class="switch" onclick="switchToLogin()">Already have an account? Login here</p>
+      </form>
+    </div>
+  </div>
+
+  <div class="popup" id="popup-message"></div>
+
+  <script>
+    const loginForm = document.getElementById('login-form');
+    const signupForm = document.getElementById('signup-form');
+    const popupMessage = document.getElementById('popup-message');
+    const showLoginPassword = document.getElementById('show-login-password');
+    const showSignupPassword = document.getElementById('show-signup-password');
+
+    function switchToSignup() {
+      signupForm.classList.add('active');
+      loginForm.classList.remove('active');
+    }
+
+    function switchToLogin() {
+      loginForm.classList.add('active');
+      signupForm.classList.remove('active');
+    }
+
+    function forgotPassword() {
+      showPopupMessage('Please contact support for password recovery.', 'error');
+    }
+
+    function showPopupMessage(message, type) {
+      popupMessage.textContent = message;
+      popupMessage.classList.add('show', type);
+
+      setTimeout(function () {
+        popupMessage.classList.remove('show');
+        popupMessage.classList.remove(type);
+      }, 2000);
+    }
+
+    showLoginPassword.addEventListener('click', function () {
+      const loginPassword = document.getElementById('login-password');
+      if (loginPassword.type === 'password') {
+        loginPassword.type = 'text';
+        showLoginPassword.name = 'eye-off';
+      } else {
+        loginPassword.type = 'password';
+        showLoginPassword.name = 'eye';
+      }
+    });
+
+    showSignupPassword.addEventListener('click', function () {
+      const signupPassword = document.getElementById('signup-password');
+      if (signupPassword.type === 'password') {
+        signupPassword.type = 'text';
+        showSignupPassword.name = 'eye-off';
+      } else {
+        signupPassword.type = 'password';
+        showSignupPassword.name = 'eye';
+      }
+    });
+  </script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-analytics.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDYPv8S_ljSo3tuMNoRYPI2tleWOqhqFMM",
+      authDomain: "commumeter.firebaseapp.com",
+      projectId: "commumeter",
+      storageBucket: "commumeter.appspot.com",
+      messagingSenderId: "1098693151947",
+      appId: "1:1098693151947:web:c0ce3c093e75ae8cbe1f4e",
+      measurementId: "G-71SRN52DX4"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const auth = getAuth();
+    console.log(app);
+
+    //----- Register code start	  
+    document.getElementById("signup").addEventListener("click", function () {
+      var email = document.getElementById("signup-email").value;
+      var password = document.getElementById("signup-password").value;
+
+      createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
+        // Signed up
+        const user = userCredential.user;
+        console.log(user);
+        showPopupMessage('Successfully signed up!', 'success');
+            setTimeout(function() {
+                window.location.href = 'index.html';
+            }, 2000);
+
+
+        // ...
+      })
+        .catch((error) => {
+          showPopupMessage('Please fill in all the fields.', 'error');
+        });
+    });
+    //----- End
+
+    //----- Login code start	  
+    document.getElementById("login").addEventListener("click", function () {
+      var email = document.getElementById("login-email").value;
+      var password = document.getElementById("login-password").value;
+
+      signInWithEmailAndPassword(auth, email, password).then((userCredential) => {
+        // Signed in 
+        const user = userCredential.user;
+        console.log(user);
+            showPopupMessage('Successfully logged in!', 'success');
+            setTimeout(function() {
+                window.location.href = 'dashboard.html';
+            }, 2000);
+
+        // ...
+      })
+        .catch((error) => {
+          showPopupMessage('Wrong email or password. Please try again.', 'error');
+        });
+    });
+    //----- End
+  </script>
+</body>
+
+</html>
+<!-- apps-fileview.texmex_20240208.01_p3
+Loginpage.html
+Displaying Loginpage.html. -->

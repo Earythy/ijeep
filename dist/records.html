@@ -5,15 +5,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iJeep</title>
+    <title>CommuMeter</title>
     <!-- ======= Styles ====== -->
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/style.css">
 
+    <!-- ======= DataTables ====== -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 
 </head>
@@ -26,9 +25,9 @@
                 <li>
                     <a href="#">
                         <span class="icon">
-                            <ion-icon name="bus"></ion-icon>
+                            <ion-icon name="speedometer"></ion-icon>
                         </span>
-                        <span class="title">iJeep</span>
+                        <span class="title">CommuMeter</span>
                     </a>
                 </li>
 
@@ -73,7 +72,7 @@
                         <span class="icon">
                             <ion-icon name="log-out-outline"></ion-icon>
                         </span>
-                        <span class="title">Sign Out</span>
+                        <span class="title" id="logout">Sign Out</span>
                     </a>
                 </li>
             </ul>
@@ -86,91 +85,17 @@
                     <ion-icon name="menu-outline"></ion-icon>
                 </div>
             </div>
-            <h2 style="padding-left: 20px;">Dashboard</h2>
 
-            <!-- ======================= Cards ================== -->
-            <div class="cardBox">
-                <div class="card">
-                    <div>
-                        <div class="numbers">1,504</div>
-                        <div class="cardName">Daily Views</div>
-                    </div>
-
-                    <div class="iconBx">
-                        <ion-icon name="eye-outline"></ion-icon>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div>
-                        <div class="numbers">80</div>
-                        <div class="cardName">Sales</div>
-                    </div>
-
-                    <div class="iconBx">
-                        <ion-icon name="cart-outline"></ion-icon>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div>
-                        <div class="numbers">284</div>
-                        <div class="cardName">Comments</div>
-                    </div>
-
-                    <div class="iconBx">
-                        <ion-icon name="chatbubbles-outline"></ion-icon>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div>
-                        <div class="numbers">$7,842</div>
-                        <div class="cardName">Earning</div>
-                    </div>
-
-                    <div class="iconBx">
-                        <ion-icon name="cash-outline"></ion-icon>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ================ Charts ================= -->
-            <div class="dashchartsBx">
-                <div class="charts">
-                    <h2 class="chart-title">Butang lang title here</h2>
-                    <div style="height:300px; width:400px;">
-                        <canvas id="lineChart"></canvas>
-                    </div>
-                </div>
-
-                <div class="charts">
-                    <h2 class="chart-title">Butang lang title here</h2>
-                    <div style="height:300px; width:400px;">
-                        <canvas id="pieChart"></canvas>
-                    </div>
-                </div>
-
-                <div class="charts">
-                    <h2 class="chart-title">Butang lang title here</h2>
-                    <div style="height:300px; width:400px;">
-                        <canvas id="barChart"></canvas>
-                    </div>
-                </div>
-
-                <div class="charts">
-                    <h2 class="chart-title">Butang lang title here</h2>
-                    <div style="height:300px; width:400px;">
-                        <canvas id="areaChart"></canvas>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ================ Order Details List ================= -->
-            <div class="details">
+            <!-- ================ Mobility Data Record Table ================= -->
+            <div class="details data">
                 <div class="dataRecord">
                     <div class="cardHeader">
                         <h2>Mobility Data Record</h2>
+
+                        <div class="btn">
+                            <button class="btn btn-good btn-add" class="icon" id="add"><ion-icon name="add-circle"
+                                    style="padding-right: 5px; text-align: center;"></ion-icon>Add Record</button>
+                        </div>
                     </div>
 
                     <table id="myTable">
@@ -269,31 +194,8 @@
                         </center>
                     </div>
 
-                    <div id="delSuccessModal">
-                        <center>
-                            <p>Successfully Deleted</p>
-                        </center>
-                    </div>
 
-                </div>
 
-                <!-- ================= New Customers ================ -->
-                <div class="popularLocations">
-                    <div class="cardHeader">
-                        <h2>Popular Locations</h2>
-                    </div>
-
-                    <table>
-                        <tr>
-                            <td width="60px">
-                                <div class="icon"><ion-icon name="location" class="loc-icon"></ion-icon></div>
-                            </td>
-                            <td>
-                                <h4 style="color: #eb4a42"><strong>Tibanga, Iligan City</strong> <br> <span
-                                        style="color: #361d32">50,000 commuters</span></h4>
-                            </td>
-                        </tr>
-                    </table>
                 </div>
             </div>
         </div>
@@ -386,205 +288,53 @@
 
             //Insert delete code here
 
-            $('#delSuccessModal').show();
-            setTimeout(function () {
-                $('#delSuccessModal').hide();
-            }, 500);
             $('#deleteModal').hide();
-
         });
         $('#delCancel').on('click', function () {
             // Hide the modal
             $('#deleteModal').hide();
         });
 
-
-        //Pie Chart Script
-        // extracting data from table
-        var locationData = [];
-        var populationData = [];
-
-        $("#myTable tbody tr").each(function () {
-            var location = $(this).find("td:nth-child(2)").text();
-            var population = $(this).find("td:nth-child(5)").text();
-
-            locationData.push(location);
-            populationData.push(population);
-        });
-
-        // creating the pie chart
-        var ctx = document.getElementById('pieChart').getContext('2d');
-
-        var chartData = {
-            datasets: [{
-                data: populationData, // population data as numbers for the pie slices
-                backgroundColor: ['#51f55c', '#f551c5', '#eff551', '#5577f5'], // colors for each location ----- add lang additional color
-                borderColor: '#361d32',
-                borderWidth: 1
-            }],
-            labels: locationData // location names as labels for the pie slices
-        };
-
-        new Chart(ctx, {
-            type: 'pie',
-            data: chartData,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                title: {
-                    display: true,
-                    text: 'Location Distribution'
-                }
-            }
-        });
-
-
-        //Line Chart Script
-        // setting the background colors for each location
-        var backgroundColors = ['#51f55c', '#f551c5', '#eff551', '#5577f5'];
-
-        // setting the border color for each location
-        var borderColor = '#361d32'; // color for the line
-
-
-        // creating the line chart
-        var ctx = document.getElementById('lineChart').getContext('2d');
-        var chartData = {
-            labels: locationData, // location names as x-axis labels
-            datasets: [{
-                data: populationData, // population data as y-axis values
-                backgroundColor: backgroundColors[0], // background color for the line
-                borderColor: borderColor, // color for the line
-                borderWidth: 1, // line width in pixels
-                pointRadius: 3, // radius of data points
-                fill: false // disable fill under the line
-            }]
-        };
-
-        new Chart(ctx, {
-            type: 'line',
-            data: chartData,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                title: {
-                    display: true,
-                    text: 'Location Population Trend'
-                },
-                scales: {
-                    x: {
-                        display: true,
-                        title: {
-                            display: true,
-                            text: 'Location'
-                        }
-                    },
-                    y: {
-                        display: true,
-                        title: {
-                            display: true,
-                            text: 'Population'
-                        }
-                    }
-                }
-            }
-        });
-
-        //Bar Chart Script
-        // creating the Bar chart
-        var ctx = document.getElementById('barChart').getContext('2d');
-        var chartData = {
-            labels: locationData, // location names as x-axis labels
-            datasets: [{
-                data: populationData, // population data as y-axis values
-                backgroundColor: backgroundColors[0], // background color for the line
-                borderColor: borderColor, // color for the line
-                borderWidth: 1, // line width in pixels
-                pointRadius: 3, // radius of data points
-                fill: false // disable fill under the line
-            }]
-        };
-
-        new Chart(ctx, {
-            type: 'bar',
-            data: chartData,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                title: {
-                    display: true,
-                    text: 'Location Population Trend'
-                },
-                scales: {
-                    x: {
-                        display: true,
-                        title: {
-                            display: true,
-                            text: 'Location'
-                        }
-                    },
-                    y: {
-                        display: true,
-                        title: {
-                            display: true,
-                            text: 'Population'
-                        }
-                    }
-                }
-            }
-        });
-
-        //Area Chart Script
-        var ctx = document.getElementById('areaChart').getContext('2d');
-        var chartData = {
-            labels: locationData, // location names as x-axis labels
-            datasets: [{
-                data: populationData, // population data as y-axis values
-                backgroundColor: 'rgba(0,123,255,0.5)', // background color for the line and the fill
-                borderColor: 'rgba(0,123,255,1)', // color for the line
-                borderWidth: 2, // line width in pixels
-                pointRadius: 3, // radius of data points
-                fill: true // enable fill under the line
-            }]
-        };
-
-        new Chart(ctx, {
-            type: 'line',
-            data: chartData,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                title: {
-                    display: true,
-                    text: 'Location Population Trend'
-                },
-                scales: {
-                    x: {
-                        display: true,
-                        title: {
-                            display: true,
-                            text: 'Location'
-                        }
-                    },
-                    y: {
-                        display: true,
-                        title: {
-                            display: true,
-                            text: 'Population'
-                        }
-                    }
-                }
-            }
-        });
-
-
     });
 
 
+</script>
 
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-analytics.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
+    import { getFirestore, collection, addDoc, connectFirestoreEmulator, query, getDocs, getDoc, updateDoc, setDoc, doc, onSnapshot, deleteDoc, orderBy } from 'https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js';
 
+    const firebaseConfig = {
+      apiKey: "AIzaSyDYPv8S_ljSo3tuMNoRYPI2tleWOqhqFMM",
+      authDomain: "commumeter.firebaseapp.com",
+      projectId: "commumeter",
+      storageBucket: "commumeter.appspot.com",
+      messagingSenderId: "1098693151947",
+      appId: "1:1098693151947:web:c0ce3c093e75ae8cbe1f4e",
+      measurementId: "G-71SRN52DX4"
+    };
 
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const analytics = getAnalytics(app);
+    const auth = getAuth();
+    console.log(app);
+    let userId, userRef, classListRef, profileRef;
 
+    document.getElementById("logout").addEventListener("click", function () {
+        signOut(auth).then(() => {
+            // Sign-out successful.
+            console.log('Sign-out successful.');
+            alert('Sign-out successful.');
+            window.location.href = "index.html";
+        }).catch((error) => {
+            // An error happened.
+            console.log('An error happened.');
+        });
+    });
 
 </script>
 
