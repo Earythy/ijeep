@@ -619,6 +619,13 @@ var baranggayData = {
       "type": "Polygon",
       "coordinates": [
         [
+          [124.240689, 8.242377], // border sea
+          [124.240651, 8.242536], // border sea
+          [124.240866, 8.243173], // border sea
+          [124.241236, 8.243837], // border sea
+          [124.240962, 8.243996], // border sea
+          [124.241327, 8.244415], // border sea
+          [124.241274, 8.244490], // border sea
           [124.241536, 8.244702], // border tibanga - sea
           [124.241928, 8.244511], // border tibanga
           [124.243140, 8.244007], // border tibanga
@@ -628,15 +635,14 @@ var baranggayData = {
           [124.244224, 8.243322], // border tibanga
           [124.244524, 8.243348], // border tibanga
           [124.248177, 8.241915], // border tibanga - san miguel - bagong silang
-          
-          // [124.242347, 8.242509], // border sea
+          /*
           [124.241274, 8.244490], // border sea
           [124.241327, 8.244415], // border sea
           [124.240962, 8.243996], // border sea
           [124.241236, 8.243837], // border sea
           [124.240866, 8.243173], // border sea
           [124.240651, 8.242536], // border sea
-          [124.240689, 8.242377], // border sea
+          [124.240689, 8.242377], // border sea - undang
           [124.240657, 8.242170], // border sea
           [124.240485, 8.241782], // border sea
           [124.240469, 8.241575], // border sea
@@ -652,7 +658,7 @@ var baranggayData = {
           [124.238666, 8.237073], // border river
           [124.238993, 8.236754], // border river (bridge)
           [124.239251, 8.236351], // border river 
-          // */
+          */
 
         ]
       ]
