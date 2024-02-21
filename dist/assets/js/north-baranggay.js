@@ -461,6 +461,53 @@ var baranggayData = {
   },
   {
     "type": "Feature",
+    "id": "11",
+    "properties": {
+      "name": "San Roque",
+      "density": 1194.65
+    },
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          
+          [124.260252, 8.254853], // border hinaplanon
+          [124.259421, 8.256743], // border san roque 
+          [124.258804, 8.257608], // border san roque
+          [124.258397, 8.257879], // border san roque
+          [124.257131, 8.258205], // border san roque
+          [124.259427, 8.260140], // border san roque
+          [124.263192, 8.261552], // border san roque
+          [124.265236, 8.262487], // border san roque
+          [124.265735, 8.264095], // border san roque
+          [124.267805, 8.264387], // border san roque (intersection)
+          [124.269012, 8.263745], // border san roque (intersection)
+          [124.269414, 8.263803], // border san roque 
+          [124.269961, 8.264260], // border san roque 
+          [124.270755, 8.264053], // border san roque 
+          [124.271705, 8.264892], // border san roque 
+          [124.272091, 8.265231], // border san roque 
+          [124.272236, 8.265688], // border san roque - kabacsanan
+          [124.274511, 8.266272], // border kabacsanan
+          [124.275885, 8.265710], // border kabacsanan
+          [124.278460, 8.266166], // border kabacsanan
+          [124.278460, 8.266166], // border kabacsanan
+          [124.280251, 8.264117], // border kabacsanan
+          [124.283019, 8.261941], // border upper hinaplanon
+          [124.280423, 8.260518], // border upper hinaplanon
+          [124.278030, 8.259711], // border upper hinaplanon
+          [124.273374, 8.257534], // border upper hinaplanon
+          [124.268095, 8.257205], // border upper hinaplanon
+          [124.263900, 8.255267], // border upper hinaplanon - san roque - hinaplanon
+          [124.262549, 8.255123], // border san roque
+          [124.261454, 8.255118], // border san roque
+          
+        ]
+      ]
+    }
+  },
+  {
+    "type": "Feature",
     "id": "07",
     "properties": {
       "name": "Hinaplanon",
@@ -612,13 +659,28 @@ var baranggayData = {
     "type": "Feature",
     "id": "09",
     "properties": {
-      "name": "Santo Rosario",
+      "name": "Tibanga",
       "density": 356
     },
     "geometry": {
       "type": "Polygon",
       "coordinates": [
         [
+          [124.239251, 8.236351], // border river 
+          [124.238993, 8.236754], // border river (bridge)
+          [124.238666, 8.237073], // border river
+          [124.238414, 8.237158], // border river
+          [124.238226, 8.237190], // border river
+          [124.238049, 8.237291], // border sea - river
+          [124.238119, 8.237588], // border sea
+          [124.238505, 8.238336], // border sea
+          [124.239154, 8.239218], // border sea
+          [124.239970, 8.240285], // border sea 
+          [124.240383, 8.240800], // border sea
+          [124.240582, 8.241548], // border sea
+          [124.240469, 8.241575], // border sea
+          [124.240485, 8.241782], // border sea
+          [124.240657, 8.242170], // border sea
           [124.240689, 8.242377], // border sea
           [124.240651, 8.242536], // border sea
           [124.240866, 8.243173], // border sea
@@ -668,7 +730,7 @@ var baranggayData = {
     "type": "Feature",
     "id": "10",
     "properties": {
-      "name": "Tibanga",
+      "name": "Santo Rosario",
       "density": 9
     },
     "geometry": {
