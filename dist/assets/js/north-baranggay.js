@@ -1,7 +1,7 @@
 var baranggayData = {
   "type": "FeatureCollection",
   "features": [
-    {
+  {
       "type": "Feature",
       "id": "01",
       "properties": {
@@ -34,9 +34,9 @@ var baranggayData = {
           ]
         ]
       }
-    },
+  },
 
-    {
+  {
       "type": "Feature",
       "id": "02",
       "properties": {
@@ -644,12 +644,11 @@ var baranggayData = {
           [124.244224, 8.243322], // border tibanga
           [124.244524, 8.243348], // border tibanga
           [124.248177, 8.241915], // border tibanga - san miguel - bagong silang
-          //[124.244524, 8.243348], // border bagong silang
           [124.248537, 8.242403], // border bagong silang
           [124.248665, 8.242642], // border bagong silang
-          [124.248767, 8.242977], // border bagong silang
-          [124.248837, 8.243279], // border bagong silang - santo rosario
-          //[124.250972, 8.247622], // border santo rosario - hinaplanon
+          [124.248767, 8.242977], // border bagong silang - santo rosario
+          [124.248837, 8.243279], // border santo rosario
+         
         ]
       ]
     }
@@ -666,6 +665,21 @@ var baranggayData = {
       "type": "Polygon",
       "coordinates": [
         [
+          [124.246451, 8.241230], // san miguel
+          [124.246048, 8.241007], // san miguel
+          [124.244717, 8.239547], // san miguel
+          [124.244448, 8.239122], // san miguel
+          [124.243857, 8.237317], // san miguel
+          [124.243160, 8.235851], // san miguel
+          [124.242705, 8.234864], // border bridge - san miguel
+          [124.242018, 8.235193], // border river
+          [124.241471, 8.235453], // border river
+          [124.241347, 8.235565], // border river
+          [124.241036, 8.235628], // border river 
+          [124.240891, 8.235613], // border river 
+          [124.240746, 8.235613], // border river 
+          [124.240499, 8.235512], // border river 
+          [124.239447, 8.236186], // border river 
           [124.239251, 8.236351], // border river 
           [124.238993, 8.236754], // border river (bridge)
           [124.238666, 8.237073], // border river
@@ -697,30 +711,6 @@ var baranggayData = {
           [124.244224, 8.243322], // border tibanga
           [124.244524, 8.243348], // border tibanga
           [124.248177, 8.241915], // border tibanga - san miguel - bagong silang
-          /*
-          [124.241274, 8.244490], // border sea
-          [124.241327, 8.244415], // border sea
-          [124.240962, 8.243996], // border sea
-          [124.241236, 8.243837], // border sea
-          [124.240866, 8.243173], // border sea
-          [124.240651, 8.242536], // border sea
-          [124.240689, 8.242377], // border sea - undang
-          [124.240657, 8.242170], // border sea
-          [124.240485, 8.241782], // border sea
-          [124.240469, 8.241575], // border sea
-          [124.240582, 8.241548], // border sea
-          [124.240383, 8.240800], // border sea
-          [124.239970, 8.240285], // border sea
-          [124.239154, 8.239218], // border sea
-          [124.238505, 8.238336], // border sea
-          [124.238119, 8.237588], // border sea
-          [124.238049, 8.237291], // border sea - river
-          [124.238226, 8.237190], // border river
-          [124.238414, 8.237158], // border river
-          [124.238666, 8.237073], // border river
-          [124.238993, 8.236754], // border river (bridge)
-          [124.239251, 8.236351], // border river 
-          */
 
         ]
       ]
@@ -762,6 +752,214 @@ var baranggayData = {
     }
   },
   
+  {
+    "type": "Feature",
+    "id": "12",
+    "properties": {
+      "name": "San Miguel",
+      "density": 99
+    },
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [124.244074, 8.234561], // villa verde - saray
+          [124.244143, 8.234689], // villa verde 
+          [124.244299, 8.234747], // villa verde
+          [124.245190, 8.234790], // villa verde
+          [124.245437, 8.234747], // villa verde
+          //[124.247074, 8.233462], // villa verde
+          [124.246623, 8.233781], // palao - villa verde
+          [124.247074, 8.233462], // palao
+          [124.247321, 8.233457], // palao
+          [124.248599, 8.234912], // palao
+          [124.248948, 8.235591], // palao
+          [124.249908, 8.237561], // palao
+          [124.250220, 8.237795], // bagong silang - san miguel - palao
+          [124.249709, 8.238533], // bagong silang
+          [124.251073, 8.239568], // bagong silang
+          [124.250751, 8.239828], // bagong silang
+          [124.250552, 8.240051], // bagong silang
+          [124.250295, 8.240492], // bagong silang
+          [124.249565, 8.242429], // bagong silang
+          [124.248177, 8.241915], // border tibanga - san miguel - bagong silang
+          [124.246451, 8.241230], // san miguel
+          [124.246048, 8.241007], // san miguel
+          [124.244717, 8.239547], // san miguel
+          [124.244448, 8.239122], // san miguel
+          [124.243857, 8.237317], // san miguel
+          [124.243160, 8.235851], // san miguel
+          [124.242705, 8.234864], // border bridge - san miguel
+        ]
+      ]
+    }
+  },
+
+  {
+    "type": "Feature",
+    "id": "13",
+    "properties": {
+      "name": "Bagong Silang",
+      "density": 11
+    },
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [ 
+          [124.259791, 8.241246], // border santo rosario - bagong silang
+          [124.257880, 8.240932], // delcarmen 
+          [124.257040, 8.240433], // delcarmen 
+          [124.256863, 8.240109], // delcarmen 
+          [124.255215, 8.239573], // delcarmen 
+          [124.255151, 8.239196], // delcarmen 
+          [124.254426, 8.239207], // delcarmen 
+          [124.254066, 8.237901], // delcarmen 
+          [124.253814, 8.236876], // delcarmen 
+          [124.252275, 8.235390], // bagong silang - delcarmen - palao
+          [124.250220, 8.237795], // bagong silang - san miguel - palao
+          [124.249709, 8.238533], // bagong silang
+          [124.251073, 8.239568], // bagong silang
+          [124.250751, 8.239828], // bagong silang
+          [124.250552, 8.240051], // bagong silang
+          [124.250295, 8.240492], // bagong silang
+          [124.249565, 8.242429], // bagong silang
+          [124.248177, 8.241915], // border tibanga - san miguel - bagong silang
+          [124.248537, 8.242403], // border bagong silang
+          [124.248665, 8.242642], // border bagong silang
+          [124.248767, 8.242977], // border bagong silang
+          [124.250044, 8.242626], // border bagong silang
+          [124.252248, 8.243507], // border bagong silang
+          [124.252490, 8.242828], // border bagong silang
+          [124.253166, 8.242451], // border bagong silang
+          [124.253858, 8.241867], // border bagong silang
+          [124.254636, 8.241379], // border bagong silang
+          [124.255457, 8.241559], // border bagong silang
+          [124.255902, 8.242106], // border santo rosario - bagong silang
+        ]
+      ]
+    }
+  },
+  {
+    "type": "Feature",
+    "id": "14",
+    "properties": {
+      "name": "Saray",
+      "density": 1009
+    },
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [124.244074, 8.234561], // villa verde - saray
+          [124.242705, 8.234864], // border bridge - san miguel
+          [124.242018, 8.235193], // border river
+          [124.241471, 8.235453], // border river
+          [124.241347, 8.235565], // border river
+          [124.241036, 8.235628], // border river 
+          [124.240891, 8.235613], // border river 
+          [124.240746, 8.235613], // border river 
+          [124.240499, 8.235512], // border river 
+          [124.239447, 8.236186], // border river 
+          [124.239251, 8.236351], // border river 
+          [124.238993, 8.236754], // border river (bridge)
+          [124.238666, 8.237073], // border river
+          [124.238414, 8.237158], // border river
+          [124.238226, 8.237190], // border river
+          [124.238049, 8.237291], // border sea - river
+          [124.237442, 8.237529], // border sea       
+          [124.237114, 8.237142], // border sea
+          [124.237393, 8.236860], // border sea
+          [124.237130, 8.236473], // border sea
+          [124.236921, 8.236573], // border sea
+          [124.236642, 8.236340], // border sea
+          [124.234130, 8.234917], // border sea
+          [124.233663, 8.235140], // border sea
+          [124.232190, 8.232236], // border sea
+          [124.234646, 8.231222], // border circle 
+          [124.238392, 8.230909], // border poblacion
+          [124.238532, 8.230824], // border poblacion
+          [124.238682, 8.230611], // border poblacion
+          [124.238306, 8.230378], // border bridge
+          [124.238451, 8.230277], // border river
+          [124.238719, 8.230229], // border river
+          [124.239235, 8.230346], // border river
+          [124.240913, 8.231275], // border poblacion-saray-villa verde
+          [124.241283, 8.231471], // border villa verde
+          [124.242550, 8.232852], // border villa verde
+          [124.243371, 8.233452], // border villa verde
+      
+
+        ]
+      ]
+    }
+  },
+  {
+    "type": "Feature",
+    "id": "15",
+    "properties": {
+      "name": "Poblacion",
+      "density": 201
+    },
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [124.232190, 8.232236], // border sea
+          [124.234646, 8.231222], // border circle 
+          [124.238392, 8.230909], // border poblacion
+          [124.238532, 8.230824], // border poblacion
+          [124.238682, 8.230611], // border poblacion
+          [124.238306, 8.230378], // border bridge
+          [124.238451, 8.230277], // border river
+          [124.238719, 8.230229], // border river
+          [124.239235, 8.230346], // border river
+          [124.240913, 8.231275], // border poblacion-saray-villa verde
+          [124.240473, 8.228620], // border palao
+          [124.240226, 8.227022], // border palao - mahayahay
+          [124.237818, 8.226295], // border mahayahay - tambacan
+          [124.237158, 8.227097], // border bridge tambacan
+          [124.235542, 8.228015], // border river tambacan
+          [124.234425, 8.227782], // border sea
+          [124.234436, 8.228058], // border sea
+          [124.232703, 8.228177], // border sea
+          [124.232809, 8.229921], // border sea
+          [124.231749, 8.231381], // border sea
+        ]
+      ]
+    }
+  },
+  {
+    "type": "Feature",
+    "id": "16",
+    "properties": {
+      "name": "Villa Verde",
+      "density": 11
+    },
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [  
+          
+          [124.240913, 8.231275], // border poblacion-saray-villa verde
+          [124.241283, 8.231471], // border villa verde
+          [124.242550, 8.232852], // border villa verde
+          [124.243371, 8.233452], // border villa verde
+          [124.244074, 8.234561], // villa verde - saray
+          [124.244143, 8.234689], // villa verde 
+          [124.244299, 8.234747], // villa verde
+          [124.245190, 8.234790], // villa verde
+          [124.245437, 8.234747], // villa verde
+          [124.246623, 8.233781], // palao - villa verde
+          [124.246144, 8.229804], // palao - villa verde
+          [124.245243, 8.227964], // palao - villa verde
+          [124.240473, 8.228620], // border palao
+         
+        
+      
+        ]
+      ]
+    }
+  },
   {
     "type": "Feature",
     "id": "72",
