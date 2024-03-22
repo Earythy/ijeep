@@ -14,6 +14,36 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
 
+    <style>
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .navigation {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .main {
+            flex: 3;
+            overflow-y: auto;
+        }
+
+        .details.data {
+            padding: 20px;
+        }
+
+        /** adjustments for smaller screen **/
+
+        @media screen and (max-width: 768px) {
+            .details.data {
+                padding: 10px;
+            }
+        }
+    </style>
+
 
 </head>
 

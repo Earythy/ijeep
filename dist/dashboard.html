@@ -15,6 +15,62 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .navigation {
+            flex: 0 0 auto;
+        }
+
+        .main {
+            flex: 1 0 auto;
+            overflow-y: auto; /*enable scrolling for content*/
+            padding: 20px;
+        }
+
+        /*** for smaller screens ***/
+
+        @media screen and (max-width: 768px) {
+            .cardBox {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 20px;
+            }
+
+            .card {
+                text-align: center;
+            }
+
+            .charts {
+                text-align: center;
+            }
+
+            .charts canvas {
+                max-width: 100%;
+            }
+
+            .details {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            #myTable {
+                width: 100%;
+            }
+        }
+    </style>
+
 
 </head>
 

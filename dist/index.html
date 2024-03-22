@@ -4,6 +4,7 @@
 <head>
   <title>Login and Signup Page</title>
   <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script defer src="./bundle.js"></script>
   <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
@@ -241,7 +242,7 @@
             style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;"></ion-icon>
         </div>
         <button type="button" id="login">Log in</button>
-        <p class="switch" onclick="switchToSignup()">Don't have an account? Signup here</p>
+        <p class="switch" onclick="switchToSignup()">Don't have an account? <u>Sign Up here</u></p>
         <p class="switch" onclick="forgotPassword()">Forgot password?</p>
       </form>
       <form id="signup-form">
@@ -260,7 +261,7 @@
             style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;"></ion-icon>
         </div>
         <button type="button" id="signup">Sign up</button>
-        <p class="switch" onclick="switchToLogin()">Already have an account? Login here</p>
+        <p class="switch" onclick="switchToLogin()">Already have an account? <u>Login here</u></p>
       </form>
     </div>
   </div>
