@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CommuMeter</title>
+    <!-- ======= Styles ====== -->
+    <link rel="stylesheet" href="./assets/css/style.css">
+
+    <!-- ======= DataTables ====== -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+
+    <!-- Sweet Alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+</head>
+
+<body>
+    <!-- =============== Navigation ================ -->
+    <div class="container">
+        <div class="navigation">
+            <ul>
+                <li>
+                    <a href="#">
+                        <span class="icon">
+                            <ion-icon name="speedometer"></ion-icon>
+                        </span>
+                        <span class="title">CommuMeter</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="dashboard.html">
+                        <span class="icon">
+                            <ion-icon name="home-outline"></ion-icon>
+                        </span>
+                        <span class="title">Dashboard</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="map.html">
+                        <span class="icon">
+                            <ion-icon name="map-outline"></ion-icon>
+                        </span>
+                        <span class="title">Map</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="barangays.html">
+                        <span class="icon">
+                            <ion-icon name="compass-outline"></ion-icon>
+                        </span>
+                        <span class="title">Barangays</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="coordinates.html">
+                        <span class="icon">
+                            <ion-icon name="locate-outline"></ion-icon>
+                        </span>
+                        <span class="title">Coordinates</span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a href="records.html">
+                        <span class="icon">
+                            <ion-icon name="server-outline"></ion-icon>
+                        </span>
+                        <span class="title">Mobility Data</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="charts.html">
+                        <span class="icon">
+                            <ion-icon name="analytics"></ion-icon>
+                        </span>
+                        <span class="title">Visualizations</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        <span class="icon">
+                            <ion-icon name="log-out-outline"></ion-icon>
+                        </span>
+                        <span class="title" id="logout">Sign Out</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- ========================= Main ==================== -->
+        <div class="main">
+            <div class="topbar">
+                <div class="toggle">
+                    <ion-icon name="menu-outline"></ion-icon>
+                </div>
+            </div>
+
+            <!-- ================ Barangays Table ================= -->
+            <div class="details data">
+                <div class="dataRecord">
+                    <div class="cardHeader">
+                        <h2>Barangays</h2>
+
+                        <div class="btn">
+                            <button class="btn btn-good btn-add" class="icon" id="add"><ion-icon name="add-circle"
+                                    style="padding-right: 5px; text-align: center;"></ion-icon>Add Barangay</button>
+                        </div>
+                    </div>
+
+                    <table id="myTable">
+                        <thead>
+                            <tr>
+                                <td>No.</td>
+                                <td>Barangay Name</td>
+                                <td>Action</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+
+                    <div id="editModal">
+                        <h3>Edit Record</h3>
+                        <form id="editForm">
+                            <label for="brgy_name_edit">Barangay Name:</label>
+                            <input type="text" id="brgy_name_edit" name="brgy_name_edit"><br>
+                            <div class="btn">
+                                <input type="button" id="cancelEdit" class="btn btn-bad" value="Cancel">
+                                <input type="button" id="update" class="btn btn-good" value="Update">
+                            </div>
+                        </form>
+                    </div>
+
+                    <div id="addModal">
+                        <h3>Add Barangay</h3>
+                        <form id="editForm">
+                            <label for="name">Barangay Name:</label>
+                            <input type="text" id="name" placeholder="Barangay Name" name="name" required><br>
+                            <div class="btn">
+                                <input type="button" id="cancelAdd" class="btn btn-bad" value="Cancel">
+                                <input type="button" id="save" class="btn btn-good" value="Save">
+                            </div>
+                        </form>
+                    </div>
+
+                    <div id="deleteModal">
+                        <h3>Delete Confirmation</h3>
+                        <center>
+                            <p style="padding-bottom: 10px;">Are you sure you want to delete this record?</p>
+                            <div class="btn">
+                                <button id="delCancel" class="btn btn-bad">Cancel</button>
+                                <button id="delConfirm" class="btn btn-good">Confirm</button>
+                            </div>
+                        </center>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- =========== Scripts =========  -->
+    <script src="assets/js/main.js"></script>
+
+    <!-- ====== ionicons ======= -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+
+<script>
+    $(document).ready(function () {
+    // Add Data Modal Script
+    $('.btn-add').on('click', function () {
+        // Show the modal
+        $('#addModal').show();
+    });
+
+    $('#save').on('click', function () {
+        //Insert add code here
+        $('#addModal').hide();
+    });
+
+    $('#cancelAdd').on('click', function () {
+        // Hide the modal
+        $('#addModal').hide();
+    });
+
+    //Edit Data Modal Script
+    $(document).on('click', '.btn-edit', function () {
+        // Get the data from the row
+        var row = $(this).closest('tr');
+        var brgy_name = row.find('td:nth-child(2)').text();
+
+        // Fill the form with the data
+        $('#brgy_name_edit').val(brgy_name);
+
+        // Show the modal
+        $('#editModal').show();
+        var row = $(this).closest('tr');
+        var brgy_name = row.find('td:nth-child(2)').text();
+
+        $('#update').data('brgy_name_old', brgy_name);
+    });
+
+    $('#cancelEdit').on('click', function () {
+        // Hide the modal
+        $('#editModal').hide();
+    });
+
+    //Delete a record Modal Script
+    $(document).on('click', '.btn-delete', function () {
+        // Show the modal
+        $('#deleteModal').show();
+
+        var row = $(this).closest('tr');
+        var brgy_name = row.find('td:nth-child(2)').text();
+
+        $('#delConfirm').data('brgy_name', brgy_name);
+    });
+
+    $('#delCancel').on('click', function () {
+        // Hide the modal
+        $('#deleteModal').hide();
+    });
+
+});
+
+</script>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-analytics.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
+    import { getFirestore, collection, addDoc, connectFirestoreEmulator, query, getDocs, getDoc, updateDoc, setDoc, doc, onSnapshot, deleteDoc, where, orderBy } from 'https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js';
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDYPv8S_ljSo3tuMNoRYPI2tleWOqhqFMM",
+      authDomain: "commumeter.firebaseapp.com",
+      projectId: "commumeter",
+      storageBucket: "commumeter.appspot.com",
+      messagingSenderId: "1098693151947",
+      appId: "1:1098693151947:web:c0ce3c093e75ae8cbe1f4e",
+      measurementId: "G-71SRN52DX4"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const analytics = getAnalytics(app);
+    const auth = getAuth();
+    console.log(app);
+    let userId, userRef, classListRef, profileRef;
+
+    // Add a new document with a generated id.
+    document.getElementById("save").addEventListener("click", async function() {
+        try {
+            var brgy_name = document.getElementById("name").value;
+            if(brgy_name != ""){
+                // Add a new document with a generated id.
+                const docRef = await addDoc(collection(db, "Barangay"), {
+                    brgy_name: document.getElementById("name").value
+                });
+
+                Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Saved Successfully",
+                showConfirmButton: false,
+                timer: 1500
+                });
+                brgy_name = document.getElementById("name").value = "";
+            } else {
+                Swal.fire({
+                title: 'Error!',
+                text: 'Please Add A Name',
+                icon: 'error',
+                confirmButtonText: 'Try Again'
+            });
+            }
+            
+        } catch (error) {
+            console.log("error:", error);
+            // If an error occurs, show error SweetAlert with a "Try Again" option
+            Swal.fire({
+                title: 'Error!',
+                text: 'Oops, that did not work. Please try again.',
+                icon: 'error',
+                confirmButtonText: 'Try Again'
+            });
+        }
+    });
+
+    $('#myTable').DataTable({
+                "autoWidth": false
+    });
+
+    function populateTable() {
+        getDocs(query(collection(db, "Barangay"), orderBy("brgy_name"))).then((barangayListSnapshot) => {
+            var count = 1;
+            // Get a reference to the DataTable instance
+            var dataTable = $('#myTable').DataTable();
+            // Clear the table before repopulating with new data
+            dataTable.clear().draw();
+            // Iterate over each document in the collection
+            barangayListSnapshot.forEach((barangayListDoc) => {
+                var barangayListData = barangayListDoc.data();
+                var brgy_name = barangayListData.brgy_name;
+                // Add data to the table
+                dataTable.row.add([
+                    count,
+                    brgy_name,
+                    '<center><button type="button" class="btn btn-good btn-edit" style="margin-right: 7px !important;">Edit</button><button type="button" class="btn btn-bad btn-delete">Delete</button></center>'
+                ]).draw(false);
+                count++;
+            });
+        }).catch((error) => {
+            console.log("Error fetching documents: ", error);
+        });
+    }
+
+    // Call populateTable function to initially populate the table
+    populateTable();
+
+    // Subscribe to real-time updates using onSnapshot
+    const unsubscribe = onSnapshot(collection(db, "Barangay"), (snapshot) => {
+        // When a change occurs, re-populate the table with updated data
+        populateTable();
+    });
+
+        //Save the update
+    $('#update').on('click', async function (event) {
+            event.preventDefault();
+            // Get the data from the form
+            var brgy_name_old = $(this).data('brgy_name_old');
+            var brgy_name_new = $('#brgy_name_edit').val(); // Get the new value from the form
+
+            try {
+                // Query for the document with the matching brgy_name
+                const querySnapshot = await getDocs(query(collection(db, "Barangay"), where("brgy_name", "==", brgy_name_old)));
+
+                querySnapshot.forEach((doc) => {
+                    // Update the document with the new data
+                    updateDoc(doc.ref, { brgy_name: brgy_name_new });
+                });
+
+                // Hide the edit modal after updating
+                $('#editModal').hide();
+
+                // Optionally, you can show a success message here
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "Updated Successfully",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            } catch (error) {
+                console.error("Error updating document: ", error);
+                // Show an error message if updating fails
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Failed to update record. Please try again.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
+
+
+    $('#delConfirm').on('click', async function () {
+        try {
+            var brgy_name = $(this).data('brgy_name');
+            console.log('brgy here:', brgy_name);
+            // Query for the document with the matching brgy_name
+            const querySnapshot = await getDocs(query(collection(db, "Barangay"), where("brgy_name", "==", brgy_name)));
+
+            // Loop through the query snapshot to get the document ID
+            querySnapshot.forEach((doc) => {
+                // Delete the document
+                deleteDoc(doc.ref);
+            });
+
+            // Hide the delete confirmation modal
+            $('#deleteModal').hide();
+
+            // Show success message
+            Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Deleted Successfully",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        } catch (error) {
+            // Show error message if deletion fails
+            console.error("Error deleting document: ", error);
+            Swal.fire({
+                title: 'Error!',
+                text: 'Failed to delete record. Please try again.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
+    });
+
+    document.getElementById("logout").addEventListener("click", function () {
+        signOut(auth).then(() => {
+            // Sign-out successful.
+            console.log('Sign-out successful.');
+            alert('Sign-out successful.');
+            window.location.href = "index.html";
+        }).catch((error) => {
+            // An error happened.
+            console.log('An error happened.');
+        });
+    });
+
+</script>
+
+</html>
