@@ -547,13 +547,18 @@ label{
   font-weight: 400;
 }
 
-input{
+input, .selectInput{
   padding: 10px;
   margin-top: 0;
   text-align: center;
   justify-content: center;
   border-radius: 5px;
   font-size: 16px;
+}
+
+.selectInput{
+  min-width: 66%;
+  border: black 1px solid;
 }
 
 

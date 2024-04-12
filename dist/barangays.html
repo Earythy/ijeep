@@ -210,8 +210,6 @@
 
         // Show the modal
         $('#editModal').show();
-        var row = $(this).closest('tr');
-        var brgy_name = row.find('td:nth-child(2)').text();
 
         $('#update').data('brgy_name_old', brgy_name);
     });
@@ -285,8 +283,8 @@
                 brgy_name = document.getElementById("name").value = "";
             } else {
                 Swal.fire({
-                title: 'Error!',
-                text: 'Please Add A Name',
+                title: 'Invalid!',
+                text: 'Barangay Name Must Not Be Empty',
                 icon: 'error',
                 confirmButtonText: 'Try Again'
             });
@@ -296,7 +294,7 @@
             console.log("error:", error);
             // If an error occurs, show error SweetAlert with a "Try Again" option
             Swal.fire({
-                title: 'Error!',
+                title: 'Invalid!',
                 text: 'Oops, that did not work. Please try again.',
                 icon: 'error',
                 confirmButtonText: 'Try Again'
@@ -343,42 +341,42 @@
 
         //Save the update
     $('#update').on('click', async function (event) {
-            event.preventDefault();
-            // Get the data from the form
-            var brgy_name_old = $(this).data('brgy_name_old');
-            var brgy_name_new = $('#brgy_name_edit').val(); // Get the new value from the form
+        event.preventDefault();
+        // Get the data from the form
+        var brgy_name_old = $(this).data('brgy_name_old');
+        var brgy_name_new = $('#brgy_name_edit').val(); // Get the new value from the form
 
-            try {
-                // Query for the document with the matching brgy_name
-                const querySnapshot = await getDocs(query(collection(db, "Barangay"), where("brgy_name", "==", brgy_name_old)));
+        try {
+            // Query for the document with the matching brgy_name
+            const querySnapshot = await getDocs(query(collection(db, "Barangay"), where("brgy_name", "==", brgy_name_old)));
 
-                querySnapshot.forEach((doc) => {
-                    // Update the document with the new data
-                    updateDoc(doc.ref, { brgy_name: brgy_name_new });
-                });
+            querySnapshot.forEach((doc) => {
+                // Update the document with the new data
+                updateDoc(doc.ref, { brgy_name: brgy_name_new });
+            });
 
-                // Hide the edit modal after updating
-                $('#editModal').hide();
+            // Hide the edit modal after updating
+            $('#editModal').hide();
 
-                // Optionally, you can show a success message here
-                Swal.fire({
-                    position: "center",
-                    icon: "success",
-                    title: "Updated Successfully",
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-            } catch (error) {
-                console.error("Error updating document: ", error);
-                // Show an error message if updating fails
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'Failed to update record. Please try again.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-            }
-        });
+            // Optionally, you can show a success message here
+            Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Updated Successfully",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        } catch (error) {
+            console.error("Error updating document: ", error);
+            // Show an error message if updating fails
+            Swal.fire({
+                title: 'Invalid!',
+                text: 'Barangay Name Must Not Be Empty',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
+    });
 
 
     $('#delConfirm').on('click', async function () {

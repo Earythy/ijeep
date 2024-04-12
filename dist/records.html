@@ -14,6 +14,35 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
 
+    <!-- Sweet Alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        $(function() {
+          $("#year").datepicker({
+            changeMonth: false,
+            changeYear: true,
+            showButtonPanel: true,
+            dateFormat: 'yy',
+            onClose: function(dateText, inst) {
+              var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+              $(this).datepicker('setDate', new Date(year, 0));
+            }
+          });
+        });
+    </script>
+
+    <style>
+        /* Hide the header of the column */
+        #myTable th:nth-child(1) {
+        display: none;
+        }
+    
+        /* Hide the cells in the column */
+        #myTable td:nth-child(1) {
+        display: none;
+        }
+    </style>
 
 </head>
 
@@ -113,67 +142,40 @@
                         <div class="btn">
                             <button class="btn btn-good btn-add" class="icon" id="add"><ion-icon name="add-circle"
                                     style="padding-right: 5px; text-align: center;"></ion-icon>Add Record</button>
+                            <select class="btn btn-good" id="brgy_filter">
+                            </select>
+                            <select class="btn btn-good" id="year_filter">
+                                <option>All Year</option>
+                            </select>
                         </div>
                     </div>
 
                     <table id="myTable">
                         <thead>
                             <tr>
+                                <td class="hidden-column">ID</td>
                                 <td>No.</td>
-                                <td>Location</td>
-                                <td>Latitude</td>
-                                <td>Longitude</td>
+                                <td>Barangay</td>
+                                <td>Year</td>
                                 <td>Population</td>
-                                <td>Date</td>
                                 <td>Action</td>
                             </tr>
                         </thead>
 
                         <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>Sample</td>
-                                <td>1234</td>
-                                <td>5678</td>
-                                <td>12034</td>
-                                <td>01/22/2023</td>
-                                <td>
-                                    <center><button type="button" class="btn btn-good btn-edit">Edit</button>
-                                        <button type="button" class="btn btn-bad btn-delete">Delete</button>
-                                    </center>
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>2</td>
-                                <td>Test</td>
-                                <td>3455</td>
-                                <td>9847</td>
-                                <td>23784</td>
-                                <td>01/26/2023</td>
-                                <td>
-                                    <center><button type="button" class="btn btn-good btn-edit">Edit</button>
-                                        <button type="button" class="btn btn-bad btn-delete">Delete</button>
-                                    </center>
-                                </td>
-                            </tr>
-
                         </tbody>
                     </table>
 
                     <div id="editModal">
                         <h3>Edit Record</h3>
                         <form id="editForm">
-                            <label for="location">Location:</label>
-                            <input type="text" id="location" name="location"><br>
-                            <label for="latitude">Latitude:</label>
-                            <input type="text" id="latitude" name="latitude"><br>
-                            <label for="longitude">Longitude:</label>
-                            <input type="text" id="longitude" name="longitude"><br>
-                            <label for="longitude">Population:</label>
-                            <input type="text" id="population" name="population"><br>
-                            <label for="longitude">Date:</label>
-                            <input type="date" id="date" name="date"><br>
+                            <label for="brgyEdit">Barangay:</label>
+                            <select type="text" class="selectInput" id="brgyEdit" name="brgyEdit">
+                            </select><br>
+                            <label for="yearEdit">Year:</label>
+                            <select type="text" class="selectInput" id="yearEdit" name="yearEdit"></select><br>
+                            <label for="populationEdit">Population:</label>
+                            <input type="numberEdit" id="populationEdit" placeholder="Population" name="populationEdit"><br>
                             <div class="btn">
                                 <input type="button" id="cancelEdit" class="btn btn-bad" value="Cancel">
                                 <input type="button" id="update" class="btn btn-good" value="Update">
@@ -184,16 +186,13 @@
                     <div id="addModal">
                         <h3>Add Record</h3>
                         <form id="editForm">
-                            <label for="location">Location:</label>
-                            <input type="text" id="location" placeholder="Location" name="location"><br>
-                            <label for="latitude">Latitude:</label>
-                            <input type="text" id="latitude" placeholder="Latitude" name="latitude"><br>
-                            <label for="longitude">Longitude:</label>
-                            <input type="text" id="longitude" placeholder="Longitude" name="longitude"><br>
-                            <label for="longitude">Population:</label>
-                            <input type="text" id="population" placeholder="Population" name="population"><br>
-                            <label for="longitude">Date:</label>
-                            <input type="date" id="date" name="date"><br>
+                            <label for="brgyAdd">Barangay:</label>
+                            <select type="text" class="selectInput" id="brgyAdd" name="brgyAdd">
+                            </select><br>
+                            <label for="yearAdd">Year:</label>
+                            <select type="text" class="selectInput" id="yearAdd" name="yearAdd"></select><br>
+                            <label for="populationAdd">Population:</label>
+                            <input type="numberAdd" id="populationAdd" placeholder="Population" name="populationAdd" required><br>
                             <div class="btn">
                                 <input type="button" id="cancelAdd" class="btn btn-bad" value="Cancel">
                                 <input type="button" id="save" class="btn btn-good" value="Save">
@@ -225,135 +224,385 @@
     <!-- ====== ionicons ======= -->
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-</body>
 
-<script>
-    $(document).ready(function () {
-        $('#myTable').DataTable({
-            "autoWidth": false
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+                "autoWidth": false,
+                "order": [[1, 'asc']]
+            });
+            $('#cancelAdd').on('click', function () {
+                $('#addModal').hide();
+            });
+
+            $('#cancelEdit').on('click', function () {
+                $('#editModal').hide();
+            });
+
+            // Delete a record Modal Script
+            $(document).on('click', '.btn-delete', function () {
+                $('#deleteModal').show();
+                var row = $(this).closest('tr');
+                var ID = row.find('td:nth-child(1)').text();
+                $('#delConfirm').data('id', ID);
+            });
         });
+
+        var currentYear = new Date().getFullYear();
+        var selectYear = document.getElementById("yearAdd");
+        var filterYear = document.getElementById("year_filter");
+
+        for (var year = 2000; year <= 2100; year++) {
+            var option = document.createElement("option");
+            option.text = year;
+            option.value = year;
+
+            if (year === currentYear) {
+                option.selected = true;
+            }
+
+            selectYear.add(option);
+        }
+
+        for (var year = 2000; year <= 2100; year++) {
+            var option = document.createElement("option");
+            option.text = year;
+            option.value = year;
+            filterYear.add(option);
+        }
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-analytics.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, connectFirestoreEmulator, query, getDocs, getDoc, updateDoc, setDoc, doc, onSnapshot, deleteDoc, orderBy, where } from 'https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js';
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDYPv8S_ljSo3tuMNoRYPI2tleWOqhqFMM",
+            authDomain: "commumeter.firebaseapp.com",
+            projectId: "commumeter",
+            storageBucket: "commumeter.appspot.com",
+            messagingSenderId: "1098693151947",
+            appId: "1:1098693151947:web:c0ce3c093e75ae8cbe1f4e",
+            measurementId: "G-71SRN52DX4"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const analytics = getAnalytics(app);
+        const auth = getAuth();
+        console.log(app);
+        let userId, userRef, classListRef, profileRef;
 
         // Add Data Modal Script
         $('.btn-add').on('click', function () {
-
-            // Show the modal
             $('#addModal').show();
-        });
-        $('#save').on('click', function () {
-
-            //Insert add code here
-
-            $('#addModal').hide();
-        });
-        $('#cancelAdd').on('click', function () {
-            // Hide the modal
-            $('#addModal').hide();
+            populateBarangaySelect('Acmac', 'brgyAdd');
         });
 
-        //Edit Data Modal Script
-        $('.btn-edit').on('click', function () {
-            // Get the data from the row
-            var row = $(this).closest('tr');
-            var location = row.find('td:nth-child(2)').text();
-            var latitude = row.find('td:nth-child(3)').text();
-            var longitude = row.find('td:nth-child(4)').text();
-            var population = row.find('td:nth-child(5)').text();
-            var date = row.find('td:nth-child(6)').text();
+        document.getElementById("save").addEventListener("click", async function() {
+            try {
+                var brgy_name = document.getElementById("brgyAdd").value;
+                var year = document.getElementById("yearAdd").value;
+                var population = document.getElementById("populationAdd").value;
+                // Add a new document with a generated id.
+                if(population != ""){
+                    const docRef = await addDoc(collection(db, "Mobility"), {
+                        brgy_name: brgy_name,
+                        year: year,
+                        population: population
+                    });
 
-            // Fill the form with the data
-            $('#location').val(location);
-            $('#latitude').val(latitude);
-            $('#longitude').val(longitude);
-            $('#population').val(population);
-            $('#date').val(date);
+                    Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "Saved Successfully",
+                    showConfirmButton: false,
+                    timer: 1500
+                    });
+                }  else {
+                Swal.fire({
+                title: 'Invalid!',
+                text: 'Population must be atleast zero',
+                icon: 'error',
+                confirmButtonText: 'Try Again'
+            });
+            }
 
-            // Show the modal
-            $('#editModal').show();
+                $('#addModal').hide();
+                document.getElementById("brgyAdd").selectedIndex = -1;
+                var yearAddSelect = document.getElementById("yearAdd");
+                for (var i = 0; i < yearAddSelect.options.length; i++) {
+                    if (yearAddSelect.options[i].value == "2024") {
+                        yearAddSelect.options[i].selected = true;
+                        break;
+                    }
+                }
+                document.getElementById("populationAdd").value = "";
+                
+            } catch (error) {
+                console.log("error:", error);
+                // If an error occurs, show error SweetAlert with a "Try Again" option
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Oops, that did not work. Please try again.',
+                    icon: 'error',
+                    confirmButtonText: 'Try Again'
+                });
+            }
         });
 
-        //Save the update
-        $('#update').on('click', function (event) {
-            event.preventDefault();
-            // Get the data from the form
-            var location = $('#location').val();
-            var latitude = $('#latitude').val();
-            var longitude = $('#longitude').val();
-            var population = $('#population').val();
-            var date = $('#date').val();
+        populateBarangaySelect('All Barangays', 'brgy_filter')
 
-            // Update the table
-            var row = $('.btn-edit').closest('tr');
-            row.find('td:nth-child(2)').text(location);
-            row.find('td:nth-child(3)').text(latitude);
-            row.find('td:nth-child(4)').text(longitude);
-            row.find('td:nth-child(5)').text(population);
-            row.find('td:nth-child(6)').text(date);
+        function populateBarangaySelect(selectedBrgy, selectId) {
+            getDocs(query(collection(db, "Barangay"), orderBy("brgy_name")))
+                .then((barangayListSnapshot) => {
+                    var selectElement = document.getElementById(selectId);
+                    selectElement.innerHTML = '';
 
-            $('#editModal').hide();
+                    if(selectedBrgy === 'All Barangays'){
+                        var option1 = document.createElement("option");
+                        option1.text = 'All Barangays';
+                        selectElement.appendChild(option1);
+                    }
+
+                    barangayListSnapshot.forEach((barangayListDoc) => {
+                        var barangayListData = barangayListDoc.data();
+                        var brgy_name = barangayListData.brgy_name;
+
+                        var option = document.createElement("option");
+                        option.value = brgy_name;
+                        option.text = brgy_name;
+
+                        if (brgy_name === selectedBrgy) {
+                            option.selected = true;
+                        }
+
+                        selectElement.appendChild(option);
+                    });
+                })
+                .catch((error) => {
+                    console.log("Error fetching documents: ", error);
+                });
+        }
+        
+        document.getElementById("year_filter").addEventListener("change", async function() {
+            populateTable();
         });
-        $('#cancelEdit').on('click', function () {
-            // Hide the modal
-            $('#editModal').hide();
+        document.getElementById("brgy_filter").addEventListener("change", async function() {
+            populateTable();
         });
 
-        //Delete a record Modal Script
-        $('.btn-delete').on('click', function () {
 
-            // Show the modal
-            $('#deleteModal').show();
+        // Function to populate the table with Mobility Data
+        function populateTable() {
+            var queryRef;
+            if (document.getElementById("brgy_filter").value !== "All Barangays" && document.getElementById("year_filter").value === "All Year") {
+                queryRef = query(collection(db, "Mobility"), where("brgy_name", "==", document.getElementById("brgy_filter").value));
+            } else if (document.getElementById("year_filter").value !== "All Year" && document.getElementById("brgy_filter").value === "All Barangays") {
+                queryRef = query(collection(db, "Mobility"), where("year", "==", document.getElementById("year_filter").value));
+            } else if (document.getElementById("year_filter").value !== "All Year" && document.getElementById("brgy_filter").value !== "All Barangays") {
+                queryRef = query(collection(db, "Mobility"), where("brgy_name", "==", document.getElementById("brgy_filter").value), where("year", "==", document.getElementById("year_filter").value));
+            } else {
+                queryRef = query(collection(db, "Mobility"), orderBy("brgy_name"));
+            }
+            getDocs(queryRef)
+                .then((mobilityListSnapshot) => {
+                    var count = 1;
+                    var dataTable = $('#myTable').DataTable();
+                    dataTable.clear().draw();
+
+                    mobilityListSnapshot.forEach((mobilityListDoc) => {
+                        var id = mobilityListDoc.id;
+                        var mobilityListData = mobilityListDoc.data();
+                        var brgy_name = mobilityListData.brgy_name;
+                        var year = mobilityListData.year;
+                        var population = mobilityListData.population;
+
+                        dataTable.row.add([
+                            id,
+                            count,
+                            brgy_name,
+                            year,
+                            population,
+                            '<center><button type="button" class="btn btn-good btn-edit" style="margin-right: 7px !important;">Edit</button><button type="button" class="btn btn-bad btn-delete">Delete</button></center>'
+                        ]).draw(false);
+                        count++;
+                    });
+                })
+                .catch((error) => {
+                    console.log("Error fetching documents: ", error);
+                });
+        }
+
+        // Initial population of the table
+        populateTable();
+
+        // Real-time updates using onSnapshot
+        const unsubscribe = onSnapshot(collection(db, "Mobility"), (snapshot) => {
+            populateTable();
         });
-        $('#delConfirm').on('click', function () {
 
-            //Insert delete code here
+    // Edit Data Modal Script
+    $(document).on('click', '.btn-edit', function () {
+        var row = $(this).closest('tr');
+        var id = row.find('td:nth-child(1)').text();
+        var brgy_name = row.find('td:nth-child(3)').text();
+        var yearValue = row.find('td:nth-child(4)').text();
+        var population = row.find('td:nth-child(5)').text();
 
-            $('#deleteModal').hide();
-        });
-        $('#delCancel').on('click', function () {
-            // Hide the modal
-            $('#deleteModal').hide();
-        });
+        $('#populationEdit').val(population);
 
+        var editYear = document.getElementById("yearEdit");
+        var yearValueInt = parseInt(yearValue, 10);
+
+        editYear.innerHTML = '';
+
+        for (var yearEdit = 2000; yearEdit <= 2100; yearEdit++) {
+            var option = document.createElement("option");
+            option.text = yearEdit;
+            option.value = yearEdit;
+
+            if (yearEdit === yearValueInt) {
+                option.selected = true;
+            }
+
+            editYear.add(option);
+        }
+
+        populateBarangaySelect(brgy_name, 'brgyEdit');
+        
+        $('#editModal').show();
+        $('#update').data('id', id);
+    });
+
+    $('#update').on('click', async function (event) {
+        event.preventDefault();
+        // Get the data from the form
+        var id = $(this).data('id');
+        var brgy_name = $('#brgyEdit').val();
+        var year = $('#yearEdit').val();
+        var population = $('#populationEdit').val();
+
+        try {
+            const querySnapshot = await getDocs(collection(db, "Mobility"));
+
+            querySnapshot.forEach(async (doc) => {
+                if (doc.id === id) {
+                    try {
+                        // Update the document with the new data
+                        if(population != ""){
+                            updateDoc(doc.ref, { 
+                                brgy_name: brgy_name,
+                                year: year,
+                                population: population
+                            });
+                            console.log("Document successfully updated!");
+                            Swal.fire({
+                                position: "center",
+                                icon: "success",
+                                title: "Updated Successfully",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                        }  else {
+                            Swal.fire({
+                            title: 'Error!',
+                            text: 'Population must be atleast zero',
+                            icon: 'error',
+                            confirmButtonText: 'Try Again'
+                        });
+                        }
+
+                        $('#editModal').hide();
+                        document.getElementById("brgyEdit").selectedIndex = -1;
+                        var yearEditSelect = document.getElementById("yearEdit");
+                        for (var i = 0; i < yearEditSelect.options.length; i++) {
+                            if (yearEditSelect.options[i].value == "2024") {
+                                yearEditSelect.options[i].selected = true;
+                                break;
+                            }
+                        }
+                        document.getElementById("populationEdit").value = "";
+                    } catch (error) {
+                        console.error("Error updating document: ", error);
+                        Swal.fire({
+                            title: 'Invalid!',
+                            text: 'Failed to update record. Please try again.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                }
+            });
+        } catch (error) {
+            console.error("Error updating document: ", error);
+            // Show an error message if updating fails
+            Swal.fire({
+                title: 'Error!',
+                text: 'Failed to update record. Please try again.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
     });
 
 
-</script>
+    $('#delConfirm').on('click', async function () {
+        try {
+            var id = $(this).data('id');
+            const querySnapshot = await getDocs(collection(db, "Mobility"));
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-analytics.js";
-    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
-    import { getFirestore, collection, addDoc, connectFirestoreEmulator, query, getDocs, getDoc, updateDoc, setDoc, doc, onSnapshot, deleteDoc, orderBy } from 'https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js';
+            querySnapshot.forEach(async (doc) => {
+                if (doc.id === id) {
+                    try {
+                        await deleteDoc(doc.ref);
+                        console.log("Document successfully deleted!");
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "Deleted Successfully",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    } catch (error) {
+                        console.error("Error deleting document: ", error);
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Failed to delete record. Please try again.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                }
+            });
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDYPv8S_ljSo3tuMNoRYPI2tleWOqhqFMM",
-      authDomain: "commumeter.firebaseapp.com",
-      projectId: "commumeter",
-      storageBucket: "commumeter.appspot.com",
-      messagingSenderId: "1098693151947",
-      appId: "1:1098693151947:web:c0ce3c093e75ae8cbe1f4e",
-      measurementId: "G-71SRN52DX4"
-    };
-
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const analytics = getAnalytics(app);
-    const auth = getAuth();
-    console.log(app);
-    let userId, userRef, classListRef, profileRef;
+            $('#deleteModal').hide();
+        } catch (error) {
+            console.error("Error deleting document: ", error);
+            Swal.fire({
+                title: 'Error!',
+                text: 'Failed to delete record. Please try again.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
+    });
 
     document.getElementById("logout").addEventListener("click", function () {
         signOut(auth).then(() => {
-            // Sign-out successful.
             console.log('Sign-out successful.');
             alert('Sign-out successful.');
             window.location.href = "index.html";
         }).catch((error) => {
-            // An error happened.
             console.log('An error happened.');
         });
     });
+    </script>
 
-</script>
+</body>
 
 </html>
