@@ -2,20 +2,11 @@
 <html>
   <head>
     <title>Login and Signup Page</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap" rel="stylesheet"/>
     <script defer src="./bundle.js"></script>
-    <script
-      type="module"
-      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"
-    ></script>
-    <script
-      nomodule
-      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"
-    ></script>
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
     <style>
       body {
         background-color: #f1e8e6;
@@ -45,7 +36,7 @@
         padding: 50px;
         border-radius: 20px;
         box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
-        width: 80%;
+        width: 100%;
         max-width: 800px;
         display: flex;
         justify-content: space-around;
@@ -118,7 +109,7 @@
       }
 
       .form-container h2 {
-        color: #f55951;
+        color: #6d3c69; /** #f55951; **/
         text-align: center;
         font-weight: bold;
         font-size: 24px;
@@ -334,6 +325,9 @@
       <div class="form-container">
         <img src="img/jeep.png" alt="Logo" class="logo" />
         <!-- <img src="../public/img/jeep.png" alt="Logo" class="logo" /> -->
+
+        <!---- LOG IN START ---->
+
         <form id="login-form" class="active">
           <h2>Welcome Back</h2>
           <p>Login to continue</p>
@@ -376,12 +370,9 @@
             <p class="switch" onclick="forgotPassword()">Forgot password?</p>
           </div>
 
-          <hr />
-          <!-- Horizontal line -->
+          <hr/>
 
-          <div
-            style="display: flex; flex-direction: column; align-items: center"
-          >
+          <div style="display: flex; flex-direction: column; align-items: center">
             <div>Or login with</div>
             <div style="display: flex; gap: 2px">
               <button type="button" class="button-facebook">
@@ -395,6 +386,10 @@
             </div>
           </div>
         </form>
+
+        <!---- LOG IN END ---->
+        <!----- SIGN UP START ------>
+
         <form id="signup-form">
           <h2>Get Started</h2>
           <p>Create a new account</p>
@@ -434,6 +429,9 @@
             Already have an account? <a class="here">Login here</a>
           </p>
         </form>
+
+        <!----- SIGN UP ENDED ----->
+        
       </div>
     </div>
 

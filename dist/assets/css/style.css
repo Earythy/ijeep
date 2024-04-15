@@ -556,3 +556,7 @@ input{
   font-size: 16px;
 }
 
+/* INSERTED FOR MANUAL RESPONSIVENESS */
+
+@media screen and (max-width: 600px) {
+}
