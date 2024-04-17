@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>iJeep</title>
+    <!-- ======= Styles ====== -->
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <script src="./assets/js/north-baranggay.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+
+    <style>
+      #map {
+        height: 665px;
+        width: 100%;
+      }
+
+      .info {
+        padding: 6px 8px;
+        font: 14px/16px Arial, Helvetica, sans-serif;
+        background: white;
+        background: rgba(255, 255, 255, 0.8);
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        border-radius: 5px;
+      }
+      .info h4 {
+        margin: 0 0 5px;
+        color: #777;
+      }
+
+      .legend {
+        line-height: 18px;
+        color: #555;
+      }
+      .legend i {
+        width: 18px;
+        height: 18px;
+        float: left;
+        margin-right: 8px;
+        opacity: 0.7;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- =============== Navigation ================ -->
+    <div class="navcontainer">
+      <div class="navigation">
+        <ul>
+          <li>
+            <a href="#">
+              <span class="icon">
+                <ion-icon name="bus"></ion-icon>
+              </span>
+              <span class="title">iJeep</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="dashboard.html">
+              <span class="icon">
+                <ion-icon name="home-outline"></ion-icon>
+              </span>
+              <span class="title">Dashboard</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="map.html">
+              <span class="icon">
+                <ion-icon name="map-outline"></ion-icon>
+              </span>
+              <span class="title">Map</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="records.html">
+              <span class="icon">
+                <ion-icon name="server-outline"></ion-icon>
+              </span>
+              <span class="title">Mobility Data</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="charts.html">
+              <span class="icon">
+                <ion-icon name="analytics"></ion-icon>
+              </span>
+              <span class="title">Visualizations</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="#">
+              <span class="icon">
+                <ion-icon name="log-out-outline"></ion-icon>
+              </span>
+              <span class="title" id="logout">Sign Out</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- ========================= Main ==================== -->
+      <div class="main">
+        <div class="topbar">
+          <div class="toggle">
+            <ion-icon name="menu-outline"></ion-icon>
+          </div>
+        </div>
+        <div
+          class="d-flex justify-content-between align-items-center px-3 px-md-5"
+        >
+          <h2 class="mb-0">MAP</h2>
+          <div class="d-flex flex-row align-items-center">
+            <select id="routeFilter" class="form-select me-3">
+              <option value="all">Filter Route</option>
+              <option value="Dalipuga">Dalipuga</option>
+              <option value="Luinab">Luinab</option>
+              <option value="Tambo">Tambo</option>
+              <option value="Santiago">Santiago</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- =============== MAP ============= -->
+        <div id="map">
+          <div class="leaflet-bottom leaflet-left p-3 bg-white shadow">
+            <h4>Legend</h4>
+            <div class="row">
+              <div class="col-auto">
+                <img
+                  src="assets/img/yellowmarker.png"
+                  alt="Marker"
+                  style="width: 20px; height: 20px"
+                />
+              </div>
+              <div class="col">Route 1</div>
+            </div>
+            <div class="row">
+              <div class="col-auto">
+                <img
+                  src="assets/img/redmarker.png"
+                  alt="Marker"
+                  style="width: 20px; height: 20px"
+                />
+              </div>
+              <div class="col">Route 2</div>
+            </div>
+            <div class="row">
+              <div class="col-auto">
+                <img
+                  src="assets/img/tealmarker.png"
+                  alt="Marker"
+                  style="width: 20px; height: 20px"
+                />
+              </div>
+              <div class="col">Route 3</div>
+            </div>
+            <!-- Add more routes as needed -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+    </script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+      crossorigin="anonymous"
+    ></script>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <script type="module">
+      // Define global variables to store the last clicked latitude and longitude
+      var lastClickedLat;
+      var lastClickedLng;
+      // access map variables to alll other functions
+      var map;
+
+      //   let db;
+
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+      import {
+        getFirestore,
+        collection,
+        addDoc,
+        connectFirestoreEmulator,
+        query,
+        getDocs,
+        getDoc,
+        updateDoc,
+        setDoc,
+        doc,
+        where,
+        onSnapshot,
+        deleteDoc,
+        orderBy,
+      } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
+
+      import {
+        getAuth,
+        onAuthStateChanged,
+        signInWithEmailAndPassword,
+        createUserWithEmailAndPassword,
+        signOut,
+      } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
+
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyDYPv8S_ljSo3tuMNoRYPI2tleWOqhqFMM",
+        authDomain: "commumeter.firebaseapp.com",
+        projectId: "commumeter",
+        storageBucket: "commumeter.appspot.com",
+        messagingSenderId: "1098693151947",
+        appId: "1:1098693151947:web:c0ce3c093e75ae8cbe1f4e",
+        measurementId: "G-71SRN52DX4",
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      const auth = getAuth(app);
+
+      // Load map after page is ready
+      document.addEventListener("DOMContentLoaded", function () {
+        map = L.map("map").setView([8.231, 124.240967], 13);
+
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          maxZoom: 19,
+          attribution: "© OpenStreetMap contributors",
+        }).addTo(map);
+
+        var buttonContainer = L.control({ position: "topleft" });
+
+        buttonContainer.onAdd = function (map) {
+          var div = L.DomUtil.create("div", "leaflet-bar leaflet-control");
+
+          // Add buttons
+          div.innerHTML +=
+            '<button id="dashboardBtn" class="btn btn-good btn-edit">Dashboard</button>' +
+            "<br>" +
+            '<button id="mobilityDataBtn" class="btn btn-good btn-edit">Mobility Data</button>' +
+            "<br>" +
+            '<button id="visualizationsBtn" class="btn btn-good btn-edit">Visualizations</button>';
+
+          // Attach event listeners to buttons
+          div
+            .querySelector("#dashboardBtn")
+            .addEventListener("click", redirectToDashboard);
+          div
+            .querySelector("#mobilityDataBtn")
+            .addEventListener("click", redirectToMobilityData);
+          div
+            .querySelector("#visualizationsBtn")
+            .addEventListener("click", redirectToVisualizations);
+
+          return div;
+        };
+
+        buttonContainer.addTo(map);
+
+        // Add any other map initialization logic here
+
+        // Function to redirect to dashboard page
+        function redirectToDashboard() {
+          window.location.href = "dashboard.html";
+        }
+
+        // Function to redirect to mobility data page
+        function redirectToMobilityData() {
+          window.location.href = "records.html";
+        }
+
+        // Function to redirect to visualizations page
+        function redirectToVisualizations() {
+          window.location.href = "charts.html";
+        }
+
+        // L.geoJson(baranggayData).addTo(map);
+
+        function getColor(d) {
+          return d > 1000
+            ? "#49006a"
+            : d > 500
+            ? "#7a0177"
+            : d > 200
+            ? "#ae017e"
+            : d > 100
+            ? "#dd3497"
+            : d > 50
+            ? "#f768a1"
+            : d > 20
+            ? "#fa9fb5"
+            : d > 10
+            ? "#fcc5c0"
+            : "#fde0dd";
+        }
+
+        function style(feature) {
+          return {
+            fillColor: getColor(feature.properties.density),
+            weight: 2,
+            opacity: 1,
+            color: "white",
+            dashArray: "3",
+            fillOpacity: 0.7,
+          };
+        }
+
+        L.geoJson(baranggayData, { style: style }).addTo(map);
+
+        function highlightFeature(e) {
+          var layer = e.target;
+
+          layer.setStyle({
+            weight: 7,
+            color: "#666",
+            dashArray: "",
+            fillOpacity: 0.7,
+          });
+
+          if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+            layer.bringToFront();
+          }
+
+          info.update(layer.feature.properties);
+        }
+
+        function resetHighlight(e) {
+          geojson.resetStyle(e.target);
+          info.update();
+        }
+
+        var geojson;
+        // ... our listeners
+        geojson = L.geoJson(baranggayData);
+
+        function zoomToFeature(e) {
+          map.fitBounds(e.target.getBounds());
+        }
+
+        function onEachFeature(feature, layer) {
+          layer.on({
+            mouseover: highlightFeature,
+            mouseout: resetHighlight,
+            click: zoomToFeature,
+          });
+        }
+
+        geojson = L.geoJson(baranggayData, {
+          style: style,
+          onEachFeature: onEachFeature,
+        }).addTo(map);
+
+        var info = L.control();
+
+        info.onAdd = function (map) {
+          this._div = L.DomUtil.create("div", "info"); // create a div with a class "info"
+          this.update();
+          return this._div;
+        };
+
+        // method that we will use to update the control based on feature properties passed
+        info.update = function (props) {
+          this._div.innerHTML =
+            "<h4>Population Density</h4>" +
+            (props
+              ? "<b>" +
+                props.name +
+                "</b><br />" +
+                props.density +
+                " people / mi<sup>2</sup>"
+              : "Select a Baranggay/Purok");
+        };
+
+        info.addTo(map);
+
+        var legend = L.control({ position: "bottomright" });
+
+        legend.onAdd = function (map) {
+          var div = L.DomUtil.create("div", "info legend"),
+            grades = [0, 10, 20, 50, 100, 200, 500, 1000],
+            labels = [];
+
+          // loop through our density intervals and generate a label with a colored square for each interval
+          for (var i = 0; i < grades.length; i++) {
+            div.innerHTML +=
+              '<i style="background:' +
+              getColor(grades[i] + 1) +
+              '"></i> ' +
+              grades[i] +
+              (grades[i + 1] ? "&ndash;" + grades[i + 1] + "<br>" : "+");
+          }
+
+          return div;
+        };
+
+        legend.addTo(map);
+
+        /* HTML COORDINATES ORIG HERE */
+
+        // Try HTML5 geolocation to get the user's location
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const userLocation = [
+                position.coords.latitude,
+                position.coords.longitude,
+              ];
+
+              // Center the map on the user's location
+              map.setView(userLocation);
+
+              //DON"T INCLUDE THIS, WILL BREAK THE MAP IF USER
+              //ALLOWED GEOLOCATION
+              //map.setView(8.298504, 124.254389); //temporary
+
+              // Add a custom marker with the 'jeep.png' image
+              const customIcon = L.icon({
+                iconUrl: "img/jeep.png", // Path to your custom marker image
+                iconSize: [50, 50], // Size of the icon
+                iconAnchor: [15, 30], // Anchor point of the icon, similar to the center
+                popupAnchor: [0, -30], // Point from which the popup should open relative to the iconAnchor
+              });
+
+              L.marker(userLocation, { icon: customIcon })
+                .addTo(map)
+                .bindPopup(
+                  `Your Location: ${position.coords.latitude}, ${position.coords.longitude}`
+                )
+                .openPopup();
+            },
+            () => {
+              // Handle errors
+              alert("Error: The Geolocation service failed.");
+            }
+          );
+        } else {
+          // Browser doesn't support Geolocation
+          alert("Error: Your browser doesn't support geolocation.");
+        }
+
+        // Function to capture and store map click coordinates
+        function onMapClick(e) {
+          lastClickedLat = e.latlng.lat.toFixed(5); // Adjust the precision as needed
+          lastClickedLng = e.latlng.lng.toFixed(5);
+
+          console.log(e.latlng);
+
+          // Remove previous markers if you want only one marker on the map at a time
+
+          if (window.lastMarker) {
+            map.removeLayer(window.lastMarker);
+          }
+
+          // Create a new marker at the clicked location
+          var marker = L.marker(e.latlng).addTo(map);
+
+          // Save the marker to the window object to remove it later
+          window.lastMarker = marker;
+
+          // Attach a popup to the marker displaying the latitude and longitude
+          marker
+            .bindPopup(
+              "Latitude: " + lastClickedLat + "<br>Longitude: " + lastClickedLng
+            )
+            .openPopup();
+        }
+        // when map is clicked, a marker is shown in the map
+        map.on("click", onMapClick);
+      });
+
+      // ensure that a user is logged in before they can interact with the website
+      // if not, redirect them to the login page
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          console.log(user.uid);
+        } else {
+          window.location.href = "logindriver.html"; // Change driver's to your login route
+        }
+        document
+          .getElementById("logout")
+          .addEventListener("click", function () {
+            signOut(auth)
+              .then(() => {
+                // Sign-out successful.
+                console.log("Sign-out successful.");
+                alert("Sign-out successful.");
+                window.location.href = "index.html"; //change
+              })
+              .catch((error) => {
+                // An error happened.
+                console.log("An error happened.");
+              });
+          });
+
+        // Custom icons
+        const redIcon = new L.Icon({
+          iconUrl: "assets/img/redmarker.png",
+          iconSize: [37, 41],
+          iconAnchor: [18, 41],
+          popupAnchor: [1, -34],
+          tooltipAnchor: [16, -28],
+          shadowUrl: "assets/img/shadowmarker.png",
+          shadowSize: [41, 41],
+          shadowAnchor: [13, 41],
+        });
+
+        const tealIcon = new L.Icon({
+          iconUrl: "assets/img/tealmarker.png",
+          iconSize: [37, 41],
+          iconAnchor: [18, 41],
+          popupAnchor: [1, -34],
+          tooltipAnchor: [16, -28],
+          shadowUrl: "assets/img/shadowmarker.png",
+          shadowSize: [41, 41],
+          shadowAnchor: [13, 41],
+        });
+
+        const greenIcon = new L.Icon({
+          iconUrl: "assets/img/greenmarker.png",
+          iconSize: [37, 41],
+          iconAnchor: [18, 41],
+          popupAnchor: [1, -34],
+          tooltipAnchor: [16, -28],
+          shadowUrl: "assets/img/shadowmarker.png",
+          shadowSize: [41, 41],
+          shadowAnchor: [13, 41],
+        });
+
+        const yellowIcon = new L.Icon({
+          iconUrl: "assets/img/yellowmarker.png",
+          iconSize: [37, 41],
+          iconAnchor: [18, 41],
+          popupAnchor: [1, -34],
+          tooltipAnchor: [16, -28],
+          shadowUrl: "assets/img/shadowmarker.png",
+          shadowSize: [41, 41],
+          shadowAnchor: [13, 41],
+        });
+
+        // Function to get the appropriate icon based on the route
+        function getIconForRoute(route) {
+          switch (route) {
+            case "Tambo":
+              return redIcon;
+            case "Dalipuga":
+              return tealIcon;
+            case "Luinab":
+              return greenIcon;
+            case "Santiago":
+              return yellowIcon;
+            default:
+              return L.Icon.Default; // Default icon
+          }
+        }
+
+        let selectedRoute = "all";
+
+        // Function to fetch and display all markers
+        async function filterMarkers() {
+          const q = collection(db, "commutermark");
+
+          const querySnapshot = await getDocs(q);
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            if (data.display == true) {
+              if (selectedRoute === "all" || data.route === selectedRoute) {
+                const marker = L.marker([data.latitude, data.longitude], {
+                  icon: getIconForRoute(data.route),
+                }).addTo(map);
+                marker.bindPopup(
+                  `Route: ${data.route}<br>Destination: ${data.to}`
+                );
+              }
+            }
+          });
+        }
+
+        // filterMarkers(user.uid);
+        //when clicked, reflect the changes to the map based on the selected route
+        document
+          .getElementById("routeFilter")
+          .addEventListener("change", function () {
+            selectedRoute = this.value;
+            map.eachLayer(function (layer) {
+              if (layer instanceof L.Marker) {
+                map.removeLayer(layer);
+              }
+            });
+            filterMarkers();
+          });
+
+        // Real-time listener for changes to all the "commutermark" collection
+        function setupRealtimeListener() {
+          const collectionRef = collection(db, "commutermark");
+          const markers = {};
+
+          onSnapshot(collectionRef, (snapshot) => {
+            snapshot.docChanges().forEach((change) => {
+              const data = change.doc.data();
+              const id = change.doc.id;
+
+              if (change.type === "added" || change.type === "modified") {
+                if (data.display == true) {
+                  // Remove the previous marker if it exists
+                  if (markers[id]) {
+                    map.removeLayer(markers[id]);
+                    delete markers[id];
+                  }
+
+                  // Add the updated marker to the map
+                  const marker = L.marker([data.latitude, data.longitude], {
+                    icon: getIconForRoute(data.route),
+                  }).addTo(map);
+                  marker.bindPopup(
+                    `Route: ${data.route}<br>Destination: ${data.to}`
+                  );
+                  markers[id] = marker;
+                } else {
+                  // If the display is false, remove the marker from the map
+                  if (markers[id]) {
+                    map.removeLayer(markers[id]);
+                    delete markers[id];
+                  }
+                }
+              } else if (change.type === "removed") {
+                // Remove the marker from the map when the document is removed
+                if (markers[id]) {
+                  map.removeLayer(markers[id]);
+                  delete markers[id];
+                }
+              }
+            });
+          });
+        }
+
+        // Call the setupRealtimeListener function to start listening for real-time updates
+        setupRealtimeListener();
+      });
+    </script>
+
+    <script>
+      // Attach event listener to the "Confirm Selection" button
+    </script>
+    <!-- =========== Scripts =========  -->
+    <script src="assets/js/main.js"></script>
+    <!-- ====== ionicons ======= -->
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"
+    ></script>
+  </body>
+</html>

@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CommuMeter</title>
+    <!-- ======= Styles ====== -->
+    <link rel="stylesheet" href="./assets/css/style.css">
+
+    <!-- ======= DataTables ====== -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+
+    <!-- Sweet Alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        /* Hide the header of the column */
+        #myTable th:nth-child(1) {
+        display: none;
+        }
+    
+        /* Hide the cells in the column */
+        #myTable td:nth-child(1) {
+        display: none;
+        }
+    </style>
+
+</head>
+
+<body>
+    <!-- =============== Navigation ================ -->
+    <div class="container">
+        <div class="navigation">
+            <ul>
+                <li>
+                    <a href="#">
+                        <span class="icon">
+                            <ion-icon name="speedometer"></ion-icon>
+                        </span>
+                        <span class="title">CommuMeter</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="dashboard.html">
+                        <span class="icon">
+                            <ion-icon name="home-outline"></ion-icon>
+                        </span>
+                        <span class="title">Dashboard</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="map.html">
+                        <span class="icon">
+                            <ion-icon name="map-outline"></ion-icon>
+                        </span>
+                        <span class="title">Map</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="barangays.html">
+                        <span class="icon">
+                            <ion-icon name="compass-outline"></ion-icon>
+                        </span>
+                        <span class="title">Barangays</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="coordinates.html">
+                        <span class="icon">
+                            <ion-icon name="locate-outline"></ion-icon>
+                        </span>
+                        <span class="title">Coordinates</span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a href="records.html">
+                        <span class="icon">
+                            <ion-icon name="server-outline"></ion-icon>
+                        </span>
+                        <span class="title">Mobility Data</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="charts.html">
+                        <span class="icon">
+                            <ion-icon name="analytics"></ion-icon>
+                        </span>
+                        <span class="title">Visualizations</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        <span class="icon">
+                            <ion-icon name="log-out-outline"></ion-icon>
+                        </span>
+                        <span class="title" id="logout">Sign Out</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- ========================= Main ==================== -->
+        <div class="main">
+            <div class="topbar">
+                <div class="toggle">
+                    <ion-icon name="menu-outline"></ion-icon>
+                </div>
+            </div>
+
+            <!-- ================ Barangays Table ================= -->
+            <div class="details data">
+                <div class="dataRecord">
+                    <div class="cardHeader">
+                        <h2>Barangay Coordinates</h2>
+
+                        <div class="btn">
+                            <button class="btn btn-good btn-add" class="icon" id="add"><ion-icon name="add-circle"
+                                    style="padding-right: 5px; text-align: center;"></ion-icon>Add Barangay Coordinate</button>
+                        </div>
+                    </div>
+
+                    <table id="myTable">
+                        <thead>
+                            <tr>
+                                <td>ID</td>
+                                <td>No.</td>
+                                <td>Barangay Name</td>
+                                <td>Latitude</td>
+                                <td>Longitude</td>
+                                <td>Action</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+
+                    <div id="editModal" style="height: 483px !important; overflow-y: auto;">
+                        <h3>Edit Barangay Coordinate</h3>
+                        <form id="editForm">
+                            <label for="brgyEdit">Barangay:</label>
+                            <select type="text" class="selectInput" id="brgyEdit" name="brgyEdit">
+                                <option selected>Select a Barangay</option>
+                            </select><br>
+                            <!-- Longitude input fields -->
+                            <div id="editFields" style="text-align: center;"></div>
+                            
+                            <div class="btn">
+                                <input type="button" id="cancelEdit" class="btn btn-bad" value="Cancel">
+                                <input type="button" id="update" class="btn btn-good" value="Update">
+                            </div>
+                        </form>
+                    </div>
+                    
+
+                    <div id="addModal" style="height: 483px !important; overflow-y: auto;">
+                        <h3>Add Barangay Coordinate</h3>
+                        <form id="editForm">
+                            <label for="brgyAdd">Barangay:</label>
+                            <select type="text" class="selectInput" id="brgyAdd" name="brgyAdd">
+                                <option selected>Select a Barangay</option>
+                            </select><br>
+                            <label for="latAdd1">Latitude:</label>
+                            <input type="number" step="any" name="latitude" placeholder="Latitude" id="latAdd1" class="additional-lat" required><br>
+                            <label for="longAdd">Longitude:</label>
+                            <input type="number" step="any" name="longitude" placeholder="Longitude" id="longAdd1" class="additional-long" required><br>
+                            <div id="additionalFields" style="text-align: center;"></div>
+                            <button type="button" class="btn btn-good btn-add" class="icon" id="addField" style="min-width: 66%;"><ion-icon name="add-circle"
+                                style="padding-right: 5px; text-align: center;"></ion-icon>Add Coordinates</button><br>
+                            <div class="btn">
+                                <input type="button" id="cancelAdd" class="btn btn-bad" value="Cancel">
+                                <input type="button" id="save" class="btn btn-good" value="Save">
+                            </div>
+                        </form>
+                    </div>
+
+                    <div id="deleteModal">
+                        <h3>Delete Confirmation</h3>
+                        <center>
+                            <p style="padding-bottom: 10px;">Are you sure you want to delete this record?</p>
+                            <div class="btn">
+                                <button id="delCancel" class="btn btn-bad">Cancel</button>
+                                <button id="delConfirm" class="btn btn-good">Confirm</button>
+                            </div>
+                        </center>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- =========== Scripts =========  -->
+    <script src="assets/js/main.js"></script>
+
+    <!-- ====== ionicons ======= -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+
+<script>
+    $(document).ready(function () {
+    $('#cancelAdd').on('click', function () {
+        // Hide the modal
+        $('#addModal').hide();
+    });
+
+    $('#cancelEdit').on('click', function () {
+        // Hide the modal
+        $('#editModal').hide();
+    });
+
+    //Delete a record Modal Script
+    $(document).on('click', '.btn-delete', function () {
+        // Show the modal
+        $('#deleteModal').show();
+        var row = $(this).closest('tr');
+        var ID = row.find('td:nth-child(1)').text();
+        $('#delConfirm').data('id', ID);
+    });
+
+    $('#addField').on('click', function () {
+        // Select the container where you want to append the additional latitude and longitude fields
+        var additionalFieldsContainer = $('#additionalFields');
+
+        // Get the number of existing additional latitude and longitude fields
+    var numAdditionalFields = $('.additional-lat').length + 1; // Initialize with 2 instead of 1
+
+    // Create new input fields for latitude and longitude with updated IDs
+    var latitudeInput = $(`<label for="latAdd${numAdditionalFields}">Latitude ${numAdditionalFields}:</label><br><input type="number" step="any" name="latitude" placeholder="Latitude ${numAdditionalFields}" id="latAdd${numAdditionalFields}" class="additional-lat"><br><br>`);
+    var longitudeInput = $(`<label for="longAdd${numAdditionalFields}">Longitude ${numAdditionalFields}:</label><br><input type="number" step="any" name="longitude" placeholder="Longitude ${numAdditionalFields}" id="longAdd${numAdditionalFields}" class="additional-long"><br><br>`);
+
+    // Append the new input fields to the container
+    additionalFieldsContainer.append(latitudeInput);
+    additionalFieldsContainer.append(longitudeInput);
+    });
+
+});
+
+</script>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-analytics.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
+    import { getFirestore, collection, addDoc, connectFirestoreEmulator, query, getDocs, getDoc, updateDoc, setDoc, doc, onSnapshot, deleteDoc, where, orderBy } from 'https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js';
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDYPv8S_ljSo3tuMNoRYPI2tleWOqhqFMM",
+      authDomain: "commumeter.firebaseapp.com",
+      projectId: "commumeter",
+      storageBucket: "commumeter.appspot.com",
+      messagingSenderId: "1098693151947",
+      appId: "1:1098693151947:web:c0ce3c093e75ae8cbe1f4e",
+      measurementId: "G-71SRN52DX4"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const analytics = getAnalytics(app);
+    const auth = getAuth();
+    console.log(app);
+    let userId, userRef, classListRef, profileRef;
+
+    // Add Data Modal Script
+    $('.btn-add').on('click', function () {
+        $('#addModal').show();
+        populateBarangaySelect('Acmac', 'brgyAdd');
+    });
+
+    function populateBarangaySelect(selectedBrgy, selectId) {
+        getDocs(query(collection(db, "Barangay"), orderBy("brgy_name")))
+            .then((barangayListSnapshot) => {
+                var selectElement = document.getElementById(selectId);
+                selectElement.innerHTML = '';
+
+                barangayListSnapshot.forEach((barangayListDoc) => {
+                    var barangayListData = barangayListDoc.data();
+                    var brgy_name = barangayListData.brgy_name;
+
+                    var option = document.createElement("option");
+                    option.value = brgy_name;
+                    option.text = brgy_name;
+
+                    if (brgy_name === selectedBrgy) {
+                        option.selected = true;
+                    }
+
+                    selectElement.appendChild(option);
+                });
+            })
+            .catch((error) => {
+                console.log("Error fetching documents: ", error);
+            });
+        }
+
+    // Add a new document with a generated id.
+    $('#save').on('click', async function() {
+        try {
+            var brgy_name = $('#brgyAdd').val();
+            var latitudeArray = [];
+            var longitudeArray = [];
+
+            // Loop through each latitude and longitude input field
+            $('.additional-lat').each(function() {
+                latitudeArray.push($(this).val()); // Push the value of each latitude input field to the latitudeArray
+            });
+
+            $('.additional-long').each(function() {
+                longitudeArray.push($(this).val()); // Push the value of each longitude input field to the longitudeArray
+            });
+
+            // Check if any of the latitude or longitude fields are empty
+            if (brgy_name != "" && latitudeArray.every(Boolean) && longitudeArray.every(Boolean)) {
+                console.log(brgy_name, latitudeArray, longitudeArray);
+                // Add a new document with a generated id.
+                const docRef = await addDoc(collection(db, "Coordinates"), {
+                    brgy_name: brgy_name,
+                    latitude: latitudeArray,
+                    longitude: longitudeArray,
+                });
+
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "Saved Successfully",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                $('#addModal').hide();
+                $('#editForm')[0].reset();
+            } else {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Please Fill All The Fields',
+                    icon: 'error',
+                    confirmButtonText: 'Try Again'
+                });
+            }
+            
+        } catch (error) {
+            console.log("error:", error);
+            // If an error occurs, show error SweetAlert with a "Try Again" option
+            Swal.fire({
+                title: 'Error!',
+                text: 'Oops, that did not work. Please try again.',
+                icon: 'error',
+                confirmButtonText: 'Try Again'
+            });
+        }
+    });
+
+    $('#myTable').DataTable({
+        "autoWidth": false,
+        "order": [[1, 'asc']]
+    });
+
+    function populateTable() {
+    getDocs(query(collection(db, "Coordinates"), orderBy("brgy_name"))).then((coordListSnapshot) => {
+        var count = 1;
+        // Get a reference to the DataTable instance
+        var dataTable = $('#myTable').DataTable();
+        // Clear the table before repopulating with new data
+        dataTable.clear().draw();
+        // Iterate over each document in the collection
+        coordListSnapshot.forEach((coordListDoc) => {
+            var id = coordListDoc.id;
+            var coordListData = coordListDoc.data();
+            var brgy_name = coordListData.brgy_name;
+            var latitude = coordListData.latitude;
+            var longitude = coordListData.longitude;
+
+            // Format latitude and longitude arrays into separate lines within the same cell
+            var formattedLatitude = latitude.map(lat => `<div>${lat}</div>`).join('');
+            var formattedLongitude = longitude.map(long => `<div>${long}</div>`).join('');
+
+            // Add data to the table
+            dataTable.row.add([
+                id,
+                count,
+                brgy_name,
+                formattedLatitude,
+                formattedLongitude,
+                '<center><button type="button" class="btn btn-good btn-edit" style="margin-right: 7px !important;">Edit</button><button type="button" class="btn btn-bad btn-delete">Delete</button></center>'
+            ]).draw(false);
+            count++;
+        });
+    }).catch((error) => {
+        console.log("Error fetching documents: ", error);
+    });
+}
+
+    // Call populateTable function to initially populate the table
+    populateTable();
+
+    // Subscribe to real-time updates using onSnapshot
+    const unsubscribe = onSnapshot(collection(db, "Coordinates"), (snapshot) => {
+        // When a change occurs, re-populate the table with updated data
+        populateTable();
+    });
+
+    $(document).on('click', '.btn-edit', function () {
+    // Get the data from the row
+    var row = $(this).closest('tr');
+    var id = row.find('td:nth-child(1)').text();
+    var brgy_name = row.find('td:nth-child(3)').text();
+    var latitudeText = row.find('td:nth-child(4)').html(); // Use .html() instead of .text() to get the formatted HTML content
+    var longitudeText = row.find('td:nth-child(5)').html(); // Use .html() instead of .text() to get the formatted HTML content
+
+    // Populate the barangay select dropdown
+    populateBarangaySelect(brgy_name, 'brgyEdit');
+
+    // Clear existing latitude and longitude input fields
+    $('#editLatFields').empty();
+    $('#editLongFields').empty();
+
+    // Split latitude and longitude text by <div> and remove empty strings
+    var latitudeArray = latitudeText.split('<div>').filter(Boolean);
+    var longitudeArray = longitudeText.split('<div>').filter(Boolean);
+
+    // Iterate over latitude and longitude arrays simultaneously
+    for (var i = 0; i < Math.max(latitudeArray.length, longitudeArray.length); i++) {
+        if (latitudeArray[i]) {
+            console.log(latitudeArray[i]);
+            var lat = latitudeArray[i].replace(/<\/?div>/g, '');
+            var inputField = $('<label for="latEdit' + (i + 1) + '">Latitude ' + (i + 1) + ':</label><br><input type="number" step="any" name="latitude" placeholder="Latitude ' + (i + 1) + '" id="latEdit' + (i + 1) + '" class="additional-lat" value="' + lat.trim() + '"><br><br>');
+            $('#editFields').append(inputField);
+            
+        }
+        if (longitudeArray[i]) {
+            console.log(longitudeArray[i]);
+            var long = longitudeArray[i].replace(/<\/?div>/g, '');
+            var inputField = $('<input type="text" name="longitude" placeholder="Longitude ' + (i + 1) + '" id="longEdit' + (i + 1) + '" class="edit-long" value="' + long.trim() + '">');
+            var inputField = $('<label for="longEdit' + (i + 1) + '">Longitude ' + (i + 1) + ':</label><br><input type="number" step="any" name="longitude" placeholder="Longitude ' + (i + 1) + '" id="longEdit' + (i + 1) + '" class="additional-long" value="' + long.trim() + '"><br><br>');
+            $('#editFields').append(inputField);
+        }
+    }
+
+    $('#editModal').show();
+    $('#update').data('id', id);
+});
+
+    $('#update').on('click', async function (event) {
+        event.preventDefault();
+        // Get the data from the form
+        var id = $(this).data('id');
+        var brgy_name = $('#brgyEdit').val();
+        var latitudeArray = [];
+        var longitudeArray = [];
+
+        // Loop through each latitude and longitude input field
+        $('.additional-lat').each(function() {
+            latitudeArray.push($(this).val()); // Push the value of each latitude input field to the latitudeArray
+        });
+
+        $('.additional-long').each(function() {
+            longitudeArray.push($(this).val()); // Push the value of each longitude input field to the longitudeArray
+        });
+
+        try {
+            const querySnapshot = await getDocs(collection(db, "Coordinates"));
+
+            querySnapshot.forEach(async (doc) => {
+                if (doc.id === id) {
+                    try {
+                        // Update the document with the new data
+                        if(brgy_name != "" && latitudeArray != "" && longitudeArray != ""){
+                            updateDoc(doc.ref, { 
+                                brgy_name: brgy_name,
+                                latitude: latitudeArray,
+                                longitude: longitudeArray,
+                            });
+                            console.log("Document successfully updated!");
+                            Swal.fire({
+                                position: "center",
+                                icon: "success",
+                                title: "Updated Successfully",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                        }  else {
+                            Swal.fire({
+                            title: 'Error!',
+                            text: 'Please Fill All The Fields',
+                            icon: 'error',
+                            confirmButtonText: 'Try Again'
+                        });
+                        }
+
+                        $('#editModal').hide();
+                        document.getElementById("brgyEdit").selectedIndex = -1;
+                    } catch (error) {
+                        console.error("Error updating document: ", error);
+                        Swal.fire({
+                            title: 'Invalid!',
+                            text: 'Failed to update record. Please try again.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                }
+            });
+        } catch (error) {
+            console.error("Error updating document: ", error);
+            // Show an error message if updating fails
+            Swal.fire({
+                title: 'Error!',
+                text: 'Failed to update record. Please try again.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
+    });
+
+    $('#delConfirm').on('click', async function () {
+        try {
+            var id = $(this).data('id');
+            const querySnapshot = await getDocs(collection(db, "Coordinates"));
+
+            querySnapshot.forEach(async (doc) => {
+                if (doc.id === id) {
+                    try {
+                        await deleteDoc(doc.ref);
+                        console.log("Document successfully deleted!");
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "Deleted Successfully",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    } catch (error) {
+                        console.error("Error deleting document: ", error);
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Failed to delete record. Please try again.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                }
+            });
+
+            $('#deleteModal').hide();
+        } catch (error) {
+            console.error("Error deleting document: ", error);
+            Swal.fire({
+                title: 'Error!',
+                text: 'Failed to delete record. Please try again.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
+    });
+
+    document.getElementById("logout").addEventListener("click", function () {
+        signOut(auth).then(() => {
+            // Sign-out successful.
+            console.log('Sign-out successful.');
+            alert('Sign-out successful.');
+            window.location.href = "index.html";
+        }).catch((error) => {
+            // An error happened.
+            console.log('An error happened.');
+        });
+    });
+
+</script>
+
+</html>
