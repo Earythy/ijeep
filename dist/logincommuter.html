@@ -321,7 +321,7 @@
   <body>
     <div class="container">
       <div class="form-container">
-        <img src="img/jeep.png" alt="Logo" class="logo" />
+        <img src="assets/img/jeep.png" alt="Logo" class="logo" />
         <!-- <img src="../public/img/jeep.png" alt="Logo" class="logo" /> -->
         <form id="login-form" class="active">
           <h2>Welcome Back</h2>
@@ -538,7 +538,36 @@
       const auth = getAuth();
       console.log(app);
 
-      //----- Register code start
+      function isWeakPassword(password) {
+        let weaknesses = [];
+
+        // Check if password is less than 6 characters
+        if (password.length < 6) {
+          weaknesses.push("at least 6 characters long");
+        }
+
+        // Check if password contains repetitive characters
+        const repetitivePattern = /(.)\1{2,}/;
+        if (repetitivePattern.test(password)) {
+          weaknesses.push("no repetitive characters");
+        }
+
+        // Check if password lacks a capital letter
+        const hasCapitalLetter = /[A-Z]/.test(password);
+        if (!hasCapitalLetter) {
+          weaknesses.push("at least one capital letter");
+        }
+
+        // Check if password lacks a number
+        const hasNumber = /\d/.test(password);
+        if (!hasNumber) {
+          weaknesses.push("at least one number");
+        }
+
+        // Return weaknesses array if there are any, otherwise return false
+        return weaknesses.length > 0 ? weaknesses : false;
+      }
+
       document.getElementById("signup").addEventListener("click", function () {
         var email = document.getElementById("signup-email").value;
         var password = document.getElementById("signup-password").value;
@@ -548,6 +577,22 @@
           return;
         }
 
+        const passwordWeaknesses = isWeakPassword(password);
+        if (passwordWeaknesses) {
+          let weaknessMessage = "Password must contain ";
+          if (passwordWeaknesses.length === 1) {
+            weaknessMessage += passwordWeaknesses[0];
+          } else {
+            weaknessMessage +=
+              passwordWeaknesses.slice(0, -1).join(", ") +
+              ", and " +
+              passwordWeaknesses.slice(-1);
+          }
+          showPopupMessage(weaknessMessage + ".", "error");
+          return;
+        }
+
+        // Password is strong, proceed with createUserWithEmailAndPassword
         createUserWithEmailAndPassword(auth, email, password)
           .then((userCredential) => {
             // Signed up
@@ -562,8 +607,6 @@
             // Handle errors here
             if (error.code === "auth/email-already-in-use") {
               showPopupMessage("The email address is already in use.", "error");
-            } else if (error.code === "auth/weak-password") {
-              showPopupMessage("The password is too weak.", "error");
             } else {
               showPopupMessage(
                 "An error occurred. Please try again later.",
@@ -572,6 +615,7 @@
             }
           });
       });
+
       //----- End
 
       //----- Login code start
