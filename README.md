@@ -3,7 +3,7 @@
  - individual marker for each user (replace the last marker with the new marker (pinaka complicated nga function))
  - firebase google and facebook login (need localhost or htttp)
  - login and sign in error trappings
- - added new html file called commuter.html
+ - added new html file specific for drivers and commuters.
 
 # TODO
  - Remove navbar from commuter.html
