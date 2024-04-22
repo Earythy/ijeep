@@ -7,47 +7,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>iJeep</title>
     <!-- ======= Styles ====== -->
-    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="/dist/assets/css/style.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    <script src="./assets/js/north-baranggay.js"></script>
+    <script src="/dist/assets/js/north-baranggay.js"></script>
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
-  <style>
-    #map {
-      height: 665px;
-      width: 100%;
-    }
+    <style>
+        #map {
+            height: 665px;
+            width: 100%;
+            }
 
-    .info {
-    padding: 6px 8px;
-    font: 14px/16px Arial, Helvetica, sans-serif;
-    background: white;
-    background: rgba(255,255,255,0.8);
-    box-shadow: 0 0 15px rgba(0,0,0,0.2);
-    border-radius: 5px;
-}
-.info h4 {
-    margin: 0 0 5px;
-    color: #777;
-}
+            .info {
+            padding: 6px 8px;
+            font: 14px/16px Arial, Helvetica, sans-serif;
+            background: white;
+            background: rgba(255,255,255,0.8);
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            border-radius: 5px;
+        }
+        .info h4 {
+            margin: 0 0 5px;
+            color: #777;
+        }
 
-.legend {
-    line-height: 18px;
-    color: #555;
-}
-.legend i {
-    width: 18px;
-    height: 18px;
-    float: left;
-    margin-right: 8px;
-    opacity: 0.7;
-}
-  </style>
-
+        .legend {
+            line-height: 18px;
+            color: #555;
+        }
+        .legend i {
+            width: 18px;
+            height: 18px;
+            float: left;
+            margin-right: 8px;
+            opacity: 0.7;
+        }
+    </style>
 </head>
 
 <body>
@@ -64,17 +63,9 @@
                     </a>
                 </li>
 
+                <!-- Map link -->
                 <li>
-                    <a href="dashboard.html">
-                        <span class="icon">
-                            <ion-icon name="home-outline"></ion-icon>
-                        </span>
-                        <span class="title">Dashboard</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="map.html">
+                    <a href="/dist/user/map.html">
                         <span class="icon">
                             <ion-icon name="map-outline"></ion-icon>
                         </span>
@@ -82,24 +73,16 @@
                     </a>
                 </li>
 
+                <!-- Profile link -->
                 <li>
-                    <a href="records.html">
+                    <a href="/dist/user/profile.html">
                         <span class="icon">
-                            <ion-icon name="server-outline"></ion-icon>
+                            <ion-icon name="person-outline"></ion-icon>
                         </span>
-                        <span class="title">Mobility Data</span>
+                        <span class="title">Profile</span>
                     </a>
                 </li>
-
-                <li>
-                    <a href="charts.html">
-                        <span class="icon">
-                            <ion-icon name="analytics"></ion-icon>
-                        </span>
-                        <span class="title">Visualizations</span>
-                    </a>
-                </li>
-
+                
                 <li>
                     <a href="#">
                         <span class="icon">
@@ -122,19 +105,11 @@
 
             <!-- =============== MAP ============= -->
             <div id="map"> </div>
+
             <script src="https://unpkg.com/leaflet/dist/leaflet.js"> </script>
     
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
-
-                // Initialize the map
-                /*
-                const map = L.map('map').setView([8.308987, 124.257553], 15); // Adjust the center based on the polygon coordinates          
-                // Add a Tile Layer (OpenStreetMap)
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                }).addTo(map);
-                */
 
                 var map = L.map('map').setView([8.231000, 124.240967], 15);
 
@@ -254,37 +229,37 @@ legend.addTo(map);
 
                 // Try HTML5 geolocation to get the user's location
                 if (navigator.geolocation) {
-                  navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                      const userLocation = [position.coords.latitude, position.coords.longitude];
-            
-                      // Center the map on the user's location
-                      //map.setView(userLocation);
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                        const userLocation = [position.coords.latitude, position.coords.longitude];
+                
+                        // Center the map on the user's location
+                        //map.setView(userLocation);
 
-                      map.setView(8.298504,124.254389) //temporary
-            
-                      // Add a custom marker with the 'jeep.png' image
-                      const customIcon = L.icon({
-                        iconUrl: 'img/jeep.png', // Path to your custom marker image
-                        iconSize: [50, 50], // Size of the icon
-                        iconAnchor: [15, 30], // Anchor point of the icon, similar to the center
-                        popupAnchor: [0, -30] // Point from which the popup should open relative to the iconAnchor
-                      });
-            
-                      L.marker(userLocation, { icon: customIcon }).addTo(map)
-                        .bindPopup(`Your Location: ${position.coords.latitude}, ${position.coords.longitude}`)
-                        .openPopup();
-                    },
-                    () => {
-                      // Handle errors
-                      alert('Error: The Geolocation service failed.');
+                        map.setView(8.298504,124.254389) //temporary
+                
+                        // Add a custom marker with the 'jeep.png' image
+                        const customIcon = L.icon({
+                            iconUrl: 'img/jeep.png', // Path to your custom marker image
+                            iconSize: [50, 50], // Size of the icon
+                            iconAnchor: [15, 30], // Anchor point of the icon, similar to the center
+                            popupAnchor: [0, -30] // Point from which the popup should open relative to the iconAnchor
+                        });
+                
+                        L.marker(userLocation, { icon: customIcon }).addTo(map)
+                            .bindPopup(`Your Location: ${position.coords.latitude}, ${position.coords.longitude}`)
+                            .openPopup();
+                        },
+                        () => {
+                        // Handle errors
+                        alert('Error: The Geolocation service failed.');
+                        }
+                    );
+                    } else {
+                    // Browser doesn't support Geolocation
+                    alert('Error: Your browser doesn\'t support geolocation.');
                     }
-                  );
-                } else {
-                  // Browser doesn't support Geolocation
-                  alert('Error: Your browser doesn\'t support geolocation.');
-                }
-              });
+                });
             </script>
             
 
@@ -292,30 +267,27 @@ legend.addTo(map);
     </div>
     
     <!-- =========== Scripts =========  -->
-    <script src="assets/js/main.js"></script>
+    <script src="/dist/assets/js/main.js"></script>
     <!-- ====== ionicons ======= -->
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-<!-- Coordinates
 
--->
 </body>
-</script>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-analytics.js";
     import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
-    import { getFirestore, collection, addDoc, connectFirestoreEmulator, query, getDocs, getDoc, updateDoc, setDoc, doc, onSnapshot, deleteDoc, orderBy } from 'https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js';
+    import { getFirestore, collection, addDoc, connectFirestoeEmulator, query, getDocs, getDoc, updateDoc, setDoc, doc, onSnapshot, deleteDoc, orderBy } from 'https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js';
 
     const firebaseConfig = {
-      apiKey: "AIzaSyDYPv8S_ljSo3tuMNoRYPI2tleWOqhqFMM",
-      authDomain: "commumeter.firebaseapp.com",
-      projectId: "commumeter",
-      storageBucket: "commumeter.appspot.com",
-      messagingSenderId: "1098693151947",
-      appId: "1:1098693151947:web:c0ce3c093e75ae8cbe1f4e",
-      measurementId: "G-71SRN52DX4"
+        apiKey: "AIzaSyDYPv8S_ljSo3tuMNoRYPI2tleWOqhqFMM",
+        authDomain: "commumeter.firebaseapp.com",
+        projectId: "commumeter",
+        storageBucket: "commumeter.appspot.com",
+        messagingSenderId: "1098693151947",
+        appId: "1:1098693151947:web:c0ce3c093e75ae8cbe1f4e",
+        measurementId: "G-71SRN52DX4"
     };
 
     // Initialize Firebase
@@ -325,6 +297,18 @@ legend.addTo(map);
     const auth = getAuth();
     console.log(app);
     let userId, userRef, classListRef, profileRef;
+
+    // Check authentication state
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        // User is signed in, redirect to map.html or profile.html
+        window.location.href = "map.html"; // or profile.html
+    } else {
+        // No user is signed in, stay on the login page
+        console.log('No user is signed in.');
+    }
+});
+
 
     document.getElementById("logout").addEventListener("click", function () {
         signOut(auth).then(() => {

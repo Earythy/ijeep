@@ -323,7 +323,7 @@
   <body>
     <div class="container">
       <div class="form-container">
-        <img src="img/jeep.png" alt="Logo" class="logo" />
+        <img src="/img/jeep.png" alt="Logo" class="logo" />
         <!-- <img src="../public/img/jeep.png" alt="Logo" class="logo" /> -->
 
         <!---- LOG IN START ---->
@@ -579,7 +579,8 @@
             console.log(user);
             showPopupMessage("Successfully logged in!", "success");
             setTimeout(function () {
-              window.location.href = "dashboard.html";
+              const userEmail = document.getElementById("login-email").value;
+              window.location.href = "user/map.html";
             }, 2000);
 
             // ...

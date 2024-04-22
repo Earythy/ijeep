@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iJeep</title>
+    <!-- ======= Styles ====== -->
+
+    <link rel="stylesheet" href="/dist/assets/css/style.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .navigation {
+            flex: 0 0 auto;
+        }
+
+        .main {
+            flex: 1 0 auto;
+            overflow-y: auto; /*enable scrolling for content*/
+            padding: 20px;
+        }
+
+        .logo {
+            max-width: 100%;
+        }
+
+        /*** for smaller screens ***/
+
+            .card {
+                text-align: center;
+                flex: 1 1 calc(25% - 20px);
+                padding: 20px;
+                border: 1px solid #ccc;
+                border-radius: 10px;
+                box-sizing: border-box;
+            }
+
+            .main-content { 
+                float: left; 
+                width: 75%; 
+                padding: 20px; 
+            }
+
+            .profile-photo { width: 100px; height: 100px; border-radius: 50%; }
+
+
+            @media screen and (max-width: 768px) {
+                .card {
+                    flex: 1 1 calc(50% - 20px);
+                }
+
+                .charts {
+                    flex: 1 1 100%;
+                }
+            }
+    </style>
+
+
+</head>
+
+<body>
+    <!-- =============== Navigation ================ -->
+    <div class="container">
+        <div class="navigation">
+            <ul>
+                <li>
+                    <a href="#">
+                        <span class="icon">
+                            <ion-icon name="bus"></ion-icon>
+                        </span>
+                        <span class="title">iJeep</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/dist/user/map.html">
+                        <span class="icon">
+                            <ion-icon name="map-outline"></ion-icon>
+                        </span>
+                        <span class="title">Map</span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a href="/dist/user/profile.html">
+                        <span class="icon">
+                            <ion-icon name="person-outline"></ion-icon>
+                        </span>
+                        <span class="title">Profile</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        <span class="icon">
+                            <ion-icon name="log-out-outline"></ion-icon>
+                        </span>
+                        <span class="title" id="logout">Sign Out</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- ========================= Main ==================== -->
+                <div class="main">
+                    <div class="topbar">
+                        <div class="toggle">
+                            <ion-icon name="menu-outline"></ion-icon>
+                        </div>
+                    </div>
+                    <h2 style="padding-left: 20px;">Account Details</h2>
+
+
+                    <div id="main-content">
+                        <div id="user-info" class="user-info" style="color: rgb(13, 10, 10); padding: 10px;">
+                            <div><strong>Name:</strong> <span id="user-name"></span></div>
+                            <div><strong>Location:</strong> <span id="user-location"></span></div>
+                            <div><strong>Email:</strong> <span id="user-email"></span></div>
+                            <div><img id="profile-photo" src="" alt="Profile Picture"></div>
+                        </div>
+                    </div>
+
+                    
+                </div>
+    </div>
+
+
+
+    <!-- =========== Scripts =========  -->
+    <script src="/dist/assets/js/main.js"></script>
+
+    <!-- ====== ionicons ======= -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-analytics.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, connectFirestoreEmulator, query, getDocs, getDoc, updateDoc, setDoc, doc, onSnapshot, deleteDoc, orderBy } from 'https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js';
+    
+        const firebaseConfig = {
+            apiKey: "AIzaSyDYPv8S_ljSo3tuMNoRYPI2tleWOqhqFMM",
+            authDomain: "commumeter.firebaseapp.com",
+            projectId: "commumeter",
+            storageBucket: "commumeter.appspot.com",
+            messagingSenderId: "1098693151947",
+            appId: "1:1098693151947:web:c0ce3c093e75ae8cbe1f4e",
+            measurementId: "G-71SRN52DX4"
+        };
+    
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const analytics = getAnalytics(app);
+        const auth = getAuth();
+        console.log(app);
+        let userId, userRef, classListRef, profileRef;
+    
+        // Update the onAuthStateChanged function to fetch user profile information
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                const email = user.email;
+                document.getElementById('user-info').textContent = `Logged in as ${email}`;
+                // Retrieve user profile information from Firestore
+                const userDocRef = doc(db, 'users', user.uid); // Assuming user profiles are stored in a collection named 'users'
+                getDoc(userDocRef).then((docSnapshot) => {
+                    if (docSnapshot.exists()) {
+                        const userData = docSnapshot.data();
+                        // Update HTML to display user profile information
+                        document.getElementById('user-name').textContent = userData.name;
+                        document.getElementById('user-location').textContent = userData.location;
+                        document.getElementById('user-email').textContent = email;
+                        // Display user profile picture (assuming it's stored in userData.profilePicture)
+                        if (userData.profilePicture) {
+                            document.getElementById('user-profile-pic').src = userData.profilePicture;
+                        }
+                    } else {
+                        console.log('User profile not found.');
+                    }
+                }).catch((error) => {
+                    console.error('Error fetching user profile:', error);
+                });
+            } else {
+                document.getElementById('user-info').textContent = 'Not logged in';
+                console.log('User is signed out');
+            }
+        });
+    
+    
+        document.getElementById("logout").addEventListener("click", function () {
+            signOut(auth).then(() => {
+                console.log('Sign-out successful.');
+                alert('Sign-out successful.');
+                window.location.href = "index.html";
+            }).catch((error) => {
+                console.log('Error signing out:', error);
+            });
+        });
+    
+    
+    </script>
+</body>
+
+</html>
