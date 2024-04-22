@@ -26,32 +26,18 @@
         .navigation {
             flex: 0 0 auto;
         }
+
         .main {
             flex: 1 0 auto;
-            overflow-y: auto; /* Enable scrolling for content */
+            overflow-y: auto;
             padding: 20px;
         }
-        .logo {
-            max-width: 100%;
+
+        h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
         }
-        .card {
-            text-align: center;
-            flex: 1 1 calc(25% - 20px);
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            box-sizing: border-box;
-        }
-        .main-content { 
-            float: left; 
-            width: 75%; 
-            padding: 20px; 
-        }
-        .profile-photo { 
-            width: 100px; 
-            height: 100px; 
-            border-radius: 50%; 
-        }
+
 
         @media screen and (max-width: 768px) {
             .card {
@@ -79,11 +65,97 @@
         }
 
         .main .user-details img {
-            width: 100px; /* fixed width */
-            height: 100px; /* fixed height */
-            border-radius: 50%; /* make it round */
-            margin-bottom: 10px; /* space below the image */
+            margin-bottom: 20px; 
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            object-fit: cover;
         }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 9999;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #888;
+        }
+
+        #display-name-input,
+        #profile-pic-input {
+            margin-bottom: 10px;
+        }
+
+        #save-button,
+        #edit-button {
+            padding: 10px 20px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #edit-profile {
+            display: none;
+            margin-top: 20px;
+        }
+
+        #edit-profile input[type="text"],
+        #edit-profile input[type="file"],
+        #edit-profile button {
+            margin-bottom: 10px;
+        }
+
+        #edit-profile button {
+            padding: 10px 20px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #edit-button {
+            padding: 5px 10px;
+            margin-top: 20px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
 
 
 
@@ -142,24 +214,49 @@
                     <ion-icon name="menu-outline"></ion-icon>
                 </div>
             </div>
-            <h2>Account Details</h2>
+            <h2 style="padding: 20px;">Account Details</h2>
             <div class="user-details">
                 <img id="user-profile-pic" src="#" alt="Profile Picture"/>
                 <div id="user-name">Display Name: </div>
-                <div id="user-email">Email:</div>
                 <div id="user-info">User info will display here.</div>
                 <button id="edit-button">Edit Profile</button>
-                <div id="edit-profile" style="display: none;">
-                    <input type="text" id="display-name-input" placeholder="Enter display name">
-                    <input type="file" id="profile-pic-input" accept="image/*">
-                    <button id="save-button">Save</button>
-                </div>
+
             </div>
             
         </div>
         
     </div>
+
+    <!-- Modal -->
+    <div id="edit-profile-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span> <!--- close button -->
+            <input type="text" id="display-name-input" placeholder="Enter display name">
+            <input type="file" id="profile-pic-input" accept="image/*">
+            <button id="save-button">Save</button>
+        </div>
+    </div>
     
+    <script>
+        // JavaScript to show and hide modal
+        var editButton = document.getElementById('edit-button');
+        var modal = document.getElementById('edit-profile-modal');
+        var closeButton = document.querySelector('#edit-profile-modal .close'); // Select the close button
+
+        var saveButton = document.getElementById('save-button');
+        
+        editButton.addEventListener('click', function() {
+            modal.style.display = 'block';
+        });
+        
+        closeButton.addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+
+        saveButton.addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+    </script>
 
 
 
@@ -193,179 +290,105 @@
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const analytics = getAnalytics(app);
         const auth = getAuth();
         const storage = getStorage(app); // Initialize Firebase Storage
         console.log(app);
-        let userId, userRef, classListRef, profileRef;
+        let userId;
 
 
-        // Update the onAuthStateChanged function to fetch user profile information
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                userId = user.uid;
-                const email = user.email;
-                document.getElementById('user-info').textContent = `Logged in as ${email}`;
-                const userDocRef = doc(db, 'users', user.uid);
-                getDoc(userDocRef).then((docSnapshot) => {
-                    if (docSnapshot.exists()) {
-                        const userData = docSnapshot.data();
-                        // Store user data in localStorage
-                        localStorage.setItem('users', JSON.stringify(userData));
-                        // Update HTML to display user profile information
-                        document.getElementById('user-name').textContent = userData.name;
-                        document.getElementById('user-email').textContent = email;
-                        if (userData.profilePicture) {
-                            document.getElementById('user-profile-pic').src = userData.profilePicture;
-                        }
-                    } else {
-                        console.log('User profile not found.');
-                    }
-                }).catch((error) => {
-                    console.error('Error fetching user profile:', error);
-                });
-            } else {
-                document.getElementById('user-info').textContent = 'Not logged in';
-                console.log('User is signed out');
-            }
-        });
-
-        // Handle save button click
-        document.getElementById("save-button").addEventListener("click", function () {
-            const displayName = document.getElementById("display-name-input").value;
-            const profilePicFile = document.getElementById("profile-pic-input").files[0];
-            document.getElementById("user-name").textContent = "Display Name: " + displayName;
-            
-            if (profilePicFile) {
-                const storageRef = ref(storage, "profile_pictures/" + userId);
-                uploadBytes(storageRef, profilePicFile).then((snapshot) => {
-                    getDownloadURL(snapshot.ref).then((url) => {
-                        const userDocRef = doc(db, 'users', userId);
-                        updateDoc(userDocRef, { profilePicture: url, name: displayName }).then(() => {
-                            console.log("Profile picture and display name updated successfully.");
-                            document.getElementById('user-profile-pic').src = url;
-                            // Update users object in localStorage
-                            let users = JSON.parse(localStorage.getItem('users'));
-                            users.profilePicture = url;
-                            users.name = displayName;
-                            localStorage.setItem('users', JSON.stringify(users));
-                        }).catch((error) => {
-                            console.error("Error updating profile picture and display name: ", error);
-                        });
-                    });
-                }).catch((error) => {
-                    console.error("Error uploading profile picture: ", error);
-                });
-            } else {
-                const userDocRef = doc(db, 'users', userId);
-                updateDoc(userDocRef, { name: displayName }).then(() => {
-                    console.log("Display name updated successfully.");
-                    // Update users object in localStorage
-                    let users = JSON.parse(localStorage.getItem('users'));
-                    users.name = displayName;
-                    localStorage.setItem('users', JSON.stringify(users));
-                }).catch((error) => {
-                    console.error("Error updating display name: ", error);
-                });
-            }
-
-            document.getElementById("edit-profile").style.display = "none";
-            document.getElementById("user-name").style.display = "block";
-        });
-
-        // Handle logout button click
-        document.getElementById("logout").addEventListener("click", function () {
-            signOut(auth).then(() => {
-                console.log('Sign-out successful.');
-                alert('Sign-out successful.');
-                // Clear users object from localStorage on logout
-                localStorage.removeItem('users');
-                window.location.href = "/dist/index.html";
-            }).catch((error) => {
-                console.log('Error signing out:', error);
-            });
-        });
-
-        // Load user data from localStorage on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            const users = JSON.parse(localStorage.getItem('users'));
-            if (users) {
-                document.getElementById('user-name').textContent = users.name;
-                document.getElementById('user-email').textContent = users.email;
-                if (users.profilePicture) {
-                    document.getElementById('user-profile-pic').src = users.profilePicture;
+// Update the onAuthStateChanged function to fetch user profile information
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        userId = user.uid;
+        const email = user.email;
+        document.getElementById('user-info').textContent = `Logged in as ${email}`;
+        const userDocRef = doc(db, 'users', user.uid);
+        getDoc(userDocRef).then((docSnapshot) => {
+            if (docSnapshot.exists()) {
+                const userData = docSnapshot.data();
+                // Update user profile information
+                document.getElementById('user-name').textContent = userData.name;
+                if (userData.profilePicture) {
+                    const profilePicURL = userData.profilePicture;
+                    console.log("Profile Picture URL:", profilePicURL);
+                    document.getElementById('user-profile-pic').src = profilePicURL;
                 }
+            } else {
+                console.log('User profile not found in user data.');
+                // Handle the case where the user's document doesn't exist
             }
+        }).catch((error) => {
+            console.error('Error fetching user profile:', error);
         });
+        // Enable edit button
+        document.getElementById("edit-button").disabled = false;
+    } else {
+        document.getElementById('user-info').textContent = 'Not logged in';
+        console.log('User is signed out');
+        // Disable edit button
+        document.getElementById("edit-button").disabled = true;
+    }
+});
 
+// Handle edit button click
+document.getElementById("edit-button").addEventListener("click", function () {
+    document.getElementById("edit-profile").style.display = "block";
+    document.getElementById("user-name").style.display = "none";
+});
 
-    
-    
-        document.getElementById("logout").addEventListener("click", function () {
-            signOut(auth).then(() => {
-                console.log('Sign-out successful.');
-                alert('Sign-out successful.');
-                window.location.href = "/dist/index.html";
-            }).catch((error) => {
-                console.log('Error signing out:', error);
-            });
-        });
-    
-    
-    </script>
+// Handle save button click
+document.getElementById("save-button").addEventListener("click", function () {
+    const displayName = document.getElementById("display-name-input").value;
+    const profilePicFile = document.getElementById("profile-pic-input").files[0];
+    document.getElementById("user-name").textContent = "Display Name: " + displayName;
 
-    <script>
-        document.getElementById("edit-button").addEventListener("click", function () {
-            document.getElementById("edit-profile").style.display = "block";
-            document.getElementById("user-name").style.display = "none";
-        });
-        
-        document.getElementById("save-button").addEventListener("click", function () {
-            const displayName = document.getElementById("display-name-input").value;
-            const profilePicFile = document.getElementById("profile-pic-input").files[0];
-        
-            // Update display name
-            document.getElementById("user-name").textContent = "Display Name: " + displayName;
-        
-            // If a new profile picture is uploaded
-            if (profilePicFile) {
-                // Handle profile picture upload (upload to storage, get URL, etc.)
-                // Once uploaded, update the user profile picture URL in Firestore
-                // Example:
-                const storageRef = storage.ref().child("profile_pictures/" + userId); // Assuming userId is defined
-                storageRef.put(profilePicFile).then(function(snapshot) {
-                    storageRef.getDownloadURL().then(function(url) {
-                        // Update user profile picture URL in Firestore
-                        const userDocRef = doc(db, 'users', userId);
-                        updateDoc(userDocRef, { profilePicture: url }).then(function() {
-                            console.log("Profile picture updated successfully.");
-                            // Update profile picture in UI
-                            document.getElementById('user-profile-pic').src = url;
-                        }).catch(function(error) {
-                            console.error("Error updating profile picture: ", error);
-                        });
-                    });
+    // Handle profile picture upload if a new one is selected
+    if (profilePicFile) {
+        const storageRef = ref(storage, "profile_pictures/" + userId);
+        uploadBytes(storageRef, profilePicFile).then((snapshot) => {
+            getDownloadURL(snapshot.ref).then((url) => {
+                const userDocRef = doc(db, 'users', userId);
+                updateDoc(userDocRef, { profilePicture: url, name: displayName }).then(() => {
+                    console.log("Profile picture and display name updated successfully.");
+                    document.getElementById('user-profile-pic').src = url;
+                    // Update users object in localStorage if needed
+                }).catch((error) => {
+                    console.error("Error updating profile picture and display name: ", error);
                 });
-            }
-        
-            // Update display name in Firestore
-            const userDocRef = doc(db, 'users', userId);
-            updateDoc(userDocRef, { name: displayName }).then(function() {
-                console.log("Display name updated successfully.");
-            }).catch(function(error) {
-                console.error("Error updating display name: ", error);
             });
-        
-            // Hide edit profile section
-            document.getElementById("edit-profile").style.display = "none";
-            document.getElementById("user-name").style.display = "block";
+        }).catch((error) => {
+            console.error("Error uploading profile picture: ", error);
+            alert("Error uploading profile picture: " + error.message);
         });
-        
+    } else {
+        // If no new profile picture, update display name only
+        const userDocRef = doc(db, 'users', userId);
+        updateDoc(userDocRef, { name: displayName }).then(() => {
+            console.log("Display name updated successfully.");
+            // Update users object in localStorage if needed
+        }).catch((error) => {
+            console.error("Error updating display name: ", error);
+        });
+    }
+
+    // Hide the edit profile section
+    document.getElementById("edit-profile").style.display = "none";
+    document.getElementById("user-name").style.display = "block";
+});
+
+document.getElementById("logout").addEventListener("click", function () {
+    signOut(auth).then(() => {
+        console.log('Sign-out successful.');
+        alert('Sign-out successful.');
+        window.location.href = "/dist/index.html";
+    }).catch((error) => {
+        console.log('Error signing out:', error);
+        alert('Error signing out: ' + error.message);
+    });
+});
+    
+    
     </script>
-
-
-
-
 
 </body>
 
