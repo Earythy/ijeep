@@ -158,6 +158,8 @@
                                 <td>Barangay</td>
                                 <td>Year</td>
                                 <td>Population</td>
+                                <td>Area</td>
+                                <td>Density</td>
                                 <td>Action</td>
                             </tr>
                         </thead>
@@ -176,6 +178,10 @@
                             <select type="text" class="selectInput" id="yearEdit" name="yearEdit"></select><br>
                             <label for="populationEdit">Population:</label>
                             <input type="numberEdit" id="populationEdit" placeholder="Population" name="populationEdit"><br>
+                            <label for="areaEdit">Area:</label>
+                            <input type="number" id="areaEdit" placeholder="Area" name="areaEdit" required><br>
+                            <label for="densityEdit">Density:</label>
+                            <input type="number" id="densityEdit" placeholder="Density" name="densityEdit" readonly><br>
                             <div class="btn">
                                 <input type="button" id="cancelEdit" class="btn btn-bad" value="Cancel">
                                 <input type="button" id="update" class="btn btn-good" value="Update">
@@ -192,7 +198,9 @@
                             <label for="yearAdd">Year:</label>
                             <select type="text" class="selectInput" id="yearAdd" name="yearAdd"></select><br>
                             <label for="populationAdd">Population:</label>
-                            <input type="numberAdd" id="populationAdd" placeholder="Population" name="populationAdd" required><br>
+                            <input type="number" id="populationAdd" placeholder="Population" name="populationAdd" required><br>
+                            <label for="areaAdd">Area:</label>
+                            <input type="number" id="areaAdd" placeholder="Area" name="areaAdd" required><br>
                             <div class="btn">
                                 <input type="button" id="cancelAdd" class="btn btn-bad" value="Cancel">
                                 <input type="button" id="save" class="btn btn-good" value="Save">
@@ -307,13 +315,28 @@
             try {
                 var brgy_name = document.getElementById("brgyAdd").value;
                 var year = document.getElementById("yearAdd").value;
-                var population = document.getElementById("populationAdd").value;
+                var population = parseFloat($('#populationAdd').val());
+                var area = parseFloat($('#areaAdd').val());
+                var density;
+
+                if (!isNaN(population) && !isNaN(area) && area !== 0) {
+                    density = (population / area).toFixed(2);
+                    console.log('density:', density);
+                } else {
+                    if (isNaN(population)) {
+                        console.error("Invalid population value");
+                    }
+                    if (isNaN(area) || area === 0) {
+                    }
+                }
                 // Add a new document with a generated id.
                 if(population != ""){
                     const docRef = await addDoc(collection(db, "Mobility"), {
                         brgy_name: brgy_name,
                         year: year,
-                        population: population
+                        population: population,
+                        area: area,
+                        density: density
                     });
 
                     Swal.fire({
@@ -421,6 +444,8 @@
                         var brgy_name = mobilityListData.brgy_name;
                         var year = mobilityListData.year;
                         var population = mobilityListData.population;
+                        var area = mobilityListData.area;
+                        var density = mobilityListData.density;
 
                         dataTable.row.add([
                             id,
@@ -428,6 +453,8 @@
                             brgy_name,
                             year,
                             population,
+                            area,
+                            density,
                             '<center><button type="button" class="btn btn-good btn-edit" style="margin-right: 7px !important;">Edit</button><button type="button" class="btn btn-bad btn-delete">Delete</button></center>'
                         ]).draw(false);
                         count++;
@@ -453,8 +480,12 @@
         var brgy_name = row.find('td:nth-child(3)').text();
         var yearValue = row.find('td:nth-child(4)').text();
         var population = row.find('td:nth-child(5)').text();
+        var area = row.find('td:nth-child(6)').text();
+        var density = row.find('td:nth-child(7)').text();
 
         $('#populationEdit').val(population);
+        $('#areaEdit').val(area);
+        $('#densityEdit').val(density);
 
         var editYear = document.getElementById("yearEdit");
         var yearValueInt = parseInt(yearValue, 10);
@@ -485,8 +516,20 @@
         var id = $(this).data('id');
         var brgy_name = $('#brgyEdit').val();
         var year = $('#yearEdit').val();
-        var population = $('#populationEdit').val();
+        var population = parseFloat($('#populationEdit').val());
+        var area = parseFloat($('#areaEdit').val());
+        var density;
 
+        if (!isNaN(population) && !isNaN(area) && area !== 0) {
+            density = (population / area).toFixed(2);
+            console.log('density:', density);
+        } else {
+            if (isNaN(population)) {
+                console.error("Invalid population value");
+            }
+            if (isNaN(area) || area === 0) {
+            }
+        }
         try {
             const querySnapshot = await getDocs(collection(db, "Mobility"));
 
@@ -498,7 +541,9 @@
                             updateDoc(doc.ref, { 
                                 brgy_name: brgy_name,
                                 year: year,
-                                population: population
+                                population: population,
+                                area: area,
+                                density: density
                             });
                             console.log("Document successfully updated!");
                             Swal.fire({

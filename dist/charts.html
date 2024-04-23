@@ -108,31 +108,26 @@
             <!-- ================ Charts ================= -->
             <h2 style="padding-left: 20px;">Visualizations</h2>
             <div class="dashchartsBx" style="display:block">
+
                 <div class="charts">
-                    <h2 class="chart-title">Butang lang title here</h2>
-                    <div style="height:300px; width:400px;">
-                        <canvas id="lineChart"></canvas>
+                    <div class="btn" style="display: flex; align-items: center; width: 100%;">
+                        <h2 class="chart-title">Barangay Population</h2>
+                        <select class="btn btn-good" id="brgy_filter" style="margin-left: auto;">
+                        </select>
+                    </div>
+                    <div>
+                        <canvas id="areaChart" height='300' width='400'></canvas>
                     </div>
                 </div><br>
 
                 <div class="charts">
-                    <h2 class="chart-title">Butang lang title here</h2>
-                    <div style="height:300px; width:400px;">
+                    <div class="btn" style="display: flex; align-items: center; width: 100%;">
+                        <h2 class="chart-title">Yearly Population</h2>
+                        <select class="btn btn-good" id="year_filter" style="margin-left: auto;">
+                        </select>
+                    </div>
+                    <div id="content" style="height:400px; width:400px;">
                         <canvas id="pieChart"></canvas>
-                    </div>
-                </div><br>
-
-                <div class="charts">
-                    <h2 class="chart-title">Butang lang title here</h2>
-                    <div style="height:300px; width:400px;">
-                        <canvas id="barChart"></canvas>
-                    </div>
-                </div><br>
-
-                <div class="charts">
-                    <h2 class="chart-title">Butang lang title here</h2>
-                    <div style="height:300px; width:400px;">
-                        <canvas id="areaChart"></canvas>
                     </div>
                 </div><br>
             </div>
@@ -147,208 +142,11 @@
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </body>
 
-<script>
-    $(document).ready(function () {
-        $('#myTable').DataTable({
-            "autoWidth": false
-        });
-
-        //change the scripts here to retreive the data from db
-
-        //Pie Chart Script
-        // extracting data from table
-        var locationData = [];
-        var populationData = [];
-
-        $("#myTable tbody tr").each(function () {
-            var location = $(this).find("td:nth-child(2)").text();
-            var population = $(this).find("td:nth-child(5)").text();
-
-            locationData.push(location);
-            populationData.push(population);
-        });
-
-        // creating the pie chart
-        var ctx = document.getElementById('pieChart').getContext('2d');
-
-        var chartData = {
-            datasets: [{
-                data: populationData, // population data as numbers for the pie slices
-                backgroundColor: ['#51f55c', '#f551c5', '#eff551', '#5577f5'], // colors for each location ----- add lang additional color
-                borderColor: '#361d32',
-                borderWidth: 1
-            }],
-            labels: locationData // location names as labels for the pie slices
-        };
-
-        new Chart(ctx, {
-            type: 'pie',
-            data: chartData,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                title: {
-                    display: true,
-                    text: 'Location Distribution'
-                }
-            }
-        });
-
-
-        //Line Chart Script
-        // setting the background colors for each location
-        var backgroundColors = ['#51f55c', '#f551c5', '#eff551', '#5577f5'];
-
-        // setting the border color for each location
-        var borderColor = '#361d32'; // color for the line
-
-
-        // creating the line chart
-        var ctx = document.getElementById('lineChart').getContext('2d');
-        var chartData = {
-            labels: locationData, // location names as x-axis labels
-            datasets: [{
-                data: populationData, // population data as y-axis values
-                backgroundColor: backgroundColors[0], // background color for the line
-                borderColor: borderColor, // color for the line
-                borderWidth: 1, // line width in pixels
-                pointRadius: 3, // radius of data points
-                fill: false // disable fill under the line
-            }]
-        };
-
-        new Chart(ctx, {
-            type: 'line',
-            data: chartData,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                title: {
-                    display: true,
-                    text: 'Location Population Trend'
-                },
-                scales: {
-                    x: {
-                        display: true,
-                        title: {
-                            display: true,
-                            text: 'Location'
-                        }
-                    },
-                    y: {
-                        display: true,
-                        title: {
-                            display: true,
-                            text: 'Population'
-                        }
-                    }
-                }
-            }
-        });
-
-        //Bar Chart Script
-        // creating the Bar chart
-        var ctx = document.getElementById('barChart').getContext('2d');
-        var chartData = {
-            labels: locationData, // location names as x-axis labels
-            datasets: [{
-                data: populationData, // population data as y-axis values
-                backgroundColor: backgroundColors[0], // background color for the line
-                borderColor: borderColor, // color for the line
-                borderWidth: 1, // line width in pixels
-                pointRadius: 3, // radius of data points
-                fill: false // disable fill under the line
-            }]
-        };
-
-        new Chart(ctx, {
-            type: 'bar',
-            data: chartData,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                title: {
-                    display: true,
-                    text: 'Location Population Trend'
-                },
-                scales: {
-                    x: {
-                        display: true,
-                        title: {
-                            display: true,
-                            text: 'Location'
-                        }
-                    },
-                    y: {
-                        display: true,
-                        title: {
-                            display: true,
-                            text: 'Population'
-                        }
-                    }
-                }
-            }
-        });
-
-        //Area Chart Script
-        var ctx = document.getElementById('areaChart').getContext('2d');
-        var chartData = {
-            labels: locationData, // location names as x-axis labels
-            datasets: [{
-                data: populationData, // population data as y-axis values
-                backgroundColor: 'rgba(0,123,255,0.5)', // background color for the line and the fill
-                borderColor: 'rgba(0,123,255,1)', // color for the line
-                borderWidth: 2, // line width in pixels
-                pointRadius: 3, // radius of data points
-                fill: true // enable fill under the line
-            }]
-        };
-
-        new Chart(ctx, {
-            type: 'line',
-            data: chartData,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                title: {
-                    display: true,
-                    text: 'Location Population Trend'
-                },
-                scales: {
-                    x: {
-                        display: true,
-                        title: {
-                            display: true,
-                            text: 'Location'
-                        }
-                    },
-                    y: {
-                        display: true,
-                        title: {
-                            display: true,
-                            text: 'Population'
-                        }
-                    }
-                }
-            }
-        });
-
-
-    });
-
-
-
-
-
-
-
-</script>
-
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-analytics.js";
     import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
-    import { getFirestore, collection, addDoc, connectFirestoreEmulator, query, getDocs, getDoc, updateDoc, setDoc, doc, onSnapshot, deleteDoc, orderBy } from 'https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js';
+    import { getFirestore, collection, addDoc, connectFirestoreEmulator, query, getDocs, getDoc, updateDoc, setDoc, doc, onSnapshot, deleteDoc, orderBy, where } from 'https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js';
 
     const firebaseConfig = {
       apiKey: "AIzaSyDYPv8S_ljSo3tuMNoRYPI2tleWOqhqFMM",
@@ -367,6 +165,188 @@
     const auth = getAuth();
     console.log(app);
     let userId, userRef, classListRef, profileRef;
+
+    populateBarangaySelect('Acmac', 'brgy_filter')
+
+    function populateBarangaySelect(selectedBrgy, selectId) {
+        getDocs(query(collection(db, "Barangay"), orderBy("brgy_name")))
+            .then((barangayListSnapshot) => {
+                var selectElement = document.getElementById(selectId);
+                selectElement.innerHTML = '';
+
+                if(selectedBrgy === 'All Barangays'){
+                    var option1 = document.createElement("option");
+                    option1.text = 'All Barangays';
+                    selectElement.appendChild(option1);
+                }
+
+                barangayListSnapshot.forEach((barangayListDoc) => {
+                    var barangayListData = barangayListDoc.data();
+                    var brgy_name = barangayListData.brgy_name;
+
+                    var option = document.createElement("option");
+                    option.value = brgy_name;
+                    option.text = brgy_name;
+
+                    if (brgy_name === selectedBrgy) {
+                        option.selected = true;
+                    }
+
+                    selectElement.appendChild(option);
+                });
+
+                showArea();
+            })
+            .catch((error) => {
+                console.log("Error fetching documents: ", error);
+            });
+    }
+
+    document.getElementById("brgy_filter").addEventListener("change", async function() {
+        showPie();
+        showArea();
+    });
+
+    function showArea() {
+        var queryRef = query(collection(db, "Mobility"), where("brgy_name", "==", document.getElementById("brgy_filter").value));
+        getDocs(queryRef)
+            .then((mobilityListSnapshot) => {
+                var years = [];
+                var populations = [];
+
+                mobilityListSnapshot.forEach((mobilityListDoc) => {
+                    var id = mobilityListDoc.id;
+                    var mobilityListData = mobilityListDoc.data();
+                    var year = mobilityListData.year;
+                    var population = mobilityListData.population;
+
+                    years.push(year);
+                    populations.push(population);
+                })
+
+                // Get the canvas element
+                var ctx = document.getElementById('areaChart').getContext('2d');
+
+                // Destroy the existing chart instance (if it exists)
+                if(window.myChart) {
+                    window.myChart.destroy();
+                }
+
+                // Create a new chart instance with updated data
+                window.myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: years,
+                        datasets: [{
+                            label: 'Population',
+                            data: populations,
+                            backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            })
+            .catch((error) => {
+                console.log("Error fetching documents: ", error);
+            });
+    }
+
+    var currentYear = new Date().getFullYear();
+    var filterYear = document.getElementById("year_filter");
+
+    for (var year = 2000; year <= 2100; year++) {
+        var option = document.createElement("option");
+        option.text = year;
+        option.value = year;
+        if (year === currentYear) {
+            option.selected = true;
+        }
+        filterYear.add(option);
+    }
+
+    showPie();
+    document.getElementById("year_filter").addEventListener("change", async function() {
+        showPie();
+        showArea();
+        $('.pcontent').empty();
+    });
+    function showPie() {
+        console.log("showPie function called"); 
+        var queryRef = query(collection(db, "Mobility"), where("year", "==", document.getElementById("year_filter").value));
+        console.log(document.getElementById("year_filter").value);
+        getDocs(queryRef)
+            .then((mobilityYearSnapshot) => {
+                console.log(mobilityYearSnapshot);
+                var barangays = [];
+                var populations = [];
+
+                mobilityYearSnapshot.forEach((mobilityYearDoc) => {
+                    var id = mobilityYearDoc.id;
+                    var mobilityYearData = mobilityYearDoc.data();
+                    var barangay = mobilityYearData.brgy_name; // Assuming you have a field named "barangay" in your document
+                    var population = mobilityYearData.population;
+
+                    // Add barangay name and population to their respective arrays
+                    barangays.push(barangay);
+                    populations.push(population);
+                });
+
+                console.log('Length of barangays:', barangays.length);
+                if(barangays.length > 0){
+                    $('.pcontent').empty();
+                    // Get the canvas element
+                    var ptx = document.getElementById('pieChart').getContext('2d');
+
+                    // Destroy the existing chart instance (if it exists)
+                    if(window.pieChart instanceof Chart) {
+                        window.pieChart.destroy();
+                    }
+
+                    // Create a new chart instance with updated data
+                    window.pieChart = new Chart(ptx, {
+                        type: 'pie',
+                        data: {
+                            labels: barangays, // Use barangay names as labels
+                            datasets: [{
+                                label: 'Population',
+                                data: populations,
+                                backgroundColor: ['#488f31', '#679f51', '#83af70', '#9fc08f', '#bad0af', '#d5e0cf', '#f1f1f1', '#f1d4d4', '#f0b8b8', '#ec9c9d', '#e67f83', '#de6069', '#de425b'],
+                                borderWidth: 1,
+                                fill: true
+                            }]
+                        },
+                        options: {
+                        plugins: {
+                            legend: {
+                                position: 'right', // Position legend on the right side
+                            }
+                        }
+                    }
+                    });
+                
+                } else {
+                    console.log('no data for this year');
+                    $('.pcontent').empty();
+                    // Destroy the existing chart instance (if it exists)
+                    if(window.pieChart instanceof Chart) {
+                        window.pieChart.destroy();
+                    }
+                    $('#content').append('<center><p class="pcontent">No Data Available For This Year</p></center>');
+                }
+                })
+            .catch((error) => {
+                console.log("Error fetching documents: ", error);
+            });
+    }
 
     document.getElementById("logout").addEventListener("click", function () {
         signOut(auth).then(() => {

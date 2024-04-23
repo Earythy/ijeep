@@ -263,44 +263,59 @@
     console.log(app);
     let userId, userRef, classListRef, profileRef;
 
-    // Add a new document with a generated id.
     document.getElementById("save").addEventListener("click", async function() {
-        try {
-            var brgy_name = document.getElementById("name").value;
-            if(brgy_name != ""){
-                // Add a new document with a generated id.
+    try {
+        var brgy_name = document.getElementById("name").value;
+        if (brgy_name != "") {
+            // Check if barangay exists in the database
+            const brgyQuery = query(collection(db, "Barangay"), where("brgy_name", "==", brgy_name));
+            const brgyQuerySnapshot = await getDocs(brgyQuery);
+
+            if (!brgyQuerySnapshot.empty) {
+                // If the barangay already exists, show error message
+                Swal.fire({
+                    title: 'Invalid!',
+                    text: 'Barangay already exists.',
+                    icon: 'error',
+                    confirmButtonText: 'Try Again'
+                });
+            } else {
+                // If the barangay doesn't exist, add it to the database
                 const docRef = await addDoc(collection(db, "Barangay"), {
-                    brgy_name: document.getElementById("name").value
+                    brgy_name: brgy_name
                 });
 
                 Swal.fire({
-                position: "center",
-                icon: "success",
-                title: "Saved Successfully",
-                showConfirmButton: false,
-                timer: 1500
+                    position: "center",
+                    icon: "success",
+                    title: "Saved Successfully",
+                    showConfirmButton: false,
+                    timer: 1500
                 });
-                brgy_name = document.getElementById("name").value = "";
-            } else {
-                Swal.fire({
+
+                // Clear input field after successful save
+                document.getElementById("name").value = "";
+            }
+        } else {
+            // If barangay name is empty, show error message
+            Swal.fire({
                 title: 'Invalid!',
                 text: 'Barangay Name Must Not Be Empty',
                 icon: 'error',
                 confirmButtonText: 'Try Again'
             });
-            }
-            
-        } catch (error) {
-            console.log("error:", error);
-            // If an error occurs, show error SweetAlert with a "Try Again" option
-            Swal.fire({
-                title: 'Invalid!',
-                text: 'Oops, that did not work. Please try again.',
-                icon: 'error',
-                confirmButtonText: 'Try Again'
-            });
         }
-    });
+    } catch (error) {
+        console.log("error:", error);
+        // If an error occurs, show error message
+        Swal.fire({
+            title: 'Invalid!',
+            text: 'Oops, that did not work. Please try again.',
+            icon: 'error',
+            confirmButtonText: 'Try Again'
+        });
+    }
+});
 
     $('#myTable').DataTable({
                 "autoWidth": false

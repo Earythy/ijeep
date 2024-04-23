@@ -154,10 +154,9 @@
                             </select><br>
                             <!-- Longitude input fields -->
                             <div id="editFields" style="text-align: center;"></div>
-                            
                             <div class="btn">
-                                <input type="button" id="cancelEdit" class="btn btn-bad" value="Cancel">
-                                <input type="button" id="update" class="btn btn-good" value="Update">
+                                <button type="button" id="cancelEdit" class="btn btn-bad">Cancel</button>
+                                <button type="button" id="update" class="btn btn-good">Update</button>
                             </div>
                         </form>
                     </div>
@@ -170,16 +169,16 @@
                             <select type="text" class="selectInput" id="brgyAdd" name="brgyAdd">
                                 <option selected>Select a Barangay</option>
                             </select><br>
-                            <label for="latAdd1">Latitude:</label>
-                            <input type="number" step="any" name="latitude" placeholder="Latitude" id="latAdd1" class="additional-lat" required><br>
-                            <label for="longAdd">Longitude:</label>
-                            <input type="number" step="any" name="longitude" placeholder="Longitude" id="longAdd1" class="additional-long" required><br>
+                            <label for="latAdd1">Latitude 1:</label>
+                            <input type="number" step="any" name="latitude" placeholder="Latitude 1" id="latAdd1" class="additional-lat" required><br>
+                            <label for="longAdd">Longitude 1:</label>
+                            <input type="number" step="any" name="longitude" placeholder="Longitude 1" id="longAdd1" class="additional-long" required><br>
                             <div id="additionalFields" style="text-align: center;"></div>
                             <button type="button" class="btn btn-good btn-add" class="icon" id="addField" style="min-width: 66%;"><ion-icon name="add-circle"
                                 style="padding-right: 5px; text-align: center;"></ion-icon>Add Coordinates</button><br>
                             <div class="btn">
-                                <input type="button" id="cancelAdd" class="btn btn-bad" value="Cancel">
-                                <input type="button" id="save" class="btn btn-good" value="Save">
+                                <button type="button" id="cancelAdd" class="btn btn-bad">Cancel</button>
+                                <button type="button" id="save" class="btn btn-good">Save</button>
                             </div>
                         </form>
                     </div>
@@ -222,6 +221,11 @@
         $('#editModal').hide();
     });
 
+    $('#delCancel').on('click', function () {
+        // Hide the modal
+        $('#deleteModal').hide();
+    });
+
     //Delete a record Modal Script
     $(document).on('click', '.btn-delete', function () {
         // Show the modal
@@ -232,20 +236,39 @@
     });
 
     $('#addField').on('click', function () {
-        // Select the container where you want to append the additional latitude and longitude fields
-        var additionalFieldsContainer = $('#additionalFields');
+    var additionalFieldsContainer = $('#additionalFields');
 
-        // Get the number of existing additional latitude and longitude fields
-    var numAdditionalFields = $('.additional-lat').length + 1; // Initialize with 2 instead of 1
+    var numAdditionalFields = $('.additional-field-container').length + 2;
 
-    // Create new input fields for latitude and longitude with updated IDs
+    var fieldContainer = $(`<div class="additional-field-container" id="additionalFieldContainer${numAdditionalFields}"></div>`);
+
     var latitudeInput = $(`<label for="latAdd${numAdditionalFields}">Latitude ${numAdditionalFields}:</label><br><input type="number" step="any" name="latitude" placeholder="Latitude ${numAdditionalFields}" id="latAdd${numAdditionalFields}" class="additional-lat"><br><br>`);
     var longitudeInput = $(`<label for="longAdd${numAdditionalFields}">Longitude ${numAdditionalFields}:</label><br><input type="number" step="any" name="longitude" placeholder="Longitude ${numAdditionalFields}" id="longAdd${numAdditionalFields}" class="additional-long"><br><br>`);
 
-    // Append the new input fields to the container
-    additionalFieldsContainer.append(latitudeInput);
-    additionalFieldsContainer.append(longitudeInput);
+    fieldContainer.append(`<button class="removeField" data-target="additionalFieldContainer${numAdditionalFields}" style="    background: none; border: none; position: absolute;right: 18%;" ><ion-icon name="remove-circle-outline"></ion-icon></button>`);
+    fieldContainer.append(latitudeInput);
+    fieldContainer.append(longitudeInput);
+
+    additionalFieldsContainer.append(fieldContainer);
+
+    var barangayValue = $('#name').val();
+    if (barangayValue) {
+        $('#name').val(barangayValue);
+    }
+});
+
+$('#additionalFields').on('click', '.removeField', function () {
+    var targetId = $(this).data('target');
+    $('#' + targetId).remove();
+    $('.additional-field-container').each(function(index) {
+        var fieldNum = index + 2;
+        $(this).find('label').eq(0).text(`Latitude ${fieldNum}:`);
+        $(this).find('input').eq(0).attr('placeholder', `Latitude ${fieldNum}:`);
+        $(this).find('label').eq(1).text(`Longitude ${fieldNum}:`);
+        $(this).find('input').eq(1).attr('placeholder', `Longitude ${fieldNum}:`);
+
     });
+});
 
 });
 
@@ -325,23 +348,44 @@
 
             // Check if any of the latitude or longitude fields are empty
             if (brgy_name != "" && latitudeArray.every(Boolean) && longitudeArray.every(Boolean)) {
-                console.log(brgy_name, latitudeArray, longitudeArray);
-                // Add a new document with a generated id.
-                const docRef = await addDoc(collection(db, "Coordinates"), {
-                    brgy_name: brgy_name,
-                    latitude: latitudeArray,
-                    longitude: longitudeArray,
-                });
 
-                Swal.fire({
-                    position: "center",
-                    icon: "success",
-                    title: "Saved Successfully",
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-                $('#addModal').hide();
-                $('#editForm')[0].reset();
+                const brgyQuery = query(collection(db, "Coordinates"), where("brgy_name", "==", brgy_name));
+                const brgyQuerySnapshot = await getDocs(brgyQuery);
+
+                if (!brgyQuerySnapshot.empty) {
+                    // If the barangay already exists, show error message
+                    Swal.fire({
+                        title: 'Invalid!',
+                        text: 'Coordinates for this Barangay already exists.',
+                        icon: 'error',
+                        confirmButtonText: 'Try Again'
+                    });
+                } else {
+                    console.log(brgy_name, latitudeArray, longitudeArray);
+                    // Add a new document with a generated id.
+                    const docRef = await addDoc(collection(db, "Coordinates"), {
+                        brgy_name: brgy_name,
+                        latitude: latitudeArray,
+                        longitude: longitudeArray,
+                    });
+
+                    Swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "Saved Successfully",
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(() => {
+                        // Select all input elements
+                        const inputFields = document.querySelectorAll('input');
+
+                        // Loop through each input element and clear its value
+                        inputFields.forEach(input => {
+                            input.value = "";
+                        });
+                        $('#addModal').hide();
+                    });
+                }
             } else {
                 Swal.fire({
                     title: 'Error!',
@@ -417,15 +461,14 @@
     var row = $(this).closest('tr');
     var id = row.find('td:nth-child(1)').text();
     var brgy_name = row.find('td:nth-child(3)').text();
-    var latitudeText = row.find('td:nth-child(4)').html(); // Use .html() instead of .text() to get the formatted HTML content
-    var longitudeText = row.find('td:nth-child(5)').html(); // Use .html() instead of .text() to get the formatted HTML content
+    var latitudeText = row.find('td:nth-child(4)').html();
+    var longitudeText = row.find('td:nth-child(5)').html(); 
 
     // Populate the barangay select dropdown
     populateBarangaySelect(brgy_name, 'brgyEdit');
 
     // Clear existing latitude and longitude input fields
-    $('#editLatFields').empty();
-    $('#editLongFields').empty();
+    $('#editFields').empty();
 
     // Split latitude and longitude text by <div> and remove empty strings
     var latitudeArray = latitudeText.split('<div>').filter(Boolean);
@@ -433,25 +476,51 @@
 
     // Iterate over latitude and longitude arrays simultaneously
     for (var i = 0; i < Math.max(latitudeArray.length, longitudeArray.length); i++) {
+        var fieldContainer = $('<div class="edit-field-container" id="editFieldContainer' + (i + 1) + '"></div>');
+        fieldContainer.append('<button type="button" class="removeField" data-target="editFieldContainer' + (i + 1) + '" style="background: none; border: none; position: absolute;right: 18%;" ><ion-icon name="remove-circle-outline"></ion-icon></button>');
         if (latitudeArray[i]) {
-            console.log(latitudeArray[i]);
             var lat = latitudeArray[i].replace(/<\/?div>/g, '');
             var inputField = $('<label for="latEdit' + (i + 1) + '">Latitude ' + (i + 1) + ':</label><br><input type="number" step="any" name="latitude" placeholder="Latitude ' + (i + 1) + '" id="latEdit' + (i + 1) + '" class="additional-lat" value="' + lat.trim() + '"><br><br>');
-            $('#editFields').append(inputField);
-            
+            fieldContainer.append(inputField);
         }
         if (longitudeArray[i]) {
-            console.log(longitudeArray[i]);
             var long = longitudeArray[i].replace(/<\/?div>/g, '');
-            var inputField = $('<input type="text" name="longitude" placeholder="Longitude ' + (i + 1) + '" id="longEdit' + (i + 1) + '" class="edit-long" value="' + long.trim() + '">');
             var inputField = $('<label for="longEdit' + (i + 1) + '">Longitude ' + (i + 1) + ':</label><br><input type="number" step="any" name="longitude" placeholder="Longitude ' + (i + 1) + '" id="longEdit' + (i + 1) + '" class="additional-long" value="' + long.trim() + '"><br><br>');
-            $('#editFields').append(inputField);
+            fieldContainer.append(inputField);
         }
+        
+        $('#editFields').append(fieldContainer);
     }
+
+    // Add button to add coordinates input field
+    $('#editFields').append('<button type="button" class="btn btn-good btn-add" id="addEditField" style="min-width: 66%;"><ion-icon name="add-circle" style="padding-right: 5px; text-align: center;"></ion-icon>Add Coordinates</button>');
 
     $('#editModal').show();
     $('#update').data('id', id);
 });
+
+    // Event delegation for dynamically created remove buttons
+    $(document).on('click', '.removeField', function () {
+        var targetId = $(this).data('target');
+        $('#' + targetId).remove();
+        $('.edit-field-container').each(function(index) {
+            var fieldNum = index + 1;
+            $(this).find('label').eq(0).text(`Latitude ${fieldNum}:`);
+            $(this).find('input').eq(0).attr('placeholder', `Latitude ${fieldNum}:`);
+            $(this).find('label').eq(1).text(`Longitude ${fieldNum}:`);
+            $(this).find('input').eq(1).attr('placeholder', `Longitude ${fieldNum}:`);
+        });
+    });
+
+    // Event handler to add coordinates input fields
+    $(document).on('click', '#addEditField', function () {
+        var fieldNum = $('.edit-field-container').length + 1;
+        var fieldContainer = $('<div class="edit-field-container" id="editFieldContainer' + fieldNum + '"></div>');
+        fieldContainer.append('<button type="button" class="removeField" data-target="editFieldContainer' + fieldNum + '" style="background: none; border: none; position: absolute;right: 18%;" ><ion-icon name="remove-circle-outline"></ion-icon></button>');
+        fieldContainer.append('<label for="latEdit' + fieldNum + '">Latitude ' + fieldNum + ':</label><br><input type="number" step="any" name="latitude" placeholder="Latitude ' + fieldNum + '" id="latEdit' + fieldNum + '" class="additional-lat"><br><br>');
+        fieldContainer.append('<label for="longEdit' + fieldNum + '">Longitude ' + fieldNum + ':</label><br><input type="number" step="any" name="longitude" placeholder="Longitude ' + fieldNum + '" id="longEdit' + fieldNum + '" class="additional-long"><br><br>');
+        $('#addEditField').before(fieldContainer);
+    });
 
     $('#update').on('click', async function (event) {
         event.preventDefault();
@@ -463,11 +532,17 @@
 
         // Loop through each latitude and longitude input field
         $('.additional-lat').each(function() {
-            latitudeArray.push($(this).val()); // Push the value of each latitude input field to the latitudeArray
+            var value = $(this).val().trim();
+            if (value !== '') {
+                latitudeArray.push(value);
+            }
         });
 
         $('.additional-long').each(function() {
-            longitudeArray.push($(this).val()); // Push the value of each longitude input field to the longitudeArray
+            var value = $(this).val().trim(); 
+            if (value !== '') {
+                longitudeArray.push(value); 
+            }
         });
 
         try {
