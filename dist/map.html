@@ -47,7 +47,9 @@
     margin-right: 8px;
     opacity: 0.7;
 }
-
+.leaflet-bar.leaflet-control {
+    border: none;
+  }
 .button-container {
   position: absolute;
   top: 10px;
@@ -200,7 +202,7 @@
 
         // Add buttons
         div.innerHTML +=
-            '<h2 class="chart-title">Yearly Population</h2>' +
+            '<h2 class="chart-title" style="border: none;">Yearly Population</h2>' +
             '<br>'+
             '<select class="btn btn-good" id="year_filter" style="margin-left: auto;"></select';
         return div;
