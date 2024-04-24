@@ -73,7 +73,7 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             object-fit: cover;
         }
-
+/*
         .modal {
             display: none;
             position: fixed;
@@ -101,8 +101,8 @@
 
         .close {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 5px;
+            right: 5px;
             font-size: 20px;
             cursor: pointer;
         }
@@ -110,9 +110,11 @@
         .close:hover {
             color: #888;
         }
-
+*/
         #display-name-input,
         #profile-pic-input {
+            width: 200px; 
+            height: 40px;
             margin-bottom: 10px;
         }
 
@@ -156,11 +158,19 @@
             cursor: pointer;
         }
 
-
-
+        
+        #user-profile-pic {
+            margin-bottom: 20px; 
+            width: 120px;
+            height: 120px;
+            border-radius: 100%; 
+            border: 3px solid #fff;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            object-fit: cover;
+        }
+        
 
     </style>
-
 
 </head>
 
@@ -216,27 +226,36 @@
             </div>
             <h2 style="padding: 20px;">Account Details</h2>
             <div class="user-details">
-                <img id="user-profile-pic" src="#" alt="Profile Picture"/>
-                <div id="user-name">Display Name: </div>
+                <svg id="user-profile-pic" class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" width="50" height="50">
+                    <path d="M12 2c-2.21 0-4 2.24-4 5s1.79 5 4 5 4-2.24 4-5-1.79-5-4-5zm0 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0 11c-2.67 0-8 1.34-8 4v1h16v-1c0-2.66-5.33-4-8-4z"/>
+                </svg>
+                
                 <div id="user-info">User info will display here.</div>
+                <!---
                 <button id="edit-button">Edit Profile</button>
-
+                -->
             </div>
+            
+            
             
         </div>
         
     </div>
 
     <!-- Modal -->
-    <div id="edit-profile-modal" class="modal">
+    <!--
+            <div id="edit-profile-modal" class="modal">
         <div class="modal-content">
-            <span class="close">&times;</span> <!--- close button -->
+            <span class="close">&times;</span> 
             <input type="text" id="display-name-input" placeholder="Enter display name">
             <input type="file" id="profile-pic-input" accept="image/*">
             <button id="save-button">Save</button>
         </div>
     </div>
-    
+        --->
+
+
+<!--
     <script>
         // JavaScript to show and hide modal
         var editButton = document.getElementById('edit-button');
@@ -257,8 +276,7 @@
             modal.style.display = 'none';
         });
     </script>
-
-
+-->
 
     <!-- =========== Scripts =========  -->
     <script src="/dist/assets/js/main.js"></script>
@@ -276,7 +294,7 @@
         import { getFirestore, collection, addDoc, connectFirestoreEmulator, query, getDocs, getDoc, updateDoc, setDoc, doc, onSnapshot, deleteDoc, orderBy } from 'https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js';
         import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-storage.js";
 
-    
+
         const firebaseConfig = {
             apiKey: "AIzaSyDYPv8S_ljSo3tuMNoRYPI2tleWOqhqFMM",
             authDomain: "commumeter.firebaseapp.com",
@@ -296,97 +314,94 @@
         let userId;
 
 
-// Update the onAuthStateChanged function to fetch user profile information
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        userId = user.uid;
-        const email = user.email;
-        document.getElementById('user-info').textContent = `Logged in as ${email}`;
-        const userDocRef = doc(db, 'users', user.uid);
-        getDoc(userDocRef).then((docSnapshot) => {
-            if (docSnapshot.exists()) {
-                const userData = docSnapshot.data();
-                // Update user profile information
-                document.getElementById('user-name').textContent = userData.name;
-                if (userData.profilePicture) {
-                    const profilePicURL = userData.profilePicture;
-                    console.log("Profile Picture URL:", profilePicURL);
-                    document.getElementById('user-profile-pic').src = profilePicURL;
-                }
-            } else {
-                console.log('User profile not found in user data.');
-                // Handle the case where the user's document doesn't exist
-            }
-        }).catch((error) => {
-            console.error('Error fetching user profile:', error);
-        });
-        // Enable edit button
-        document.getElementById("edit-button").disabled = false;
-    } else {
-        document.getElementById('user-info').textContent = 'Not logged in';
-        console.log('User is signed out');
-        // Disable edit button
-        document.getElementById("edit-button").disabled = true;
-    }
-});
-
-// Handle edit button click
-document.getElementById("edit-button").addEventListener("click", function () {
-    document.getElementById("edit-profile").style.display = "block";
-    document.getElementById("user-name").style.display = "none";
-});
-
-// Handle save button click
-document.getElementById("save-button").addEventListener("click", function () {
-    const displayName = document.getElementById("display-name-input").value;
-    const profilePicFile = document.getElementById("profile-pic-input").files[0];
-    document.getElementById("user-name").textContent = "Display Name: " + displayName;
-
-    // Handle profile picture upload if a new one is selected
-    if (profilePicFile) {
-        const storageRef = ref(storage, "profile_pictures/" + userId);
-        uploadBytes(storageRef, profilePicFile).then((snapshot) => {
-            getDownloadURL(snapshot.ref).then((url) => {
-                const userDocRef = doc(db, 'users', userId);
-                updateDoc(userDocRef, { profilePicture: url, name: displayName }).then(() => {
-                    console.log("Profile picture and display name updated successfully.");
-                    document.getElementById('user-profile-pic').src = url;
-                    // Update users object in localStorage if needed
+        // Update the onAuthStateChanged function to fetch user profile information
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                userId = user.uid;
+                const email = user.email;
+                document.getElementById('user-info').textContent = `Logged in as ${email}`;
+                const userDocRef = doc(db, 'users', user.uid);
+                getDoc(userDocRef).then((docSnapshot) => {
+                    if (docSnapshot.exists()) {
+                        const userData = docSnapshot.data();
+                        // Update user profile information
+                        document.getElementById('user-name').textContent = userData.name;
+                        if (userData.profilePicture) {
+                            const profilePicURL = userData.profilePicture;
+                            console.log("Profile Picture URL:", profilePicURL);
+                            document.getElementById('user-profile-pic').src = profilePicURL;
+                        }
+                    } else {
+                        console.log('User profile not found in user data.');
+                        // Handle the case where the user's document doesn't exist
+                    }
                 }).catch((error) => {
-                    console.error("Error updating profile picture and display name: ", error);
+                    console.error('Error fetching user profile:', error);
                 });
+                // Enable edit button
+                document.getElementById("edit-button").disabled = false;
+            } else {
+                document.getElementById('user-info').textContent = 'Not logged in';
+                console.log('User is signed out');
+                // Disable edit button
+                document.getElementById("edit-button").disabled = true;
+            }
+        });
+
+        // Handle edit button click
+        document.getElementById("edit-button").addEventListener("click", function () {
+            document.getElementById("edit-profile").style.display = "block";
+            document.getElementById("user-name").style.display = "none";
+        });
+
+        // Handle save button click
+        document.getElementById("save-button").addEventListener("click", function () {
+            const displayName = document.getElementById("display-name-input").value;
+            const profilePicFile = document.getElementById("profile-pic-input").files[0];
+            document.getElementById("user-name").textContent = "Display Name: " + displayName;
+
+            // Update display name in Firestore
+            const userDocRef = doc(db, 'users', userId);
+            updateDoc(userDocRef, { name: displayName }).then(() => {
+                console.log("Display name updated successfully in Firestore.");
+                // Update users object in localStorage if needed
+            }).catch((error) => {
+                console.error("Error updating display name in Firestore: ", error);
             });
-        }).catch((error) => {
-            console.error("Error uploading profile picture: ", error);
-            alert("Error uploading profile picture: " + error.message);
-        });
-    } else {
-        // If no new profile picture, update display name only
-        const userDocRef = doc(db, 'users', userId);
-        updateDoc(userDocRef, { name: displayName }).then(() => {
-            console.log("Display name updated successfully.");
-            // Update users object in localStorage if needed
-        }).catch((error) => {
-            console.error("Error updating display name: ", error);
-        });
-    }
 
-    // Hide the edit profile section
-    document.getElementById("edit-profile").style.display = "none";
-    document.getElementById("user-name").style.display = "block";
-});
+            // Handle profile picture upload if a new one is selected
+            if (profilePicFile) {
+                const storageRef = ref(storage, "profile_pictures/" + userId);
+                uploadBytes(storageRef, profilePicFile).then((snapshot) => {
+                    getDownloadURL(snapshot.ref).then((url) => {
+                        updateDoc(userDocRef, { profilePicture: url }).then(() => {
+                            console.log("Profile picture updated successfully in Firestore.");
+                            document.getElementById('user-profile-pic').src = url;
+                        }).catch((error) => {
+                            console.error("Error updating profile picture and display name: ", error);
+                        });
+                    });
+                }).catch((error) => {
+                    console.error("Error uploading profile picture: ", error);
+                    alert("Error uploading profile picture: " + error.message);
+                });
+            }
 
-document.getElementById("logout").addEventListener("click", function () {
-    signOut(auth).then(() => {
-        console.log('Sign-out successful.');
-        alert('Sign-out successful.');
-        window.location.href = "/dist/index.html";
-    }).catch((error) => {
-        console.log('Error signing out:', error);
-        alert('Error signing out: ' + error.message);
-    });
-});
-    
+            // Hide the edit profile section
+            document.getElementById("edit-profile").style.display = "none";
+            document.getElementById("user-name").style.display = "block";
+        });
+
+        document.getElementById("logout").addEventListener("click", function () {
+            signOut(auth).then(() => {
+                console.log('Sign-out successful.');
+                alert('Sign-out successful.');
+                window.location.href = "/dist/index.html";
+            }).catch((error) => {
+                console.log('Error signing out:', error);
+                alert('Error signing out: ' + error.message);
+            });
+        });
     
     </script>
 

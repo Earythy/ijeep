@@ -310,17 +310,16 @@ onAuthStateChanged(auth, (user) => {
 });
 
 
-    document.getElementById("logout").addEventListener("click", function () {
-        signOut(auth).then(() => {
-            // Sign-out successful.
-            console.log('Sign-out successful.');
-            alert('Sign-out successful.');
-            window.location.href = "/dist/index.html";
-        }).catch((error) => {
-            // An error happened.
-            console.log('An error happened.');
-        });
+document.getElementById("logout").addEventListener("click", function () {
+    signOut(auth).then(() => {
+        console.log('Sign-out successful.');
+        alert('Sign-out successful.');
+        window.location.href = "/dist/index.html";
+    }).catch((error) => {
+        console.log('Error signing out:', error);
+        alert('Error signing out: ' + error.message);
     });
+});
 
 </script>
 </html>
