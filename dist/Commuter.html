@@ -214,25 +214,78 @@
             </div>
             <div class="modal-body">
               <p id="latLngText">Latitude: 0, Longitude: 0</p>
+              <div id="fareDisplay">Fare:</div>
               <div class="mb-3">
                 <label for="routeSelect" class="form-label"
                   >Select a Route:</label
                 >
                 <select class="form-select" id="routeSelect">
                   <option selected>Dalipuga</option>
-                  <option value="Luinab">Luinab</option>
-                  <option value="Tambo">Tambo</option>
-                  <option value="Santiago">Santiago</option>
-                  <!-- Add more options based on your routes -->
+                </select>
+                <label for="commuterlocation" class="form-label"
+                  >Select your Location:</label
+                >
+                <select class="form-select" id="commuterlocation">
+                  <option value="City Proper">City Proper</option>
+                  <option value="MSU-IIT">MSU-IIT</option>
+                  <option value="Traffic Light Tambo">
+                    Traffic Light Tambo
+                  </option>
+                  <option value="Tambo Gerona">Tambo Gerona</option>
+                  <option value="Barinaut High Way">Barinaut High Way</option>
+                  <option value="Valderama">Valderama</option>
+                  <option value="St. Felomina">St. Felomina</option>
+                  <option value="Acmac Brgy. Hall">Acmac Brgy. Hall</option>
+                  <option value="Purok 7 Kiwalan">Kiwalan</option>
+                  <option value="Pilmico">Pilmico</option>
+                  <option value="Tagibo">Tagibo</option>
+                  <option value="Dalipuga Crossing Kalubihon">
+                    Dalipuga Crossing Kalubihon
+                  </option>
+                  <option value="Dalipuga Proper">Dalipuga Proper</option>
+                  <option value="Paitan">Paitan</option>
+                  <option value="Mapalad">Mapalad</option>
+                  <option value="Boundary Lugait/Iligan">
+                    Boundary Lugait/Iligan
+                  </option>
                 </select>
                 <label for="routeto" class="form-label">To:</label>
                 <select class="form-select" id="routeto">
-                  <option selected>Gaisano Dako</option>
-                  <option value="Luinab">Luinab</option>
-                  <option value="Tambo Terminal">Tambo Terminal</option>
-                  <option value="Gaisano Gamay">Gaisano Gamay</option>
+                  <option selected>Select Destination</option>
+                  <option value="City Proper">City Proper</option>
+                  <option value="MSU-IIT">MSU-IIT</option>
+                  <option value="Traffic Light Tambo">
+                    Traffic Light Tambo
+                  </option>
+                  <option value="Tambo Gerona">Tambo Gerona</option>
+                  <option value="Barinaut High Way">Barinaut High Way</option>
+                  <option value="Valderama">Valderama</option>
+                  <option value="St. Felomina">St. Felomina</option>
+                  <option value="Acmac Brgy. Hall">Acmac Brgy. Hall</option>
+                  <option value="Purok 7 Kiwalan">Kiwalan</option>
+                  <option value="Pilmico">Pilmico</option>
+                  <option value="Tagibo">Tagibo</option>
+                  <option value="Dalipuga Crossing Kalubihon">
+                    Dalipuga Crossing Kalubihon
+                  </option>
+                  <option value="Dalipuga Proper">Dalipuga Proper</option>
+                  <option value="Paitan">Paitan</option>
+                  <option value="Mapalad">Mapalad</option>
+                  <option value="Boundary Lugait/Iligan">
+                    Boundary Lugait/Iligan
+                  </option>
+
                   <!-- Add more options based on your routes -->
                 </select>
+                <label for="howmany" class="form-label"
+                  >How many Commuters?</label
+                >
+                <input
+                  type="number"
+                  id="howmany"
+                  class="form-control"
+                  min="1"
+                />
               </div>
             </div>
             <div class="modal-footer">
@@ -380,6 +433,8 @@
           });
       });
 
+      // calculate the fare of commuters
+
       // ensure that a user is logged in before they can interact with the website
       // if not, redirect them to the login page
       // also store "user" object that will be used later for retrieving user data
@@ -406,34 +461,6 @@
                 console.log("An error happened.");
               });
           });
-
-        // Function to save data to Firebase
-        async function saveDataToFirebase(lat, lng, route, to, userId) {
-          try {
-            const docRef = await addDoc(collection(db, "commutermark"), {
-              userId: userId, // Include the userId in the document
-              latitude: lat,
-              longitude: lng,
-              route: route,
-              to: to,
-              date: new Date(),
-              display: true,
-            });
-
-            // Display success message
-            alert("Coordinates and route saved successfully!");
-
-            // Add a marker to the map for the new data
-            // L.marker([lat, lng])
-            //   .addTo(map)
-            //   .bindPopup(
-            //     `Route: ${route}, To: ${to}<br>Latitude: ${lat}, Longitude: ${lng}`
-            //   );
-          } catch (error) {
-            console.error("Error adding document: ", error);
-            alert("An error occurred while saving coordinates and route.");
-          }
-        }
 
         // Icons
         const redIcon = new L.Icon({
@@ -563,7 +590,7 @@
                     icon: getIconForRoute(data.route),
                   }).addTo(map);
                   marker.bindPopup(
-                    `Route: ${data.route}<br>Destination: ${data.to}`
+                    `Route: ${data.route}<br>Destination: ${data.to}<br>Number of Commuters: ${data.howmany}`
                   );
                   markers[id] = marker;
                 } else {
@@ -630,7 +657,9 @@
           .addEventListener("click", async function () {
             var selectedRoute = document.getElementById("routeSelect").value;
             var selectedto = document.getElementById("routeto").value;
+            var howmany = document.getElementById("howmany").value;
             console.log("Selected Route:", selectedRoute);
+            console.log("How many commuters in the area: ", howmany);
 
             // Check if a mark already exists for the user
             const markExists = await checkIfMarkExists(user.uid);
@@ -642,7 +671,8 @@
                 lastClickedLng,
                 selectedRoute,
                 selectedto,
-                user.uid
+                user.uid,
+                howmany
               );
             } else {
               // Save data to Firebase as before
@@ -651,7 +681,8 @@
                 lastClickedLng,
                 selectedRoute,
                 selectedto,
-                user.uid
+                user.uid,
+                howmany
               );
             }
 
@@ -669,9 +700,45 @@
           );
           return !querySnapshot.empty;
         }
+        // Function to save data to Firebase
+        async function saveDataToFirebase(
+          lat,
+          lng,
+          route,
+          to,
+          userId,
+          howmany
+        ) {
+          try {
+            const docRef = await addDoc(collection(db, "commutermark"), {
+              userId: userId, // Include the userId in the document
+              latitude: lat,
+              longitude: lng,
+              route: route,
+              to: to,
+              // howmany: parseInt(howmany),
+              date: new Date(),
+              display: true,
+            });
+
+            // Display success message
+            alert("Coordinates and route saved successfully!");
+          } catch (error) {
+            console.error("Error adding document: ", error);
+            alert("An error occurred while saving coordinates and route.");
+          }
+        }
 
         // update the marker if marker already exists
-        async function updateMarkInFirebase(lat, lng, route, to, userId) {
+        async function updateMarkInFirebase(
+          lat,
+          lng,
+          route,
+          to,
+          userId,
+          howmany
+        ) {
+          console.log("Updating marker for user:", userId);
           const querySnapshot = await getDocs(
             query(collection(db, "commutermark"), where("userId", "==", userId))
           );
@@ -682,6 +749,7 @@
                 longitude: lng,
                 route: route,
                 to: to,
+                howmany: parseInt(howmany),
                 date: new Date(),
               });
               alert("Marker updated successfully!");
@@ -699,6 +767,8 @@
     </script>
     <!-- =========== Scripts =========  -->
     <script src="assets/js/main.js"></script>
+    <!-- <script src="assets/js/fare.js"></script> -->
+    <script src="assets/js/test.js"></script>
     <!-- ====== ionicons ======= -->
     <script
       type="module"
