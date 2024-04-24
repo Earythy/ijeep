@@ -200,38 +200,34 @@
 
         // Add buttons
         div.innerHTML +=
-            '<button id="dashboardBtn" class="btn btn-good btn-edit">Dashboard</button>' +
+            '<h2 class="chart-title">Yearly Population</h2>' +
             '<br>'+
-            '<button id="mobilityDataBtn" class="btn btn-good btn-edit">Mobility Data</button>' +
-            '<br>'+
-            '<button id="visualizationsBtn" class="btn btn-good btn-edit">Visualizations</button>';
-
-        // Attach event listeners to buttons
-        div.querySelector('#dashboardBtn').addEventListener('click', redirectToDashboard);
-        div.querySelector('#mobilityDataBtn').addEventListener('click', redirectToMobilityData);
-        div.querySelector('#visualizationsBtn').addEventListener('click', redirectToVisualizations);
-
+            '<select class="btn btn-good" id="year_filter" style="margin-left: auto;"></select';
         return div;
     };
 
     buttonContainer.addTo(map);
+    console.log('added to map');
 
     // Add any other map initialization logic here
+    var currentYear = new Date().getFullYear();
+    var filterYear = document.getElementById("year_filter");
 
-    // Function to redirect to dashboard page
-    function redirectToDashboard() {
-        window.location.href = "dashboard.html";
+    for (var year = 2000; year <= 2100; year++) {
+        var option = document.createElement("option");
+        option.text = year;
+        option.value = year;
+        if (year === currentYear) {
+            option.selected = true;
+        }
+        filterYear.add(option);
     }
 
-    // Function to redirect to mobility data page
-    function redirectToMobilityData() {
-        window.location.href = "records.html";
-    }
+    document.getElementById("year_filter").addEventListener("change", async function(){
+    console.log(document.getElementById("year_filter").value);
+    var year_filter = document.getElementById('year_filter').value;
+    });
 
-    // Function to redirect to visualizations page
-    function redirectToVisualizations() {
-        window.location.href = "charts.html";
-    }
 
 
                 // L.geoJson(baranggayData).addTo(map);
@@ -321,7 +317,7 @@ info.onAdd = function (map) {
 // method that we will use to update the control based on feature properties passed
 info.update = function (props) {
     this._div.innerHTML = '<h4>Population Density</h4>' +  (props ?
-        '<b>' + props.name + '</b><br />' + props.density + ' people / mi<sup>2</sup>'
+        '<b>' + props.name + '</b><br />' + props.density + ' people / km<sup>2</sup>'
         : 'Select a Baranggay/Purok');
 };
 

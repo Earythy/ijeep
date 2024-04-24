@@ -20,6 +20,7 @@ const analytics = getAnalytics(app);
 const auth = getAuth();
 console.log(app);
 
+
 // Define dalipugaCoords as an empty array
 let dalipugaCoords = [];
 
@@ -39,7 +40,7 @@ getDocs(query(collection(db, "Coordinates")))
             // Zip latitude and longitude arrays into coordinate pairs
             var coordinates = longitude.map((longitude, index) => [longitude, latitude[index]]);
             console.log(coordinates);
-            
+            console.log('year:', year_filter);
             // Fetch density data for the current barangay
             getDocs(query(collection(db, "Mobility"), where("year", "==", "2020"), where("brgy_name", "==", barangay)))
             .then((mobilityListSnapshot) => {
