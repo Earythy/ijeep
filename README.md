@@ -6,8 +6,7 @@
  - added new html file specific for drivers and commuters.
 
 # TODO
- - Remove navbar from commuter.html
  - Webpage link should be standardized eg. commuter/login.html, commuter/map.html (commuter can only see map.html), driver/login.html, driver/map.html, admin/...(if ever included) etc.
  - Data visualization
- - Page for drivers to see users who have put a marker, and maybe add a button that redirects them to the user mark in the map.
+ - Page for drivers to see users who have put a marker, and maybe add a button that redirects them to the user mark in the map. (tbd)
  - etc
