@@ -19,55 +19,82 @@ const db = getFirestore(app);
 const analytics = getAnalytics(app);
 const auth = getAuth();
 console.log(app);
-
-
 // Define dalipugaCoords as an empty array
 let dalipugaCoords = [];
+let brgyDensity = [];
 
-// Fetch coordinates asynchronously
-getDocs(query(collection(db, "Coordinates")))
-.then((coordListSnapshot) => {
-    // Iterate over each document in the collection
-    coordListSnapshot.forEach((coordListDoc) => {
-        var coordListData = coordListDoc.data();
-        var barangay = coordListData.brgy_name;
-        var latitude = coordListData.latitude;
-        var longitude = coordListData.longitude;
-        console.log(barangay);
+document.addEventListener('DOMContentLoaded', function () {
 
-        // Ensure latitude and longitude are arrays of the same length
-        if (latitude.length === longitude.length) {
-            // Zip latitude and longitude arrays into coordinate pairs
-            var coordinates = longitude.map((longitude, index) => [longitude, latitude[index]]);
-            console.log(coordinates);
-            console.log('year:', year_filter);
-            // Fetch density data for the current barangay
-            getDocs(query(collection(db, "Mobility"), where("year", "==", "2020"), where("brgy_name", "==", barangay)))
-            .then((mobilityListSnapshot) => {
-                // Iterate over each document in the density collection
-                mobilityListSnapshot.forEach((mobilityListDoc) => {
-                    var mobilityListData = mobilityListDoc.data();
-                    var density = mobilityListData.density;
-                    
-                    dalipugaCoords.push({ coordinates: coordinates, barangay: barangay, density: density });
-                });
-            })
-            .catch((error) => {
-                console.log("Error fetching density data for barangay", barangay, ": ", error);
+year_filter.addEventListener("change", async function(){
+    console.log('changed');
+
+    var yearValue = year_filter
+    await datafetch(yearValue);
+    setTimeout(() => {
+        console.log('dispatched');
+        document.dispatchEvent(new CustomEvent('yearFilterChanged', { detail: { brgyDensity } }));
+        
+    }, 5000);
+    
+});
+
+function datafetch(yearValue) {
+    brgyDensity = [];
+    console.log(yearValue);
+    // Fetch density data for the current barangay
+    return getDocs(query(collection(db, "Mobility"), where("year", "==", yearValue)))
+        .then((mobilityListSnapshot) => {
+            // Iterate over each document in the density collection
+            mobilityListSnapshot.forEach((mobilityListDoc) => {
+                var mobilityListData = mobilityListDoc.data();
+                var density = mobilityListData.density;
+                var barangay = mobilityListData.brgy_name;
+                
+                brgyDensity.push({ barangay:barangay, density: density });
             });
-        } else {
-            console.error("Latitude and longitude arrays have different lengths.");
-        }
-    });
-})
+        }).then(() => {
+            // After fetching coordinates and density data, use dalipugaCoords array here
+            console.log(brgyDensity);
+        })
+        .catch((error) => {
+            console.log("Error fetching density data for barangay", barangay, ": ", error);
+        });
+        
+}
+
+getDocs(query(collection(db, "Coordinates")))
+    .then((coordListSnapshot) => {
+        // Iterate over each document in the collection
+        coordListSnapshot.forEach((coordListDoc) => {
+            var coordListData = coordListDoc.data();
+            var barangay = coordListData.brgy_name;
+            var latitude = coordListData.latitude;
+            var longitude = coordListData.longitude;
+            console.log(barangay);
+
+            // Ensure latitude and longitude are arrays of the same length
+            if (latitude.length === longitude.length) {
+                // Zip latitude and longitude arrays into coordinate pairs
+                var coordinates = longitude.map((longitude, index) => [longitude, latitude[index]]);
+                console.log(coordinates);
+
+                
+                dalipugaCoords.push({ coordinates: coordinates, barangay: barangay });
+            } else {
+                console.error("Latitude and longitude arrays have different lengths.");
+            }
+        });
+    })
 .then(() => {
     // After fetching coordinates and density data, use dalipugaCoords array here
     console.log(dalipugaCoords);
+    var yearValue = year_filter.value;
+    datafetch(yearValue);
 })
 .catch((error) => {
     console.log("Error fetching coordinates: ", error);
 });
 
+});
 
-
-    export { dalipugaCoords };
+    export { dalipugaCoords, brgyDensity };
