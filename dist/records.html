@@ -33,6 +33,79 @@
     </script>
 
     <style>
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .navigation {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .main {
+            flex: 3;
+            overflow-y: auto;
+        }
+
+        .details.data {
+            padding: 20px;
+        }
+
+        /** adjustments for smaller screen **/
+
+        .cardBox {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .card {
+            text-align: center;
+            flex: 1 1 calc(25% - 20px);
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-sizing: border-box;
+        }
+
+        .dashchartsBx {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .charts {
+            text-align: center;
+            flex: 1 1 400px;
+        }
+
+        .charts canvas {
+            max-width: 100%;
+        }
+
+        .details {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        #myTable {
+            width: 100%;
+        }
+
+        @media screen and (max-width: 768px) {
+            .card {
+                flex: 1 1 calc(50% - 20px);
+            }
+
+            .charts {
+                flex: 1 1 100%;
+            }
+        }
+
         /* Hide the header of the column */
         #myTable th:nth-child(1) {
         display: none;

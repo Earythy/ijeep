@@ -67,6 +67,7 @@
   margin: 0 5px;
   padding: 5px 10px;
   text-transform: uppercase;
+  
 }
 
 .button-container button:hover {
@@ -105,6 +106,15 @@
                             <ion-icon name="map-outline"></ion-icon>
                         </span>
                         <span class="title">Map</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="browseroute.html">
+                        <span class="icon">
+                            <ion-icon name="search"></ion-icon>
+                        </span>
+                        <span class="title">Browse Route</span>
                     </a>
                 </li>
 
@@ -198,12 +208,16 @@
     buttonContainer.onAdd = function (map) {
         var div = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
 
-        // Add buttons
-        div.innerHTML +=
-            '<h2 class="chart-title">Yearly Population</h2>' +
-            '<br>'+
-            '<select class="btn btn-good" id="year_filter" style="margin-left: auto;"></select';
-        return div;
+      // Add buttons
+div.innerHTML +=
+'<h2 class="chart-title">Yearly Population</h2>' +
+'<br>'+
+'<select class="btn btn-good" id="year_filter" style="margin-left: auto; border: none;"></select>';
+
+// Modify CSS to make the border invisible
+div.style.border = 'none';
+
+return div;
     };
 
     buttonContainer.addTo(map);
