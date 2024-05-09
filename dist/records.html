@@ -55,57 +55,38 @@
 
         /** adjustments for smaller screen **/
 
-        .cardBox {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .card {
-            text-align: center;
-            flex: 1 1 calc(25% - 20px);
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            box-sizing: border-box;
-        }
-
-        .dashchartsBx {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-        }
-
-        .charts {
-            text-align: center;
-            flex: 1 1 400px;
-        }
-
-        .charts canvas {
-            max-width: 100%;
-        }
-
-        .details {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-        }
-
-        #myTable {
-            width: 100%;
-        }
-
         @media screen and (max-width: 768px) {
-            .card {
-                flex: 1 1 calc(50% - 20px);
+            .container {
+                flex-direction: column;
             }
-
-            .charts {
-                flex: 1 1 100%;
+            .navigation {
+                width: 100%;
+                min-width: 0; 
+            }
+            .main {
+                width: 100%;
+                min-width: 0; 
+            }
+            .details.data {
+                padding: 10px;
+            }
+            
+            .navigation ul {
+                display: none;
+            }
+            .toggle {
+                display: block;
+            }
+            .toggle ion-icon {
+                display: inline-block;
+            }
+            .dropdown-content {
+                display: none;
+            }
+            .dropdown:hover .dropdown-content {
+                display: block;
             }
         }
-
         /* Hide the header of the column */
         #myTable th:nth-child(1) {
         display: none;
