@@ -35,13 +35,51 @@
             padding: 20px;
         }
 
-        /** adjustments for smaller screen **/
 
+        /* Adjustments for smaller screens */
         @media screen and (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .navigation {
+                width: 100%;
+                min-width: 0; 
+            }
+            .main {
+                width: 100%;
+                min-width: 0; 
+            }
             .details.data {
                 padding: 10px;
             }
+            
+            .navigation ul {
+                display: none;
+            }
+            .toggle {
+                display: block;
+            }
+            .toggle ion-icon {
+                display: inline-block;
+            }
+            .dropdown-content {
+                display: none;
+            }
+            .dropdown:hover .dropdown-content {
+                display: block;
+            }
         }
+
+        .details .dataRecord {
+            padding: 2rem; /* Adjust padding for desktop */
+        }
+        
+        @media screen and (max-width: 768px) {
+            .details .dataRecord {
+                padding: 1rem; /* Adjust padding for smaller screens */
+            }
+        }
+        
     </style>
 
 

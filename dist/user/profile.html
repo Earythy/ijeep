@@ -345,7 +345,7 @@
                     } else {
                         console.log('User profile not found in user data.');
                         // If the user profile document doesn't exist, create it with default values
-                        setDoc(userDocRef, { email: email, name: 'New User', profilePicture: '' })
+                        setDoc(userDocRef, { email: email, name: 'New User', profilePicture: '' }) // shuta lods ikaw lang pala problema
                             .then(() => {
                                 console.log('User profile created successfully.');
                                 // Now that the profile document is created, you can update the display name

@@ -1,605 +1,528 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Login and Signup Page</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap" rel="stylesheet"/>
-    <script defer src="./bundle.js"></script>
-    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Aboard!</title>
     <style>
-      body {
-        background-color: #f1e8e6;
-        font-family: "Ubuntu", sans-serif;
-        color: #361d32;
-        background-image: url('/img/bg2.png');
-        background-size: cover;
-        background-position: center;
-      }
-
-      .container {
-        /* position: relative; add this to enable absolute positioning of the logo */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-        opacity: 0;
-        animation: appear 1s ease-out forwards;
-      }
-
-      @keyframes appear {
-        to {
-          opacity: 1;
+        :root {
+            --text: #dbdbe0;
+            --link: #dadae6;
+            --link-hover: #e4e4ff;
+            --bg-drk: hsl(240, 8%, 8%);
+            --bg-header: rgba(26, 25, 28, 0.742);
+            --bg-lt: hsl(240, 6%, 30%);
+            --primary: rgb(66, 66, 73);
+            --heading: #cdc9d1;
+            --subheading: #b2b1bd;
+            --h2: #b8b9c0;
+            --h3: #c2c2ca;
+            --green: #7bdae0;
+            --cyan: rgb(74, 153, 226);
+            --blue: #4546b4;
+            --violet: rgb(87, 59, 211);
+            --indigo: rgb(81, 54, 235);
+            --purple: rgb(124, 63, 223);
+            --pink: #df65e4;
+            --lighting-color: #984ddd;
+            --lighting-highlight-color: #c58eff;
+            --lighting-size: 300px;
+            --size: clamp(4rem, 5vh + 40px, 12rem);
+            --gap: calc(var(--size) / 4);
+            --duration: 60s;
+            --scroll-start: 0;
+            --scroll-end: calc(-100% - var(--gap));
+            --padding-hor: 2px;
+            --federal-blue: #1f175cff;
+            --tekhelet: #3f2678ff;
+            --russian-violet: #481d61ff;
+            --prussian-blue: #133a58ff;
+            --eerie-black: #1a191cff;
+            --prussian-blue: #113755ff;
+            --denim: #1d5aafff;
+            --federal-blue-lt: #322593;
+            --tekhelet-lt: #5936ab;
+            --russian-violet-lt: #752f9d;
+            --prussian-blue-lt: #226faa;
+            --denim-lt: #3e81e0;
+            --eerie-black-lt: rgb(50, 49, 53);
+            --federal-blue: hsla(247, 60%, 23%, 1);
+            --tekhelet: hsla(258, 52%, 31%, 1);
+            --russian-violet: hsla(278, 54%, 25%, 1);
+            --prussian-blue: hsla(206, 64%, 21%, 1);
+            --eerie-black: hsla(260, 6%, 10%, 1);
+            --denim: hsla(215, 72%, 40%, 1);
         }
-      }
-
-      .form-container {
-        position: relative;
-        /*background: linear-gradient(135deg, #eea7ee 0%, #6d3c69 100%);*/
-        padding: 50px;
-        border-radius: 20px;
-        box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
-        width: 100%;
-        max-width: 800px;
-        display: flex;
-        justify-content: space-around;
-        transform: translateY(20px);
-        animation: slideIn 1s ease-out forwards;
-        gap: 20px;
-        background: rgba(0, 0, 0, 0.35); /* Semi-transparent white background */
-        backdrop-filter: blur(10px); /* Apply a blur effect */
-        border-radius: 10px; /* Rounded corners */
-        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37); /* Shadow effect */
-      }
-
-      @keyframes slideIn {
-        to {
-          transform: translateY(0);
-        }
-      }
-
-      .form-container form {
-        background-color: #f5f5f5;
-        padding: 40px;
-        border-radius: 20px;
-        width: 50%;
-        transition: all 0.3s ease-out;
-        box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
-        position: relative;
-        opacity: 0.6;
-        transform: scale(0.9);
-        pointer-events: none; /* Set pointer-events to none for all forms initially */
-      }
-
-      .form-container form.active {
-        pointer-events: auto; /* Enable pointer-events for the active form */
-        transform: scale(1);
-        box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
-        opacity: 1;
-      }
-
-      .form-container form:not(.active) input,
-      .form-container form:not(.active) button {
-        opacity: 0.5;
-        pointer-events: none;
-      }
-
-      .form-container form:not(.active).inactive input,
-      .form-container form:not(.active).inactive button {
-        opacity: 1;
-        pointer-events: none;
-      }
-
-      @media screen and (max-width: 768px) {
-        .form-container form {
-          width: 100%;
+        * {
+            font-smoothing: antialiased;
+            font-smoothing: grayscale;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Manrope', sans-serif;
         }
 
-        .form-container form.active {
-          display: block;
-          opacity: 1;
-          transform: scale(1);
-          box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: manrope, sans-serif;
+            background: var(--bg-drk);
+            overflow-x: hidden;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-drk) url(/img/jeepney.png) no-repeat center center;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
-        .form-container form:not(.active) {
-          display: none;
+        h1, h2, p {
+            color: var(--heading);
+        }
+    
+        h1 {
+            font-size: clamp(2rem, 5vw, 5.5rem);
+        }
+    
+        h2 {
+            font-size: clamp(1rem, 2.5vw, 1.5rem);
+        }
+    
+        p {
+            font-size: clamp(0.8rem, 2vw, 1rem);
         }
 
-        .form-container label {
-          margin-bottom: 5px;
-        }
-
-        .form-container input {
-          margin-bottom: 10px;
-        }
-      }
-
-      .form-container h2 {
-        color: #6d3c69; /** #f55951; **/
-        text-align: center;
-        font-weight: bold;
-        font-size: 24px;
-        margin-bottom: 20px;
-      }
-
-      .form-container p {
-        text-align: center;
-        color: #333;
-        margin-bottom: 20px;
-      }
-
-      .form-container label {
-        display: flex;
-        align-items: center;
-        font-size: 18px;
-        margin-bottom: 10px;
-      }
-
-      .form-container ion-icon {
-        margin-right: 10px;
-      }
-
-      .form-container input {
-        width: 100%;
-        padding: 15px;
-        border: none;
-        border-radius: 15px;
-        box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.1);
-        font-size: 16px;
-        transition: box-shadow 0.3s ease-out;
-      }
-
-      .form-container input:focus {
-        box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.3), 0 0 0 transparent;
-      }
-
-      .form-container button {
-        width: 100%;
-        padding: 15px;
-        border: none;
-        border-radius: 15px;
-        color: white;
-        background: linear-gradient(90deg, #543c52 0%, #69495f 100%);
-
-        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
-        margin-top: 30px;
-        font-size: 18px;
-        transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
-      }
-
-      .form-container button:hover {
-        transform: scale(1.05);
-        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
-      }
-
-      .form-container button:active {
-        transform: scale(1);
-        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
-      }
-
-      .form-container .switch {
-        text-align: center;
-        color: #543c52;
-        cursor: pointer;
-        margin-top: 10px;
-      }
-
-      .logo {
-        position: absolute;
-        top: 2%; /* adjust as needed */
-        left: 2%;
-        width: 100px; /* adjust as needed */
-        height: 100px; /* adjust as needed */
-        z-index: 1000;
-      }
-      .button-facebook {
-        background-color: #3b5998;
-        color: white;
-        display: flex;
-        align-items: center;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-      }
-
-      .button-google {
-        background-color: #db4437;
-        color: white;
-        display: flex;
-        align-items: center;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-      }
-
-      .button-facebook ion-icon,
-      .button-google ion-icon {
-        margin-right: 10px;
-      }
-
-      /* Pop-up message */
-      .popup {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        padding: 20px;
-        background-color: #fff;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-        border-radius: 5px;
-        z-index: 9999;
-        display: none;
-        opacity: 0;
-        animation: fadeIn 0.3s ease-out forwards;
-
-        max-width: 90%;
-        text-align: center;
-      }
-
-      .popup p {
-        text-align: center;
-        margin: 0;
-        font-size: 18px;
-        color: #333;
-      }
-
-      .popup.success {
-        border-color: #32cd32;
-        background-color: #dff0d8;
-      }
-
-      .popup.error {
-        border-color: #dc143c;
-        background-color: #f2dede;
-      }
-
-      .popup.show {
-        display: block;
-        animation: fadeIn 0.3s ease-out forwards;
-      }
-
-      .popup.show.success {
-        animation: fadeIn 0.3s ease-out forwards,
-          successAnimation 2s ease-out 0.3s forwards;
-      }
-
-      .popup.show.error {
-        animation: fadeIn 0.3s ease-out forwards,
-          errorAnimation 2s ease-out 0.3s forwards;
-      }
-
-      @media only screen and (max-width: 768px) {
-        .popup {
-          padding: 10px;
-          font-size: 16px;
-          max-width: 80%;
-        }
-      }
-
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-        }
-
-        to {
-          opacity: 1;
-        }
-      }
-
-      @keyframes successAnimation {
-        0% {
-          transform: scale(1);
-        }
-
-        20% {
-          transform: scale(1.2);
-        }
-
-        100% {
-          transform: scale(1);
-        }
-      }
-
-      @keyframes errorAnimation {
-        0% {
-          transform: translateX(-10px);
-        }
-
-        20% {
-          transform: translateX(10px);
-        }
-
-        100% {
-          transform: translateX(0);
-        }
-      }
-
-      a.here {
-        text-decoration: underline;
-        color: #543c52;
-      }
-
-      a.here:hover {
-        color: #070707;
-        cursor: pointer;
-      }
-    </style>
-  </head>
-
-  <body>
-    <div class="container">
-      <div class="form-container">
-        <img src="/img/jeep.png" alt="Logo" class="logo" />
-        <!-- <img src="../public/img/jeep.png" alt="Logo" class="logo" /> -->
-
-        <!---- LOG IN START ---->
-
-        <form id="login-form" class="active">
-          <h2>Welcome Back</h2>
-          <p>Login to continue</p>
-          <label for="login-email">
-            <ion-icon name="person-outline"></ion-icon> Email
-          </label>
-          <input
-            type="text"
-            id="login-email"
-            placeholder="Your email"
-            required
-          />
-          <label for="login-password">
-            <ion-icon name="lock-closed-outline"></ion-icon> Password
-          </label>
-          <div style="position: relative">
-            <input
-              type="password"
-              id="login-password"
-              placeholder="Your password"
-              required
-            />
-            <ion-icon
-              name="eye"
-              id="show-login-password"
-              style="
-                position: absolute;
-                right: 10px;
-                top: 50%;
-                transform: translateY(-50%);
-                cursor: pointer;
-              "
-            ></ion-icon>
-          </div>
-          <button type="button" id="login">Log in</button>
-          <p class="switch" onclick="switchToSignup()">
-            Don't have an account? <a class="here">Signup here</a>
-          </p>
-          <div class="here">
-            <p class="switch" onclick="forgotPassword()">Forgot password?</p>
-          </div>
-
-          <hr/>
-
-          <div style="display: flex; flex-direction: column; align-items: center">
-            <div>Or login with</div>
-            <div style="display: flex; gap: 2px">
-              <button type="button" class="button-facebook">
-                <ion-icon name="logo-facebook"></ion-icon>
-                Facebook
-              </button>
-              <button type="button" class="button-google">
-                <ion-icon name="logo-google"></ion-icon>
-                Google
-              </button>
-            </div>
-          </div>
-        </form>
-
-        <!---- LOG IN END ---->
-        <!----- SIGN UP START ------>
-
-        <form id="signup-form">
-          <h2>Get Started</h2>
-          <p>Create a new account</p>
-          <label for="signup-email">
-            <ion-icon name="person-add-outline"></ion-icon> Email
-          </label>
-          <input
-            type="text"
-            id="signup-email"
-            placeholder="Choose an email"
-            required
-          />
-          <label for="signup-password">
-            <ion-icon name="lock-closed-outline"></ion-icon> Password
-          </label>
-          <div style="position: relative">
-            <input
-              type="password"
-              id="signup-password"
-              placeholder="Choose a password"
-              required
-            />
-            <ion-icon
-              name="eye"
-              id="show-signup-password"
-              style="
-                position: absolute;
-                right: 10px;
-                top: 50%;
-                transform: translateY(-50%);
-                cursor: pointer;
-              "
-            ></ion-icon>
-          </div>
-          <button type="button" id="signup">Sign up</button>
-          <p class="switch" onclick="switchToLogin()">
-            Already have an account? <a class="here">Login here</a>
-          </p>
-        </form>
-
-        <!----- SIGN UP ENDED ----->
         
-      </div>
-    </div>
-
-    <div class="popup" id="popup-message"></div>
-
-    <script>
-      const loginForm = document.getElementById("login-form");
-      const signupForm = document.getElementById("signup-form");
-      const popupMessage = document.getElementById("popup-message");
-      const showLoginPassword = document.getElementById("show-login-password");
-      const showSignupPassword = document.getElementById(
-        "show-signup-password"
-      );
-
-      function switchToSignup() {
-        signupForm.classList.add("active");
-        loginForm.classList.remove("active");
-        addInactiveClass(loginForm, true);
-      }
-
-      function switchToLogin() {
-        loginForm.classList.add("active");
-        signupForm.classList.remove("active");
-        addInactiveClass(signupForm, true);
-      }
-
-      function addInactiveClass(element, isForm = false) {
-        if (isForm) {
-          element.classList.add("inactive");
+        .info {
+            text-align: center;
+            color: var(--heading);
+            width: 90%;
+            background-color: rgba(0, 0, 0, 0.8);
+            margin: 4rem auto;
+            padding: 2em;
+            border-radius: 1em;
+            border: 1px solid var(--bg-lt);
+            max-width: 600px;
         }
-
-        const inputs = element.querySelectorAll("input, button");
-        inputs.forEach((input) => input.classList.add("inactive"));
-
-        const childForms = element.querySelectorAll("form");
-        childForms.forEach((childForm) => addInactiveClass(childForm, true));
-
-        const childLinks = element.querySelectorAll(".switch");
-        childLinks.forEach((link) => link.classList.remove("inactive"));
-      }
-
-      if (window.matchMedia("(min-width: 768px)").matches) {
-        // Initially hide the signup form if the screen is wider than 768px
-        signupForm.classList.remove("active");
-        addInactiveClass(signupForm, true);
-      }
-      function forgotPassword() {
-        showPopupMessage(
-          "Please contact support for password recovery.",
-          "error"
-        );
-      }
-
-      function showPopupMessage(message, type) {
-        popupMessage.textContent = message;
-        popupMessage.classList.add("show", type);
-
-        setTimeout(function () {
-          popupMessage.classList.remove("show");
-          popupMessage.classList.remove(type);
-        }, 2000);
-      }
-
-      showLoginPassword.addEventListener("click", function () {
-        const loginPassword = document.getElementById("login-password");
-        if (loginPassword.type === "password") {
-          loginPassword.type = "text";
-          showLoginPassword.name = "eye-off";
-        } else {
-          loginPassword.type = "password";
-          showLoginPassword.name = "eye";
+        
+        .subheading {
+            text-align: center;
+            color: var(--subheading);
         }
-      });
-
-      showSignupPassword.addEventListener("click", function () {
-        const signupPassword = document.getElementById("signup-password");
-        if (signupPassword.type === "password") {
-          signupPassword.type = "text";
-          showSignupPassword.name = "eye-off";
-        } else {
-          signupPassword.type = "password";
-          showSignupPassword.name = "eye";
+        
+        .title {
+            color: #fff;
+            max-width: 600px;
         }
-      });
-    </script>
+        
+        @media screen and (max-width: 768px) {
+            h1 {
+                font-size: clamp(1.5rem, 8vw, 3rem);
+            }
 
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
-      import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-analytics.js";
-      import {
-        getAuth,
-        signInWithEmailAndPassword,
-        createUserWithEmailAndPassword,
-        signOut,
-      } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
-
-      const firebaseConfig = {
-        apiKey: "AIzaSyDYPv8S_ljSo3tuMNoRYPI2tleWOqhqFMM",
-        authDomain: "commumeter.firebaseapp.com",
-        projectId: "commumeter",
-        storageBucket: "commumeter.appspot.com",
-        messagingSenderId: "1098693151947",
-        appId: "1:1098693151947:web:c0ce3c093e75ae8cbe1f4e",
-        measurementId: "G-71SRN52DX4",
-      };
-
-      // Initialize Firebase
-      const app = initializeApp(firebaseConfig);
-      const analytics = getAnalytics(app);
-      const auth = getAuth();
-      console.log(app);
-
-      //----- Register code start
-      document.getElementById("signup").addEventListener("click", function () {
-        var email = document.getElementById("signup-email").value;
-        var password = document.getElementById("signup-password").value;
-
-        createUserWithEmailAndPassword(auth, email, password)
-          .then((userCredential) => {
-            // Signed up
-            const user = userCredential.user;
-            console.log(user);
-            showPopupMessage("Successfully signed up!", "success");
-            setTimeout(function () {
-              window.location.href = "index.html";
-            }, 2000);
-
-            // ...
-          })
-          .catch((error) => {
-            showPopupMessage("Please fill in all the fields.", "error");
-          });
-      });
-      //----- End
-
-      //----- Login code start
-      document.getElementById("login").addEventListener("click", function () {
-        var email = document.getElementById("login-email").value;
-        var password = document.getElementById("login-password").value;
-
-        signInWithEmailAndPassword(auth, email, password)
-          .then((userCredential) => {
-            // Signed in
-            const user = userCredential.user;
-            console.log(user);
-            showPopupMessage("Successfully logged in!", "success");
-            setTimeout(function () {
-              const userEmail = document.getElementById("login-email").value;
-              window.location.href = "user/map.html";
-            }, 2000); 
-
-            // ...
-          })
-          .catch((error) => {
-            showPopupMessage(
-              "Wrong email or password. Please try again.",
-              "error"
+            .info {
+                width: 85%;
+            }
+        
+            h2.subheading {
+                font-weight: 600;
+                text-align: left;
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                padding-left: 1.4em;
+                padding-right: 1.4em;
+            }
+        }
+        h1 > .magic {
+            display: inline-block;
+            position: relative;
+        }
+        h1 > .magic > .magic-star {
+            --size: clamp(20px, 1.5vw, 30px);
+            animation: scale 0.9s ease forwards;
+            display: block;
+            height: var(--size);
+            left: var(--star-left);
+            position: absolute;
+            top: var(--star-top);
+            width: var(--size);
+        }
+        h1 > .magic > .magic-star > svg {
+            animation: rotate 3s linear infinite;
+            display: block;
+            opacity: 1;
+        }
+        h1 > .magic > .magic-star > svg > path {
+            fill: var(--pink);
+        }
+        h1 > .magic > .magic-text {
+            animation: background-pan 10s linear infinite;
+            background: linear-gradient(
+                to right,
+                var(--purple),
+                var(--denim-lt),
+                var(--indigo),
+                var(--pink),
+                var(--purple)
             );
-          });
-      });
-      //----- End
-    </script>
-  </body>
+            background-size: cover;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            white-space: nowrap;
+        }
+        @keyframes background-pan {
+            from {
+                background-position: 0 center;
+            }
+            to {
+                background-position: -500% center;
+            }
+        }
+        @keyframes scale {
+            from,
+            to {
+                transform: scale(0);
+            }
+            50% {
+                transform: scale(1);
+            }
+        }
+        @keyframes rotate {
+            from {
+                transform: rotate(0);
+            }
+            to {
+                transform: rotate(180deg);
+            }
+        }
+        @keyframes fade {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        li {
+            list-style: none;
+            margin: 0;
+            padding-left: 1em;
+            color: #abacb3;
+        }
+        
+        i {
+            font-size: 2rem;
+            line-height: 1;
+            margin-left: 1em;
+            margin-right: 1em;
+        }
+        
+        a {
+            font-family: Jakarta;
+            font-weight: 600;
+            font-size: 1.2em;
+            text-decoration: none;
+            color: #b5b6bb;
+        }
+        a:hover {
+            color: #e4e4e4;
+            transition: color ease-in-out 0.3s;
+            text-shadow: rgba(188, 105, 255, 0.2) 0 0 6px;
+        }
+        ::-moz-selection {
+            color: #fff;
+            background: var(--tekhelet-lt);
+        }
+        ::selection {
+            color: #fff;
+            background: var(--tekhelet-lt);
+        }
+        body {
+            --sb-track-color: #25252b;
+            --sb-thumb-color: #383b46;
+            --sb-size: 12px;
+            scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
+            scrollbar-width: var(--sb-size);
+            scrollbar-arrow-color: var(--sb-thumb-color);
+            scrollbar-track-color: var(--sb-track-color);
+        }
+        body::-webkit-scrollbar {
+            width: var(--sb-size);
+        }
+        body::-webkit-scrollbar-track {
+            background: #212126;
+        }
+        body::-webkit-scrollbar-track:active {
+            background: #2a2a31;
+        }
+        body::-webkit-scrollbar-thumb {
+            background: #35373f;
+            border-radius: 20px;
+        }
+        body::-webkit-scrollbar-thumb:hover {
+            background: #4a505e;
+        }
+        @media screen and (max-width: 768px) {
+            body::-webkit-scrollbar {
+                display: none;
+            }
+        }
+        .brand h3 {
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: -1px;
+            text-transform: uppercase;
+            color: var(--link);
+        }
+        .brand {
+            align-items: center;
+            display: flex;
+            justify-content: center;
+        
+            object-fit: contain;
+        }
+        
+        @media screen and (min-width: 768px) {
+            .brand h3 {
+                display: none !important;
+            }
+        }
+        @media screen and (max-width: 768px) {
+            .brand h3 {
+                display: visible !important;
+            }
+        }
+        header {
+            border-bottom: solid 1px hsla(240, 5%, 5%, 0);
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            color: #fff;
+        }
+        
+        .header {
+            position: fixed;
+            height: 8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            z-index: 10;
+            transition: all 0.4s ease-in-out;
+        }
+        .navbar {
+            padding-left: 12vw;
+            padding-right: 12vw;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 80%;
+            height: 100dvh;
+            z-index: 11;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .hero {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .section {
+            background-color: var(--bg-drk);
+            min-height: 100vh;
+            margin-bottom: 8em;
+            margin-top: 4em;
+        }
+        
+        .desktop-wrapper {
+            width: 100vw;
+            margin-top: 12vh;
+            margin-left: auto;
+            margin-right: auto;
+            min-height: 100vh;
+        }
+
+        .button {
+            flex-grow: 1;
+            padding: 15px 30px 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            background-color: #454392;
+            transition: background-color 0.3s ease-out;
+        }
+        a.button {
+            color: #fff;
+            text-decoration: none;
+            line-height: normal;
+            font-family: Manrope;
+            font-size: 0.8em;
+        }
+        .button:hover {
+            background-color: #5b57d1;
+        }
+
+        .login-buttons {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .login-buttons button {
+            background-color: #564caf; 
+            color: white; 
+            border: none; 
+            padding: 10px 20px; 
+            text-align: center; 
+            text-decoration: none; 
+            display: inline-block;
+            font-size: 16px; 
+            margin: 4px 2px; 
+            cursor: pointer; 
+            border-radius: 5px; 
+            transition: background-color 0.3s; 
+        }
+        .login-buttons button:hover {
+            background-color: #513e8e; 
+        }
+
+        @media screen and (max-width: 768px) {
+            body {
+                background-size: cover; 
+            }
+
+            .header .navbar .brand h3 {
+                font-size: 18px; 
+            }
+
+            .hero .title h1 {
+                font-size: 50px; 
+            }
+
+            .login-buttons button {
+                padding: 10px 20px; 
+                font-size: 16px; 
+            }
+        }
+
+        @media only screen and (max-width: 768px) {
+            .popup {
+                padding: 10px;
+                font-size: 16px;
+                max-width: 80%;
+            }
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            margin-right: 8px;
+        }
+
+            /* Responsive Styles */
+    @media (max-width: 768px) {
+        .navbar .brand h3,
+        .intro {
+            font-size: 18px;
+        }
+
+        .login-buttons button {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .hero {
+            padding: 10px;
+        }
+    }
+        
+    </style>
+</head>
+<body style="background: url(/img/jeepney.png) no-repeat center center; background-size: cover; z-index: 3;">
+    <header class="header" id="header">
+        <nav class="navbar">
+            <a href="#top" class="brand">
+                <div class="logo"><i class="fa fa-rocket"></i></div>
+            </a>
+            <span class="overlay"></span>    
+        </nav>
+    </header>
+        
+    <section class="hero" id="top">
+        <div class="title">
+            <h1 class="intro">
+                <span class="magic">
+                    <span class="magic-star">
+                        <svg viewBox="0 0 512 512">
+                            <path d="M512 255.1c0 11.34-7.406 20.86-18.44 23.64l-171.3 42.78l-42.78 171.1C276.7 504.6 267.2 512 255.9 512s-20.84-7.406-23.62-18.44l-42.66-171.2L18.47 279.6C7.406 276.8 0 267.3 0 255.1c0-11.34 7.406-20.83 18.44-23.61l171.2-42.78l42.78-171.1C235.2 7.406 244.7 0 256 0s20.84 7.406 23.62 18.44l42.78 171.2l171.2 42.78C504.6 235.2 512 244.6 512 255.1z" />
+                        </svg>
+                    </span>
+                    <span class="magic-star">
+                        <svg viewBox="0 0 512 512">
+                            <path d="M512 255.1c0 11.34-7.406 20.86-18.44 23.64l-171.3 42.78l-42.78 171.1C276.7 504.6 267.2 512 255.9 512s-20.84-7.406-23.62-18.44l-42.66-171.2L18.47 279.6C7.406 276.8 0 267.3 0 255.1c0-11.34 7.406-20.83 18.44-23.61l171.2-42.78l42.78-171.1C235.2 7.406 244.7 0 256 0s20.84 7.406 23.62 18.44l42.78 171.2l171.2 42.78C504.6 235.2 512 244.6 512 255.1z" />
+                        </svg>
+                    </span>
+                    <span class="magic-star">
+                        <svg viewBox="0 0 512 512">
+                            <path d="M512 255.1c0 11.34-7.406 20.86-18.44 23.64l-171.3 42.78l-42.78 171.1C276.7 504.6 267.2 512 255.9 512s-20.84-7.406-23.62-18.44l-42.66-171.2L18.47 279.6C7.406 276.8 0 267.3 0 255.1c0-11.34 7.406-20.83 18.44-23.61l171.2-42.78l42.78-171.1C235.2 7.406 244.7 0 256 0s20.84 7.406 23.62 18.44l42.78 171.2l171.2 42.78C504.6 235.2 512 244.6 512 255.1z" />
+                        </svg></span>
+                    <span class="magic-text">i</span></span>Jeep
+            </h1>
+            <div class="login-buttons">
+                <button onclick="window.location.href='/dist/login.html';">Login</button>
+            </div>
+        </div>
+    </section>
+</body>
+
+<script>
+    let index = 0,
+        interval = 1000;
+    const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+    const animate = (star) => {
+        star.style.setProperty("--star-left", `${rand(-10, 100)}%`);
+        star.style.setProperty("--star-top", `${rand(-40, 80)}%`);
+        star.style.animation = "none";
+        star.offsetHeight;
+        star.style.animation = "";
+    };
+    for (const star of document.getElementsByClassName("magic-star")) {
+        setTimeout(() => {
+            animate(star);
+            setInterval(() => animate(star), 1000);
+        }, index++ * (interval / 3));
+    }
+    // ================================  LOADER  ====================================== //
+    // ================================ NAVIGATE ====================================== //
+    // ===============================  CAROUSEL  ============================ //
+    // ==========================  HERO SPARKLE TEXT  ============================= //
+    // =============================== Particles =============================== //
+</script>
+
+<script>
+
+</script>
 </html>
