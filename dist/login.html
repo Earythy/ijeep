@@ -538,7 +538,7 @@
         setDoc,
         getDoc
       } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js";
-
+    
       const firebaseConfig = {
         apiKey: "AIzaSyDYPv8S_ljSo3tuMNoRYPI2tleWOqhqFMM",
         authDomain: "commumeter.firebaseapp.com",
@@ -548,84 +548,68 @@
         appId: "1:1098693151947:web:c0ce3c093e75ae8cbe1f4e",
         measurementId: "G-71SRN52DX4",
       };
-
+    
       // Initialize Firebase
       const app = initializeApp(firebaseConfig);
       const analytics = getAnalytics(app);
-      const auth = getAuth();
+      const auth = getAuth(app);
       const db = getFirestore(app);
       console.log(app);
-
+    
       //----- Register code start
       document.getElementById("signup").addEventListener("click", function () {
         var email = document.getElementById("signup-email").value;
         var password = document.getElementById("signup-password").value;
         var role = 'commuter'; // Assign default role as 'commuter'
-      
+    
+        if (!email || !password) {
+          showPopupMessage("Please fill in all the fields.", "error");
+          return;
+        }
+    
         createUserWithEmailAndPassword(auth, email, password)
           .then((userCredential) => {
             const user = userCredential.user;
-            console.log(user);
-            showPopupMessage("Successfully signed up!", "success");
-      
-            // Save the user role in Firestore
             return setDoc(doc(db, "users", user.uid), {
               email: email,
               role: role,
               name: '',
               profilePicture: ''
             }).then(() => {
-              setTimeout(function () {
-                window.location.href = "/dist/login.html";
-              }, 2000);
+              showPopupMessage("Successfully signed up!", "success");
+              // Sign the user out immediately after sign-up
+              return signOut(auth);
             });
-      
+          })
+          .then(() => {
+            // Redirect to login page after sign out
+            setTimeout(() => {
+              window.location.href = "/dist/login.html";
+            }, 2000);
           })
           .catch((error) => {
-            showPopupMessage("Please fill in all the fields.", "error");
+            console.error("Error during signup: ", error.message);
+            showPopupMessage(error.message, "error");
           });
       });
-      
+    
       //----- End
-
+    
       //----- Login code start
       document.getElementById("login").addEventListener("click", function () {
         var email = document.getElementById("login-email").value;
         var password = document.getElementById("login-password").value;
-      
+    
         signInWithEmailAndPassword(auth, email, password)
           .then((userCredential) => {
             const user = userCredential.user;
             console.log(user);
-      
+    
             // Get the user's role from Firestore
             const userRef = doc(db, "users", user.uid);
-            getDoc(userRef).then((snapshot) => {
-              if (snapshot.exists()) {
-                const userInfo = snapshot.data();
-                if (userInfo.role === 'admin') {
-                  window.location.href = '/dist/dashboard.html';
-                } else {
-                  window.location.href = '/dist/user/map.html';
-                }
-              } else {
-                showPopupMessage("No such user data found.", "error");
-              }
-            });
+            return getDoc(userRef);
           })
-          .catch((error) => {
-            showPopupMessage("Wrong email or password. Please try again.", "error");
-          });
-      });
-      
-      //----- End
-  
-
-
-      onAuthStateChanged(auth, user => {
-        if (user) {
-          const userRef = doc(db, "users", user.uid);
-          getDoc(userRef).then(snapshot => {
+          .then((snapshot) => {
             if (snapshot.exists()) {
               const userInfo = snapshot.data();
               if (userInfo.role === 'admin') {
@@ -636,22 +620,34 @@
             } else {
               showPopupMessage("No such user data found.", "error");
             }
+          })
+          .catch((error) => {
+            console.error("Error during login: ", error.message);
+            showPopupMessage("Wrong email or password. Please try again.", "error");
+          });
+      });
+    
+      //----- End
+    
+      onAuthStateChanged(auth, user => {
+        if (user) {
+          const userRef = doc(db, "users", user.uid);
+          getDoc(userRef).then(snapshot => {
+            if (snapshot.exists()) {
+              const userInfo = snapshot.data();
+              if (userInfo.role === 'admin') {
+                window.location.href = '/dist/dashboard.html';
+              }
+            } else {
+              showPopupMessage("No such user data found.", "error");
+            }
           });
         } else {
-          // No user is signed in
-          window.location.href = '/login.html';
+          console.log("No user is signed in");
         }
       });
-      
-      function showPopupMessage(message, type) {
-        const popup = document.getElementById('popup');
-        popup.textContent = message;
-        popup.className = type;
-        popup.style.display = 'block';
-        setTimeout(() => {
-          popup.style.display = 'none';
-        }, 3000);
-      }
+    
     </script>
+
   </body>
 </html>
