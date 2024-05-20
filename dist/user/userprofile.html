@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>iJeep</title>
+    <!-- ======= Styles ====== -->
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="/dist/assets/css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/2.0.7/css/dataTables.bootstrap5.css"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+      }
+      .container {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+      .navigation {
+        flex: 0 0 auto;
+      }
+
+      .main {
+        flex: 1 0 auto;
+        overflow-y: auto;
+        padding: 20px;
+      }
+
+      h2 {
+        margin-bottom: 20px;
+        font-size: 24px;
+      }
+
+      @media screen and (max-width: 768px) {
+        .card {
+          flex: 1 1 calc(50% - 20px);
+        }
+        .charts {
+          flex: 1 1 100%;
+        }
+        .main-content {
+          width: 100%;
+        }
+      }
+
+      /* Additional CSS for User Details */
+      .main .user-details {
+        width: 100%;
+        max-width: 600px;
+        margin: 20px auto; /* Center and provide margin */
+        padding: 20px;
+        border: 1px solid #ccc;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 10px; /* rounded corners */
+        text-align: center; /* Center text within the box */
+        background: #ffffff; /* Optional: for better contrast */
+      }
+      /*
+        .main .user-details img {
+            margin-bottom: 20px; 
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            object-fit: cover;
+        }
+*/
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+      }
+
+      .modal-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .close {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        font-size: 20px;
+        cursor: pointer;
+      }
+
+      .close:hover {
+        color: #888;
+      }
+
+      #display-name-input,
+      #profile-pic-input {
+        width: 200px;
+        height: 40px;
+        margin-bottom: 10px;
+      }
+
+      #save-button,
+      #edit-button {
+        padding: 10px 20px;
+        background-color: #333;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      #edit-profile {
+        display: none;
+        margin-top: 20px;
+      }
+
+      #edit-profile input[type="text"],
+      #edit-profile input[type="file"],
+      #edit-profile button {
+        margin-bottom: 10px;
+      }
+
+      #edit-profile button {
+        padding: 10px 20px;
+        background-color: #333;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      #edit-button {
+        padding: 5px 10px;
+        margin-top: 20px;
+        background-color: #333;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      #user-profile-pic {
+        margin-bottom: 20px;
+        width: 120px;
+        height: 120px;
+        border-radius: 50%; /* Use 50% for a circle */
+        border: 3px solid #b45b5b;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        object-fit: cover; /* Ensure the image covers the container without distortion */
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- =============== Navigation ================ -->
+    <div class="navcontainer">
+      <div class="navigation">
+        <ul>
+          <li>
+            <a href="#">
+              <span class="icon">
+                <ion-icon name="bus"></ion-icon>
+              </span>
+              <span class="title">iJeep</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="/dist/user/map.html">
+              <span class="icon">
+                <ion-icon name="map-outline"></ion-icon>
+              </span>
+              <span class="title">Map</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="/dist/user/profile.html">
+              <span class="icon">
+                <ion-icon name="person-outline"></ion-icon>
+              </span>
+              <span class="title">Profile</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="#">
+              <span class="icon">
+                <ion-icon name="log-out-outline"></ion-icon>
+              </span>
+              <span class="title" id="logout">Sign Out</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- ========================= Main ==================== -->
+      <div class="main">
+        <div class="topbar">
+          <div class="toggle">
+            <ion-icon name="menu-outline"></ion-icon>
+          </div>
+        </div>
+        <h2 style="padding: 20px">Account Details</h2>
+        <div class="user-details">
+          <!---
+                <div class="profile-pic-container">
+                    <svg id="user-profile-pic" class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" width="50" height="50">
+                        <path d="M12 2c-2.21 0-4 2.24-4 5s1.79 5 4 5 4-2.24 4-5-1.79-5-4-5zm0 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0 11c-2.67 0-8 1.34-8 4v1h16v-1c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                </div>
+                -->
+          <img id="user-profile-pic" src="#" />
+          <div id="user-name">Display Name:</div>
+          <div id="user-info" style="padding-top: 20px">
+            User info will display here.
+          </div>
+          <button id="edit-button">Edit Profile</button>
+
+          <!-- Make sure this element exists with the correct ID -->
+          <div id="edit-profile" style="display: none">
+            <!-- Edit profile content -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal -->
+
+    <div id="edit-profile-modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <input
+          type="text"
+          id="display-name-input"
+          placeholder="Enter display name"
+        />
+        <input type="file" id="profile-pic-input" accept="image/*" />
+        <button id="save-button">Save</button>
+      </div>
+    </div>
+
+    <div class="container">
+      <table id="logging" class="table table-striped"></table>
+    </div>
+
+    <script>
+      // JavaScript to show and hide modal
+      var editButton = document.getElementById("edit-button");
+      var modal = document.getElementById("edit-profile-modal");
+      var closeButton = document.querySelector("#edit-profile-modal .close"); // Select the close button
+
+      var saveButton = document.getElementById("save-button");
+
+      editButton.addEventListener("click", function () {
+        modal.style.display = "block";
+      });
+
+      closeButton.addEventListener("click", function () {
+        modal.style.display = "none";
+      });
+
+      saveButton.addEventListener("click", function () {
+        modal.style.display = "none";
+
+        // Retrieve updated display name from input field
+        const displayName = document.getElementById("display-name-input").value;
+
+        // Update the name display
+        document.getElementById("user-name").textContent =
+          "Display Name: " + displayName;
+      });
+    </script>
+
+    <!-- =========== Scripts =========  -->
+    <script src="/dist/assets/js/main.js"></script>
+
+    <!-- ====== ionicons ======= -->
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"
+    ></script>
+
+    <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-storage.js"></script>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-analytics.js";
+      import {
+        getAuth,
+        signInWithEmailAndPassword,
+        onAuthStateChanged,
+        signOut,
+      } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
+      import {
+        getFirestore,
+        collection,
+        addDoc,
+        connectFirestoreEmulator,
+        query,
+        getDocs,
+        getDoc,
+        updateDoc,
+        setDoc,
+        doc,
+        where,
+        onSnapshot,
+        deleteDoc,
+        orderBy,
+      } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js";
+      import {
+        getStorage,
+        ref,
+        uploadBytes,
+        getDownloadURL,
+      } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-storage.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyDYPv8S_ljSo3tuMNoRYPI2tleWOqhqFMM",
+        authDomain: "commumeter.firebaseapp.com",
+        projectId: "commumeter",
+        storageBucket: "commumeter.appspot.com",
+        messagingSenderId: "1098693151947",
+        appId: "1:1098693151947:web:c0ce3c093e75ae8cbe1f4e",
+        measurementId: "G-71SRN52DX4",
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      const auth = getAuth();
+      const storage = getStorage(app); // Initialize Firebase Storage
+      console.log(app);
+      let userId;
+
+      // Update the onAuthStateChanged function to fetch user profile information
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          userId = user.uid;
+          const email = user.email;
+          document.getElementById(
+            "user-info"
+          ).textContent = `Logged in as ${email}`;
+
+          const userDocRef = doc(db, "users", user.uid);
+
+          getDoc(userDocRef)
+            .then((docSnapshot) => {
+              if (docSnapshot.exists()) {
+                const userData = docSnapshot.data();
+                // Update user profile information
+                document.getElementById("user-name").textContent =
+                  userData.name;
+                if (userData.profilePicture) {
+                  const profilePicURL = userData.profilePicture;
+                  console.log("Profile Picture URL:", profilePicURL);
+                  document.getElementById("user-profile-pic").src =
+                    profilePicURL;
+                }
+              } else {
+                console.log("User profile not found in user data.");
+                // If the user profile document doesn't exist, create it with default values
+                setDoc(userDocRef, {
+                  email: email,
+                  name: "New User",
+                  profilePicture: "",
+                })
+                  .then(() => {
+                    console.log("User profile created successfully.");
+                    // Now that the profile document is created, you can update the display name
+                    document.getElementById("user-name").textContent =
+                      "Display Name: New User";
+                  })
+                  .catch((error) => {
+                    console.error("Error creating user profile:", error);
+                  });
+              }
+            })
+            .catch((error) => {
+              console.error("Error fetching user profile:", error);
+            });
+          // Enable edit button
+          document.getElementById("edit-button").disabled = false;
+        } else {
+          document.getElementById("user-info").textContent = "Not logged in";
+          console.log("User is signed out");
+          // Disable edit button
+          document.getElementById("edit-button").disabled = true;
+        }
+
+        const collectionRef = query(
+          collection(db, "userlogging"),
+          where("userId", "==", user.uid)
+        );
+
+        let table;
+
+        onSnapshot(collectionRef, (snapshot) => {
+          const dataset = [];
+
+          snapshot.forEach((doc) => {
+            //all data inside userlogging
+            const data = doc.data();
+
+            //formatting to readable date
+            const date = new Date(
+              data.date.seconds * 1000 + data.date.nanoseconds / 1000000
+            );
+            const options = {
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+            };
+            const formattedDate = date.toLocaleString("en-US", options);
+
+            // Generate a unique ID for the row
+            const rowId = doc.id;
+
+            dataset.push([
+              rowId, // Add the unique ID for the row
+              data.commuterlocation,
+              data.to,
+              data.fare,
+              data.howmany,
+              formattedDate,
+              // '<center><button type="button" class="btn btn-good btn-edit" style="margin-right: 7px !important;">Edit</button><button type="button" class="btn btn-bad btn-delete">Delete</button></center>',
+            ]);
+          });
+
+          // Sort dataset by date in descending order
+          dataset.sort((a, b) => new Date(b[5]) - new Date(a[5]));
+
+          // Destroy the existing DataTable instance if it exists
+          if (table) {
+            table.destroy();
+          }
+
+          // Reinitialize the DataTable with the sorted data
+          table = new DataTable("#logging", {
+            columns: [
+              { title: "DT_RowId" }, // Hidden column for the row ID
+              { title: "Location" },
+              { title: "Destination" },
+              { title: "Fare" },
+              { title: "Number" },
+              { title: "Date" },
+              // { title: "Action" },
+            ],
+            data: dataset,
+            // retrieve: true,
+            paging: true,
+            searching: true,
+            order: [[5, "desc"]], // Sort by the Date column in descending order
+            columnDefs: [
+              { targets: 0, visible: false }, // Hide the DT_RowId column
+            ],
+            responsive: true,
+          });
+        });
+      });
+
+      // Handle edit button click
+      document
+        .getElementById("edit-button")
+        .addEventListener("click", function () {
+          // Hide the user name and show the edit profile section
+          document.getElementById("user-name").style.display = "none";
+          document.getElementById("edit-profile").style.display = "block";
+        });
+
+      // Handle save button click
+      document
+        .getElementById("save-button")
+        .addEventListener("click", function () {
+          const displayName =
+            document.getElementById("display-name-input").value;
+          const profilePicFile =
+            document.getElementById("profile-pic-input").files[0];
+          document.getElementById("user-name").textContent =
+            "Display Name: " + displayName;
+
+          // Update display name in Firestore
+          const userDocRef = doc(db, "users", userId);
+          getDoc(userDocRef)
+            .then((docSnapshot) => {
+              if (docSnapshot.exists()) {
+                updateDoc(userDocRef, { name: displayName })
+                  .then(() => {
+                    console.log(
+                      "Display name updated successfully in Firestore."
+                    );
+                    // Update users object in localStorage if needed
+                  })
+                  .catch((error) => {
+                    console.error(
+                      "Error updating display name in Firestore: ",
+                      error
+                    );
+                  });
+              } else {
+                console.log("User profile not found in user data.");
+                // Handle the case where the user's document doesn't exist
+              }
+            })
+            .catch((error) => {
+              console.error("Error fetching user profile:", error);
+            });
+
+          // Handle profile picture upload if a new one is selected
+          if (profilePicFile) {
+            const storageRef = ref(storage, "profile_pictures/" + userId);
+            uploadBytes(storageRef, profilePicFile)
+              .then((snapshot) => {
+                getDownloadURL(snapshot.ref).then((url) => {
+                  updateDoc(userDocRef, { profilePicture: url })
+                    .then(() => {
+                      console.log(
+                        "Profile picture updated successfully in Firestore."
+                      );
+                      document.getElementById("user-profile-pic").src = url;
+                    })
+                    .catch((error) => {
+                      console.error(
+                        "Error updating profile picture and display name: ",
+                        error
+                      );
+                    });
+                });
+              })
+              .catch((error) => {
+                console.error("Error uploading profile picture: ", error);
+                alert("Error uploading profile picture: " + error.message);
+              });
+          }
+
+          // Show the user name and hide the edit profile section
+          document.getElementById("user-name").style.display = "block";
+          document.getElementById("edit-profile").style.display = "none";
+        });
+
+      // ====================== LOG OUT SHUTA ======================= //
+
+      document.getElementById("logout").addEventListener("click", function () {
+        signOut(auth)
+          .then(() => {
+            console.log("Sign-out successful.");
+            alert("Sign-out successful.");
+            window.location.href = "/dist/index.html";
+          })
+          .catch((error) => {
+            console.log("Error signing out:", error);
+            alert("Error signing out: " + error.message);
+          });
+      });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.0.7/js/dataTables.bootstrap5.js"></script>
+  </body>
+</html>
