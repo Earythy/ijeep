@@ -138,6 +138,46 @@
         padding: 8px;
         text-align: left;
       }
+
+      .btn-info {
+        background-color: #e9a184;
+        border-color: #e9a184;
+      }
+
+      .btn-info:hover,
+      .btn-info:focus,
+      .btn-info:active,
+      .btn-info.active {
+        background-color: #e9a184;
+        border-color: #e9a184;
+      }
+
+      .btn-secondary {
+        background-color: #f55951;
+        border-color: #f55951;
+      }
+
+      .btn-secondary:hover,
+      .btn-secondary:focus,
+      .btn-secondary:active,
+      .btn-secondary.active {
+        background-color: #f55951;
+        border-color: #f55951;
+      }
+
+      h5 {
+        color: #eb4a42;
+        font-weight: bold;
+      }
+
+      .modal-content {
+        background-color: #f1e8e6;
+      }
+
+      .modal-header,
+      .modal-footer {
+        border-color: #f1e8e6;
+      }
     </style>
   </head>
 
@@ -238,7 +278,9 @@
           <div class="modal-dialog modal-dialog-sm">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="infoModalLabel">Modal Title</h5>
+                <h5 class="modal-title" id="infoModalLabel">
+                  List of Active Commuter Location
+                </h5>
                 <button
                   type="button"
                   class="btn-close"
@@ -460,10 +502,13 @@
 
               // Create and configure the button
               const button = document.createElement("button");
-              button.className = "btn btn-primary btn-sm";
+              button.className = "btn btn-info btn-sm";
               button.textContent = "Center on map";
               button.onclick = () => {
-                map.setView([item.latitude, item.longitude], 15);
+                map.setView(
+                  [item.locationlatitude, item.locationlongitude],
+                  15
+                );
                 $("#infoModal").modal("hide");
                 console.log("button clicked");
               };
