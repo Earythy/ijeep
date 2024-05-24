@@ -81,6 +81,7 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
         h1, h2, p {
@@ -120,6 +121,7 @@
         .title {
             color: #fff;
             max-width: 600px;
+            margin: 0 auto;
         }
         
         @media screen and (max-width: 768px) {
@@ -302,12 +304,15 @@
                 display: visible !important;
             }
         }
+        
+        /*
         header {
             border-bottom: solid 1px hsla(240, 5%, 5%, 0);
             padding: 20px;
             background: rgba(0, 0, 0, 0.5);
             color: #fff;
         }
+        */
         
         .header {
             position: fixed;
@@ -349,14 +354,14 @@
             text-align: center;
             padding: 20px;
         }
-        
+
         .section {
             background-color: var(--bg-drk);
             min-height: 100vh;
             margin-bottom: 8em;
             margin-top: 4em;
         }
-        
+
         .desktop-wrapper {
             width: 100vw;
             margin-top: 12vh;
@@ -491,9 +496,11 @@
                         </svg></span>
                     <span class="magic-text">i</span></span>Jeep
             </h1>
+
             <div class="login-buttons">
                 <button onclick="window.location.href='login.html';">Login</button>
             </div>
+
         </div>
     </section>
 </body>
@@ -515,10 +522,5 @@
             setInterval(() => animate(star), 1000);
         }, index++ * (interval / 3));
     }
-    // ================================  LOADER  ====================================== //
-    // ================================ NAVIGATE ====================================== //
-    // ===============================  CAROUSEL  ============================ //
-    // ==========================  HERO SPARKLE TEXT  ============================= //
-    // =============================== Particles =============================== //
 </script>
 </html>
