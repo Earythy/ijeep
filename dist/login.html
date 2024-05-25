@@ -16,6 +16,11 @@
         background-image: url('./assets/img/jeepney.png');
         background-size: cover;
         background-position: center;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
       }
 
       .container {
@@ -24,8 +29,11 @@
         justify-content: center;
         align-items: center;
         height: 100%;
+        width: 100%;
         opacity: 0;
         animation: appear 1s ease-out forwards;
+        padding: 20px;
+        box-sizing: border-box;
       }
 
       @keyframes appear {
@@ -40,17 +48,20 @@
         padding: 50px;
         border-radius: 20px;
         box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
-        width: 100%;
-        max-width: 800px;
-        display: flex;
-        justify-content: space-around;
         transform: translateY(20px);
-        animation: slideIn 1s ease-out forwards;
-        gap: 20px;
         background: rgba(0, 0, 0, 0.35); /* Semi-transparent white background */
         backdrop-filter: blur(10px); /* Apply a blur effect */
         border-radius: 10px; /* Rounded corners */
         box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37); /* Shadow effect */
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        width: 100%;
+        max-width: 800px;
+        animation: slideIn 1s ease-out forwards;
+        /*flex-wrap: wrap;*/
       }
 
       @keyframes slideIn {
@@ -62,8 +73,11 @@
       .form-container form {
         background-color: #f5f5f5;
         padding: 40px;
+        /*padding: 20px*/
         border-radius: 20px;
         width: 50%;
+        /*width: 100%*/
+        /*max-width: 380px*/
         transition: all 0.3s ease-out;
         box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
         position: relative;
@@ -91,33 +105,8 @@
         pointer-events: none;
       }
 
-      @media screen and (max-width: 768px) {
-        .form-container form {
-          width: 100%;
-        }
-
-        .form-container form.active {
-          display: block;
-          opacity: 1;
-          transform: scale(1);
-          box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .form-container form:not(.active) {
-          display: none;
-        }
-
-        .form-container label {
-          margin-bottom: 5px;
-        }
-
-        .form-container input {
-          margin-bottom: 10px;
-        }
-      }
-
       .form-container h2 {
-        color: #6d3c69; /** #f55951; **/
+        color: #543c52; /* #f55951; **/
         text-align: center;
         font-weight: bold;
         font-size: 24px;
@@ -149,6 +138,8 @@
         box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.1);
         font-size: 16px;
         transition: box-shadow 0.3s ease-out;
+        align-items: center;
+        justify-content: center;
       }
 
       .form-container input:focus {
@@ -162,7 +153,6 @@
         border-radius: 15px;
         color: white;
         background: linear-gradient(90deg, #543c52 0%, #69495f 100%);
-
         box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
         margin-top: 30px;
         font-size: 18px;
@@ -194,6 +184,7 @@
         height: 100px; /* adjust as needed */
         z-index: 1000;
       }
+
       .button-facebook {
         background-color: #3b5998;
         color: white;
@@ -233,7 +224,6 @@
         display: none;
         opacity: 0;
         animation: fadeIn 0.3s ease-out forwards;
-
         max-width: 90%;
         text-align: center;
       }
@@ -262,57 +252,43 @@
 
       .popup.show.success {
         animation: fadeIn 0.3s ease-out forwards,
-          successAnimation 2s ease-out 0.3s forwards;
+          successAnimation 5s ease-out 0.3s forwards;
       }
 
       .popup.show.error {
         animation: fadeIn 0.3s ease-out forwards,
-          errorAnimation 2s ease-out 0.3s forwards;
-      }
-
-      @media only screen and (max-width: 768px) {
-        .popup {
-          padding: 10px;
-          font-size: 16px;
-          max-width: 80%;
-        }
+          errorAnimation 5s ease-out 0.3s forwards;
       }
 
       @keyframes fadeIn {
         from {
           opacity: 0;
+          transform: translate(-50%, -50%) scale(0.8);
         }
 
         to {
           opacity: 1;
+          transform: translate(-50%, -50%) scale(1);
         }
       }
 
       @keyframes successAnimation {
-        0% {
-          transform: scale(1);
+        from {
+          opacity: 1;
         }
-
-        20% {
-          transform: scale(1.2);
-        }
-
-        100% {
-          transform: scale(1);
+        to {
+          opacity: 0;
+          display: none;
         }
       }
 
       @keyframes errorAnimation {
-        0% {
-          transform: translateX(-10px);
+        from {
+          opacity: 1;
         }
-
-        20% {
-          transform: translateX(10px);
-        }
-
-        100% {
-          transform: translateX(0);
+        to {
+          opacity: 0;
+          display: none;
         }
       }
 
@@ -325,13 +301,103 @@
         color: #070707;
         cursor: pointer;
       }
+
+      @media screen and (max-width: 1200px) {
+        .container {
+            padding: 10px;
+        }
+
+        .form-container form {
+            max-width: none;
+            width: 100%;
+        }
+
+        .form-container h2 {
+            font-size: 22px;
+        }
+
+        .form-container p {
+            font-size: 16px;
+        }
+
+        .form-container label {
+            font-size: 16px;
+        }
+
+        .form-container input {
+            font-size: 14px;
+        }
+
+        .form-container button {
+            font-size: 16px;
+        }
+      }
+
+      
+      @media screen and (max-width: 768px) {
+        .form-container form {
+          width: 100%;
+          max-width: none; /* added */
+        }
+
+        .form-container form.active {
+          display: block;
+          opacity: 1;
+          transform: scale(1);
+          box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-container form:not(.active) {
+          display: none;
+        }
+
+        .form-container { /* fully added */
+          padding: 10px;
+          gap: 0;
+          justify-content: center;
+        }
+
+        .form-container label {
+          margin-bottom: 5px;
+        }
+
+        .form-container input {
+          margin-bottom: 10px;
+        }
+
+        .form-container input, 
+        .form-container button {
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        .form-container button {
+            margin-top: 10px;
+        }
+
+        .button-facebook,
+        .button-google {
+            font-size: 14px;
+        }
+
+        .button-facebook ion-icon,
+        .button-google ion-icon {
+            font-size: 16px;
+        }
+
+        .popup {
+          padding: 10px;
+          font-size: 16px;
+          max-width: 80%;
+        }
+      }
     </style>
   </head>
 
   <body>
     <div class="container">
       <div class="form-container">
-        <img src="./assets/img/ijeep.png" alt="Logo" class="logo" />
+        <!--<img src="./assets/img/ijeep.png" alt="Logo" class="logo" />-->
 
         <!---- LOG IN START ---->
 
