@@ -456,6 +456,21 @@
             }
         }
 
+        /* Hide the login button on screens larger than 1200px */
+        @media screen and (min-width: 1200px) {
+            .createbtn.selectedbtn {
+                display: none;
+            }
+        }
+
+        /* Show the login button on screens 1200px and smaller */
+        @media screen and (max-width: 768px) {
+            .createbtn.selectedbtn {
+                display: inline-block; /* or block depending on your layout */
+            }
+        }
+
+
         @media screen and (max-width: 1040px) {
             .box {
                 flex-direction: column;
