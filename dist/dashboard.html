@@ -221,6 +221,17 @@
                         <ion-icon name="people-circle-outline"></ion-icon>
                     </div>
                 </div>
+
+                <div class="card">
+                    <div>
+                        <div class="numbers" id="totalRoutes"></div>
+                        <div class="cardName">Routes</div>
+                    </div>
+
+                    <div class="iconBx">
+                        <ion-icon name="trail-sign-outline"></ion-icon>
+                    </div>
+                </div>
             </div>
 
             <!-- ================ Charts ================= -->
@@ -402,6 +413,13 @@
     const analytics = getAnalytics(app);
     const auth = getAuth();
     console.log(app);
+
+    getDocs(query(collection(db, "Routes")))
+        .then((routeListSnapshot) => {
+            var totalRoutes = routeListSnapshot.size;
+            $('#totalRoutes').text(totalRoutes);
+        });
+    
 
     populateBarangaySelect('Acmac', 'brgy_filter')
 
