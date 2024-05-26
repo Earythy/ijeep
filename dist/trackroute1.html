@@ -13,7 +13,8 @@
     <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    <script type="module" src="./assets/js/coords.js"></script>
+    <script type="module" src="./assets/js/routeCoords.js"></script>
+    <script type="module" src="./assets/js/route.js"></script>
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
@@ -217,117 +218,6 @@
             <div class="fare-container" id="fare-container"></div> <!-- Added fare container -->
         <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
         <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
-          
-        <script>
-            // Map configuration
-            const mapConfig = { center: [8.2333, 124.2333], zoom: 13, };
-        
-            // Create the map const
-            const map = L.map('map').setView(mapConfig.center, mapConfig.zoom);
-        
-            // Add tile layer
-            L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-                attribution: 'Leaflet © <a href="http://openstreetmap.org">OpenStreetMap</a>, contribution',
-                maxZoom: 18,
-                minZoom: 13,
-            }).addTo(map);
-
-var purpleLine = [
-
-[	8.317762,124.252194	]	,
-[	8.317529,124.251834	]	,
-[	8.317332,124.251324	]	,
-[	8.317465,124.250986	]	,
-[	8.316982,124.249971	]	,
-[   8.307206,124.255127	]	,
-[	8.305896,124.255646	]	,
-[	8.298361,124.255141	]	,
-[	8.297039,124.255375	]	,
-[	8.296126,124.255740	]	,
-[	8.290576,124.258373 ]	,
-[	8.289960,124.259060	]	,
-[	8.288814,124.261873	]	,
-[	8.288177,124.262431	]	,
-[	8.279973,124.266949	]	,
-[	8.279267,124.267222	]	,
-[	8.278386,124.267174	]	,
-[	8.275418,124.266125	]	,
-[	8.263399,124.254785	]	,
-[	8.262943,124.254505	]	,
-[	8.262348,124.254366	]	,
-[	8.261743,124.254441	]	,
-[	8.259354,124.255133	]	,
-[	8.258871,124.255482	]	,
-[	8.258393,124.256277	]	,
-[	8.257907,124.258236	]	,
-[	8.257586,124.258837	]	,
-[	8.257029,124.259288	]	,
-[	8.252941,124.261080	]	,
-[	8.251954,124.261327	]	,
-[	8.250563,124.261359	]	,
-[	8.248917,124.260968	]	,
-[	8.247738,124.260334	]	,
-[	8.247027,124.259765	]	,
-[	8.246114,124.258681	]	,
-[	8.241240,124.246483	]	,
-[	8.240895,124.245941	]	,
-[	8.239233,124.244508	]	,
-[	8.237317,124.243874	]	,
-[	8.233908,124.242274	]	,
-[	8.233186,124.241764	]	,
-[	8.232443,124.241147	]	, 
-[	8.231047,124.239417 ]   ,
-[	8.230120,124.237843	]	,
-[	8.228272,124.237623	]	,
-[	8.227869,124.240318	]	,
-[	8.232443,124.241147	]	
-];
-
-var polyline = L.polyline(purpleLine, {color: 'black'}).addTo(map);
-
-// Add dropdown menu to Leaflet map
-var dropdownOptions = {
-    "Select Driver": {
-        "disabled": true, // Disable the "Select Page" option
-        "hide": true // Hide the "Select Page" option from the dropdown list
-    },
-    "Driver 1": {
-        "href": "trackroute.html" // Link to the Map page
-    },
-    "Driver 2": {
-        "href": "trackroute1.html" // Link to the Browse Route page
-    },
-    "Driver 3": {
-        "href": "trackroute2.html" // Link to the Track Route page
-    }
-};
-
-// Define custom control
-var CustomControl = L.Control.extend({
-    onAdd: function (map) {
-        var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
-        container.innerHTML = `
-            <select name="dropdown" onchange="window.location.href=this.options[this.selectedIndex].value;">
-                ${Object.keys(dropdownOptions).map(option => {
-                    if (dropdownOptions[option].disabled) {
-                        return `<option disabled selected>${option}</option>`;
-                    } else if (dropdownOptions[option].hide) {
-                        return `<option disabled style="display:none">${option}</option>`;
-                    } else {
-                        return `<option value="${dropdownOptions[option].href}">${option}</option>`;
-                    }
-                }).join('')}
-            </select>
-        `;
-        return container;
-    }
-});
-
-// Add custom control to map
-map.addControl(new CustomControl({ position: 'topright' }));
-</script>
-                
-            
 
         </div>
     </div>
