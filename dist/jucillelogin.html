@@ -611,6 +611,7 @@
         GoogleAuthProvider,
         FacebookAuthProvider,
         signInWithPopup,
+        onAuthStateChanged,
         signOut,
       } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
       import {
@@ -777,18 +778,33 @@
         .getElementById("google-login")
         .addEventListener("click", function () {
           const provider = new GoogleAuthProvider();
+
+          var role = "commuter"; // Assign default role as 'commuter'
           signInWithPopup(auth, provider)
             .then((result) => {
               // Handle successful login
               const user = result.user;
-              console.log(user);
-              showPopupMessage(
-                "Successfully logged in with Google!",
-                "success"
-              );
-              setTimeout(function () {
-                window.location.href = "commuter.html";
-              }, 2000);
+              return setDoc(doc(db, "users", user.uid), {
+                email: user.email,
+                role: role,
+                name: "",
+                profilePicture: "",
+              }).then(() => {
+                // Fetch user data after setting it
+                return getDoc(doc(db, "users", user.uid));
+              });
+            })
+            .then((snapshot) => {
+              if (snapshot.exists()) {
+                const userInfo = snapshot.data();
+                if (userInfo.role === "admin") {
+                  window.location.href = "/dashboard.html";
+                } else {
+                  window.location.href = "/commuter.html";
+                }
+              } else {
+                showPopupMessage("No such user data found.", "error");
+              }
             })
             .catch((error) => {
               // Handle errors
@@ -805,18 +821,32 @@
         .getElementById("facebook-login")
         .addEventListener("click", function () {
           const provider = new FacebookAuthProvider();
+          var role = "commuter"; // Assign default role as 'commuter'
           signInWithPopup(auth, provider)
             .then((result) => {
               // Handle successful login
               const user = result.user;
-              console.log(user);
-              showPopupMessage(
-                "Successfully logged in with Facebook!",
-                "success"
-              );
-              setTimeout(function () {
-                window.location.href = "commuter.html";
-              }, 2000);
+              return setDoc(doc(db, "users", user.uid), {
+                email: user.email,
+                role: role,
+                name: "",
+                profilePicture: "",
+              }).then(() => {
+                // Fetch user data after setting it
+                return getDoc(doc(db, "users", user.uid));
+              });
+            })
+            .then((snapshot) => {
+              if (snapshot.exists()) {
+                const userInfo = snapshot.data();
+                if (userInfo.role === "admin") {
+                  window.location.href = "/dashboard.html";
+                } else {
+                  window.location.href = "/commuter.html";
+                }
+              } else {
+                showPopupMessage("No such user data found.", "error");
+              }
             })
             .catch((error) => {
               // Handle errors
