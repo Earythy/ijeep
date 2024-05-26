@@ -281,10 +281,12 @@
             </div>
 
             <div class="modal-body">
-              <p id="latLngText">Location: Latitude: 0, Longitude: 0</p>
-              <p id="destinationlatLngText">
-                Destination :Latitude: 0, Longitude: 0
-              </p>
+              <div style="display: none">
+                <p id="latLngText">Location: Latitude: 0, Longitude: 0</p>
+                <p id="destinationlatLngText">
+                  Destination :Latitude: 0, Longitude: 0
+                </p>
+              </div>
               <div id="fareDisplay">Fare:</div>
               <div class="mb-3">
                 <label for="routeSelect" class="form-label"
@@ -317,7 +319,7 @@
                   <option value="Dalipuga Proper">Dalipuga Proper</option>
                   <option value="Paitan">Paitan</option>
                   <option value="Mapalad">Mapalad</option>
-                  <option value="Boundary Lugait/Iligan">
+                  <option value="Boundary Lugait-Iligan">
                     Boundary Lugait/Iligan
                   </option>
                 </select>
@@ -343,7 +345,7 @@
                   <option value="Dalipuga Proper">Dalipuga Proper</option>
                   <option value="Paitan">Paitan</option>
                   <option value="Mapalad">Mapalad</option>
-                  <option value="Boundary Lugait/Iligan">
+                  <option value="Boundary Lugait-Iligan">
                     Boundary Lugait/Iligan
                   </option>
 
@@ -535,7 +537,7 @@
                 // Sign-out successful.
                 console.log("Sign-out successful.");
                 alert("Sign-out successful.");
-                window.location.href = "index.html";
+                window.location.href = "jucillelogin.html";
               })
               .catch((error) => {
                 // An error happened.
@@ -718,31 +720,8 @@
         // Call the setupRealtimeListener function to start listening for real-time updates
         setupRealtimeListener();
 
-        //
-        //
-        //Removed because of cloud functions
-        //
-        //
-
-        // async function updateOldDocuments() {
-        //   const currentTime = Date.now();
-        //   const thirtyMinutesAgo = currentTime - 30 * 60 * 1000;
-
-        //   const q = query(
-        //     collection(db, "commutermark"),
-        //     where("date", "<", new Date(thirtyMinutesAgo)),
-        //     where("userId", "==", user.uid)
-        //   );
-        //   const querySnapshot = await getDocs(q);
-
-        //   const updatePromises = querySnapshot.docs.map((doc) =>
-        //     updateDoc(doc.ref, { display: false })
-        //   );
-        //   await Promise.all(updatePromises);
-        // }
-
         var latlnglocation, latlongdestination;
-        // setInterval(updateOldDocuments, 30 * 60 * 1000);
+
         async function getCommuterLocation() {
           const commuterLocation =
             document.getElementById("commuterlocation").value;
@@ -806,7 +785,7 @@
               return [8.313266, 124.251974];
             case "Mapalad":
               return [8.319363, 124.248871];
-            case "Boundary Lugait/Iligan":
+            case "Boundary Lugait-Iligan":
               return [8.32272, 124.24745];
             case "Traffic Light Tambo":
               return [8.245201, 124.256384];
@@ -819,6 +798,7 @@
           }
         }
 
+        //fare display
         function updateFareOverlay(FareContainer) {
           const fareContainer = document.getElementById("fare-container");
           fareContainer.innerHTML = `<b> Your total Fare: is  ₱${FareContainer.toFixed(
@@ -897,7 +877,9 @@
                   L.latLng(latlnglocation[0], latlnglocation[1]),
                   L.latLng(latlongdestination[0], latlongdestination[1]),
                 ],
-                routeWhileDragging: true,
+                routeWhileDragging: false,
+                draggableWaypoints: false,
+                addWaypoints: false,
               });
 
               // Listen for the routing control event to update the marker's position
@@ -995,6 +977,7 @@
           commuterfare
         ) {
           try {
+            //save latlong to Firebase
             const docRef = await addDoc(collection(db, "commutermark"), {
               userId: userId, // Include the userId in the document
               locationlatitude: locationlat,
@@ -1009,8 +992,9 @@
               display: true,
             });
 
+            //for logging
             const logging = await addDoc(collection(db, "userlogging"), {
-              userId: userId, // Include the userId in the document
+              userId: userId,
               locationlatitude: locationlat,
               locationlongitude: locationlng,
               destinationlatitude: destinationlat,
