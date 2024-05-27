@@ -513,45 +513,45 @@
         /* HTML COORDINATES ORIG HERE */
 
         // Try HTML5 geolocation to get the user's location
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-            (position) => {
-              const userLocation = [
-                position.coords.latitude,
-                position.coords.longitude,
-              ];
+        // if (navigator.geolocation) {
+        //   navigator.geolocation.getCurrentPosition(
+        //     (position) => {
+        //       const userLocation = [
+        //         position.coords.latitude,
+        //         position.coords.longitude,
+        //       ];
 
-              // Center the map on the user's location
-              map.setView(userLocation);
+        //       // Center the map on the user's location
+        //       map.setView(userLocation);
 
-              //DON"T INCLUDE THIS, WILL BREAK THE MAP IF USER
-              //ALLOWED GEOLOCATION
-              //map.setView(8.298504, 124.254389); //temporary
+        //       //DON"T INCLUDE THIS, WILL BREAK THE MAP IF USER
+        //       //ALLOWED GEOLOCATION
+        //       //map.setView(8.298504, 124.254389); //temporary
 
-              // Add a custom marker with the 'jeep.png' image
-              const customIcon = L.icon({
-                iconUrl: "img/jeep.png", // Path to your custom marker image
-                iconSize: [50, 50], // Size of the icon
-                iconAnchor: [15, 30], // Anchor point of the icon, similar to the center
-                popupAnchor: [0, -30], // Point from which the popup should open relative to the iconAnchor
-              });
+        //       // Add a custom marker with the 'jeep.png' image
+        //       const customIcon = L.icon({
+        //         iconUrl: "img/jeep.png", // Path to your custom marker image
+        //         iconSize: [50, 50], // Size of the icon
+        //         iconAnchor: [15, 30], // Anchor point of the icon, similar to the center
+        //         popupAnchor: [0, -30], // Point from which the popup should open relative to the iconAnchor
+        //       });
 
-              L.marker(userLocation, { icon: customIcon })
-                .addTo(map)
-                .bindPopup(
-                  `Your Location: ${position.coords.latitude}, ${position.coords.longitude}`
-                )
-                .openPopup();
-            },
-            () => {
-              // Handle errors
-              alert("Error: The Geolocation service failed.");
-            }
-          );
-        } else {
-          // Browser doesn't support Geolocation
-          alert("Error: Your browser doesn't support geolocation.");
-        }
+        //       L.marker(userLocation, { icon: customIcon })
+        //         .addTo(map)
+        //         .bindPopup(
+        //           `Your Location: ${position.coords.latitude}, ${position.coords.longitude}`
+        //         )
+        //         .openPopup();
+        //     },
+        //     () => {
+        //       // Handle errors
+        //       alert("Error: The Geolocation service failed.");
+        //     }
+        //   );
+        // } else {
+        //   // Browser doesn't support Geolocation
+        //   alert("Error: Your browser doesn't support geolocation.");
+        // }
 
         //////////////////////////////////
       });
@@ -581,75 +581,63 @@
           });
 
         // Custom icons
-        const redIcon = new L.Icon({
-          iconUrl: "assets/img/walk.png",
-          iconSize: [37, 41],
-          iconAnchor: [18, 41],
-          popupAnchor: [1, -34],
-          tooltipAnchor: [16, -28],
-          shadowUrl: "assets/img/shadowmarker.png",
-          shadowSize: [41, 41],
-          shadowAnchor: [13, 41],
-        });
 
-        const tealIcon = new L.Icon({
-          iconUrl: "assets/img/walk.png",
-          iconSize: [37, 41],
-          iconAnchor: [18, 41],
-          popupAnchor: [1, -34],
-          tooltipAnchor: [16, -28],
-          shadowUrl: "assets/img/shadowmarker.png",
-          shadowSize: [41, 41],
-          shadowAnchor: [13, 41],
-        });
+        // const tealIcon = new L.Icon({
+        //   iconUrl: "assets/img/walk.png",
+        //   iconSize: [37, 41],
+        //   iconAnchor: [18, 41],
+        //   popupAnchor: [1, -34],
+        //   tooltipAnchor: [16, -28],
+        //   shadowUrl: "assets/img/shadowmarker.png",
+        //   shadowSize: [41, 41],
+        //   shadowAnchor: [13, 41],
+        // });
 
-        const greenIcon = new L.Icon({
-          iconUrl: "assets/img/walk.png",
-          iconSize: [37, 41],
-          iconAnchor: [18, 41],
-          popupAnchor: [1, -34],
-          tooltipAnchor: [16, -28],
-          shadowUrl: "assets/img/shadowmarker.png",
-          shadowSize: [41, 41],
-          shadowAnchor: [13, 41],
-        });
+        // const greenIcon = new L.Icon({
+        //   iconUrl: "assets/img/walk.png",
+        //   iconSize: [37, 41],
+        //   iconAnchor: [18, 41],
+        //   popupAnchor: [1, -34],
+        //   tooltipAnchor: [16, -28],
+        //   shadowUrl: "assets/img/shadowmarker.png",
+        //   shadowSize: [41, 41],
+        //   shadowAnchor: [13, 41],
+        // });
 
-        const yellowIcon = new L.Icon({
-          iconUrl: "assets/img/walk.png",
-          iconSize: [37, 41],
-          iconAnchor: [18, 41],
-          popupAnchor: [1, -34],
-          tooltipAnchor: [16, -28],
-          shadowUrl: "assets/img/shadowmarker.png",
-          shadowSize: [41, 41],
-          shadowAnchor: [13, 41],
-        });
+        // const yellowIcon = new L.Icon({
+        //   iconUrl: "assets/img/walk.png",
+        //   iconSize: [37, 41],
+        //   iconAnchor: [18, 41],
+        //   popupAnchor: [1, -34],
+        //   tooltipAnchor: [16, -28],
+        //   shadowUrl: "assets/img/shadowmarker.png",
+        //   shadowSize: [41, 41],
+        //   shadowAnchor: [13, 41],
+        // });
+
+        // const redIcon = new L.Icon({
+        //   iconUrl: "assets/img/walk.png",
+        //   iconSize: [37, 41],
+        //   iconAnchor: [18, 41],
+        //   popupAnchor: [1, -34],
+        //   tooltipAnchor: [16, -28],
+        //   shadowUrl: "assets/img/shadowmarker.png",
+        //   shadowSize: [41, 41],
+        //   shadowAnchor: [13, 41],
+        // });
 
         const defaultIcon = new L.Icon({
-          iconUrl:
-            "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-          iconSize: [25, 41],
+          iconUrl: "assets/img/people-peach.png",
+          iconSize: [32, 32],
           iconAnchor: [12, 41],
           popupAnchor: [1, -34],
           tooltipAnchor: [16, -28],
-          shadowUrl:
-            "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-          shadowSize: [41, 41],
-          shadowAnchor: [13, 41],
         });
         // Function to get the appropriate icon based on the route
         // Can add more icons and routes if necessary
 
         function getIconForRoute(commuterlocation) {
           switch (commuterlocation) {
-            case "City Proper":
-              return redIcon;
-            case "Dalipuga Proper":
-              return tealIcon;
-            case "MSU-IIT":
-              return greenIcon;
-            case "Tambo Gerona":
-              return yellowIcon;
             default:
               return defaultIcon;
           }
