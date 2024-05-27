@@ -200,7 +200,8 @@
                 <li>
                     <a href="/dist/user/profile.html">
                         <span class="icon">
-                            <ion-icon name="person-outline"></ion-icon>
+                            <!--<ion-icon name="person-outline"></ion-icon>-->
+                            <img id="profile-icon" src="default_profile_picture.png" alt="" style="width: 25px; height: 25px; border-radius: 50%;">
                         </span>
                         <span class="title">Profile</span>
                     </a>
@@ -341,6 +342,7 @@
                             const profilePicURL = userData.profilePicture;
                             console.log("Profile Picture URL:", profilePicURL);
                             document.getElementById('user-profile-pic').src = profilePicURL;
+                            document.getElementById('profile-icon').src = profilePicURL; // update the navigation icon
                         }
                     } else {
                         console.log('User profile not found in user data.');
@@ -408,7 +410,10 @@
                 getDownloadURL(snapshot.ref).then((url) => {
                     updateDoc(userDocRef, { profilePicture: url }).then(() => {
                         console.log("Profile picture updated successfully in Firestore.");
+                        // update the profile picture on the page
                         document.getElementById('user-profile-pic').src = url;
+                        // also update the profile icon in the navigation
+                        document.getElementById('profile-icon').src = url;
                     }).catch((error) => {
                         console.error("Error updating profile picture and display name: ", error);
                     });
@@ -433,7 +438,7 @@
             signOut(auth).then(() => {
                 console.log('Sign-out successful.');
                 alert('Sign-out successful.');
-                window.location.href = "/dist/admin_landingpage.html";
+                window.location.href = "/dist/index.html";
             }).catch((error) => {
                 console.log('Error signing out:', error);
                 alert('Error signing out: ' + error.message);

@@ -316,7 +316,6 @@ body {
 }
 
 .cardHeader{
-  padding-bottom: 30px;
   padding-top: 10px;
 }
 
@@ -327,7 +326,6 @@ body {
 
 
 .details table {
-  
   border-collapse: collapse;
   margin-top: 10px;
 }
@@ -405,24 +403,79 @@ body {
   height: 100%;
   object-fit: cover;
 }
+
+.popularLocations table {
+  width: 100%;
+}
+
 .popularLocations table tr td {
   padding: 12px 10px;
 }
+
 .popularLocations table tr td h4 {
   font-size: 16px;
   font-weight: 500;
   line-height: 1.2rem;
-}
-.popularLocations table tr td h4 {
-  font-size: 14px;
   color: white;
 }
+
 .popularLocations table tr:hover {
   background: var(--blue);
   color: var(--white);
 }
 .popularLocations table tr:hover td h4 span {
   color: var(--white);
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+  .popularLocations {
+    padding: 15px;
+  }
+  
+  .popularLocations .imgBx {
+    width: 30px;
+    height: 30px;
+  }
+
+  .popularLocations table tr td h4 {
+    font-size: 14px;
+  }
+
+  .popularLocations table tr td h4 span {
+    font-size: 12px;
+  }
+
+  .popularLocations table tr td {
+    padding: 10px 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .popularLocations {
+    padding: 10px;
+  }
+  
+  .popularLocations .imgBx {
+    width: 25px;
+    height: 25px;
+  }
+
+  .popularLocations table tr td h4 {
+    font-size: 12px;
+  }
+
+  .popularLocations table tr td h4 span {
+    font-size: 10px;
+  }
+
+  .popularLocations table tr td {
+    padding: 8px 6px;
+  }
+
+  .popularLocations table {
+    font-size: 14px;
+  }
 }
 
 /* ====================== Responsive Design ========================== */
@@ -449,6 +502,7 @@ body {
 @media (max-width: 768px) {
   .details {
     grid-template-columns: 1fr;
+    padding: 0;
   }
   .recentOrders {
     overflow-x: auto;

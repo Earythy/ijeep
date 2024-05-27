@@ -20,16 +20,36 @@
             margin: 0;
             padding: 0;
             height: 100%;
+            font-family: Arial, sans-serif;
         }
 
         .container {
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
+            /*min-height: 100vh;*/
+            height: 100%;
         }
 
         .navigation {
             flex: 0 0 auto;
+        }
+
+        .navigation ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        
+        .navigation ul li a {
+            text-decoration: none;
+            color: white;
+            display: flex;
+            align-items: center;
+        }
+        
+        .navigation ul li a .icon {
+            margin-right: 10px;
         }
 
         .main {
@@ -48,6 +68,7 @@
                 display: flex;
                 flex-wrap: wrap;
                 gap: 20px;
+                justify-content: space-between;
             }
 
             .card {
@@ -57,6 +78,11 @@
                 border: 1px solid #ccc;
                 border-radius: 10px;
                 box-sizing: border-box;
+                transition: transform 0.3s ease;
+            }
+
+            .card:hover {
+                transform: scale(1.05);
             }
 
             .dashchartsBx {
@@ -76,13 +102,75 @@
             }
 
             .details {
-                display: grid;
-                grid-template-columns: 1fr;
+                display: flex;
+                flex-wrap: wrap;
                 gap: 20px;
+                justify-content: center;
+                position: relative;
+                width: 100%;
+                padding: 20px;
+                overflow-x: auto; /* Add horizontal scroll for small screens */
+            }
+
+            .details .dataRecord {
+                width: 100%; /* Ensure the record container fills the available width */
+                background: #edd2cb;
+                padding: 1rem; /* Adjust padding */
+                overflow-x: auto;
             }
 
             #myTable {
+                width: 100%; /* Make table fill its container */
+                overflow-x: auto;
+            }
+
+            #myTable input[type="text"],
+            #myTable input[type="date"] {
                 width: 100%;
+                box-sizing: border-box; /* Ensure padding and border are included in the width */
+                margin-bottom: 10px; /* Add spacing between inputs */
+            }
+
+            @media screen and (max-width: 768px) {
+                #myTable input[type="text"],
+                #myTable input[type="date"] {
+                    margin-bottom: 5px; /* Reduce spacing between inputs for smaller screens */
+                }
+            }
+        
+            @media screen and (max-width: 480px) {
+                #myTable input[type="text"],
+                #myTable input[type="date"] {
+                    margin-bottom: 5px; /* Adjust spacing between inputs for smaller screens */
+                }
+            }
+
+
+
+
+
+
+            .popularLocations {
+                flex: 1 1 100%; /* Ensure the popular locations section takes up full width */
+            }
+
+            .popularLocations .cardHeader {
+                margin-bottom: 10px; /* Add spacing below card header */
+            }
+        
+            .popularLocations table {
+                width: 100%; /* Make the table inside popular locations fill its container */
+            }
+        
+
+            @media screen and (max-width: 1200px) {
+                .card {
+                    flex: 1 1 calc(33.33% - 20px);
+                }
+            
+                .charts {
+                    flex: 1 1 45%;
+                }
             }
 
             @media screen and (max-width: 768px) {
@@ -93,6 +181,63 @@
                 .charts {
                     flex: 1 1 100%;
                 }
+
+                .main {
+                    margin-left: 0;
+                    overflow-y: auto;
+                }
+
+                .details .dataRecord {
+                    padding: 10px;
+                }
+            }
+
+            @media screen and (max-width: 480px) {
+                .card {
+                    flex: 1 1 calc(100% - 20px);
+                }
+            
+                .charts {
+                    flex: 1 1 100%;
+                }
+            
+                .navigation ul {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+                }
+            
+                .topbar {
+                    display: flex;
+                    justify-content: space-between;
+                }
+
+                .details {
+                    flex-wrap: wrap; /* Stack elements vertically on smaller screens */
+                }
+
+                .details .dataRecord,
+                .popularLocations {
+                    width: 100%; /* Ensure elements take up full width */
+                }
+
+                .details .dataRecord {
+                    padding: 10px; /* Adjust padding for smaller screens */
+                }
+            }
+
+            .charts {
+                text-align: center;
+                flex: 1 1 400px;
+            }
+            
+            .charts canvas {
+                max-width: 100%;
+            }
+
+            .details.data {
+                padding: 20px;
+                overflow-x: auto; /* Add horizontal scroll for small screens */
             }
     </style>
 
