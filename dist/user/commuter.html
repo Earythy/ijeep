@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>iJeep</title>
+    <!-- ======= Styles ====== -->
+    <link rel="stylesheet" href="../assets/css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <script src="../assets/js/north-baranggay.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css"
+    />
+    <style>
+      #map {
+        height: 665px;
+        width: 100%;
+      }
+
+      .info {
+        padding: 6px 8px;
+        font: 14px/16px Arial, Helvetica, sans-serif;
+        background: white;
+        background: rgba(255, 255, 255, 0.8);
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        border-radius: 5px;
+      }
+      .info h4 {
+        margin: 0 0 5px;
+        color: #777;
+      }
+
+      .legend {
+        line-height: 18px;
+        color: #555;
+      }
+      .legend i {
+        width: 18px;
+        height: 18px;
+        float: left;
+        margin-right: 8px;
+        opacity: 0.7;
+      }
+
+      .fare-container {
+        position: absolute;
+        top: 20px; /* Adjusted top position */
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 999; /* Ensure it's on top of other elements */
+        background-color: rgba(
+          106,
+          5,
+          114,
+          0.8
+        ); /* Adjusted background color with transparency */
+        color: #fff; /* White text color */
+        padding: 5px 15px;
+        border-radius: 7px;
+        font-size: 18px; /* Increased font size */
+        font-weight: bold; /* Bold font weight */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Added box shadow for depth */
+      }
+
+      .fare-container:hover {
+        background-color: rgba(124, 20, 144, 0.8);
+      }
+
+      .btn-info {
+        background-color: #e9a184;
+        border-color: #e9a184;
+      }
+
+      .btn-info:hover,
+      .btn-info:focus,
+      .btn-info:active,
+      .btn-info.active {
+        background-color: #e9a184;
+        border-color: #e9a184;
+      }
+
+      .btn-secondary {
+        background-color: #f55951;
+        border-color: #f55951;
+      }
+
+      .btn-secondary:hover,
+      .btn-secondary:focus,
+      .btn-secondary:active,
+      .btn-secondary.active {
+        background-color: #f55951;
+        border-color: #f55951;
+      }
+
+      h5 {
+        color: #eb4a42;
+        font-weight: bold;
+      }
+
+      .modal-content {
+        background-color: #f1e8e6;
+      }
+
+      .modal-header,
+      .modal-footer {
+        border-color: #f1e8e6;
+      }
+    </style>
+  </head>
+
+  <body>
+ <!-- =============== Navigation ================ -->
+ <div class="navcontainer">
+  <div class="navigation">
+      <ul>
+          <li>
+              <a href="#">
+                  <span class="icon">
+                      <ion-icon name="speedometer"></ion-icon>
+                  </span>
+                  <span class="title">iJeep</span>
+              </a>
+          </li>
+
+          <li>
+            <a href="userprofile.html">
+              <span class="icon">
+                <!---<ion-icon name="person-outline"></ion-icon>-->
+                <img id="profile-icon" src="default_profile_picture.png" alt="" style="width: 25px; height: 25px; border-radius: 50%;">
+              </span>
+              <span class="title">Profile</span>
+            </a>
+          </li>
+
+          <li>
+              <a href="commuter.html">
+                  <span class="icon">
+                      <ion-icon name="log-in-outline"></ion-icon>
+                  </span>
+                  <span class="title">Book a Route</span>
+              </a>
+          </li>
+
+          <li>
+              <a href="trackroute1.html">
+                  <span class="icon">
+                      <ion-icon name="bus-outline"></ion-icon>
+                  </span>
+                  <span class="title">Where are the Jeeps?</span>
+              </a>
+          </li>
+
+          <li>
+              <a href="browseroute.html">
+                  <span class="icon">
+                      <ion-icon name="location-outline"></ion-icon>
+                  </span>
+                  <span class="title">Trip Estimator</span>
+              </a>
+          </li>
+
+          <li>
+              <a href="#">
+                  <span class="icon">
+                      <ion-icon name="log-out-outline"></ion-icon>
+                  </span>
+                  <span class="title" id="logout">Sign Out</span>
+              </a>
+          </li>
+      </ul>
+  </div>
+      <!-- ========================= Main ==================== -->
+      <div class="main">
+        <div class="topbar">
+          <div class="toggle">
+            <ion-icon name="menu-outline"></ion-icon>
+          </div>
+        </div>
+        <div
+          class="d-flex justify-content-between align-items-center px-3 px-md-5"
+        >
+          <h2 class="mb-0">MAP</h2>
+          <div class="d-flex flex-row align-items-center">
+            <button id="showCoordsBtn" type="button" class="btn btn-info me-3">
+              Add Location
+            </button>
+          </div>
+        </div>
+
+        <!-- =============== MAP ============= -->
+        <div id="map"></div>
+      </div>
+
+      <div
+        class="modal fade"
+        id="latLngModal"
+        tabindex="-1"
+        aria-labelledby="modalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-sm">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalLabel">Location Coordinates</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+
+            <div class="modal-body">
+              <div style="display: none">
+                <p id="latLngText">Location: Latitude: 0, Longitude: 0</p>
+                <p id="destinationlatLngText">
+                  Destination :Latitude: 0, Longitude: 0
+                </p>
+              </div>
+              <div id="fareDisplay">Fare:</div>
+              <div class="mb-3">
+                <label for="routeSelect" class="form-label"
+                  >Select a Route:</label
+                >
+                <select class="form-select" id="routeSelect">
+                  <option selected>Dalipuga</option>
+                </select>
+                <label for="commuterlocation" class="form-label"
+                  >Select your Location:</label
+                >
+                <select class="form-select" id="commuterlocation">
+                  <option selected>Select Location</option>
+                  <option value="City Proper">City Proper</option>
+                  <option value="MSU-IIT">MSU-IIT</option>
+                  <option value="Traffic Light Tambo">
+                    Traffic Light Tambo
+                  </option>
+                  <option value="Tambo Gerona">Tambo Gerona</option>
+                  <option value="Barinaut Highway">Barinaut Highway</option>
+                  <option value="Valderama">Valderama</option>
+                  <option value="Sta Filomena">Sta. Filomena</option>
+                  <option value="Acmac Brgy Hall">Acmac Brgy. Hall</option>
+                  <option value="Purok 7 Kiwalan">Kiwalan</option>
+                  <option value="Pilmico">Pilmico</option>
+                  <option value="Tag-ibo">Tag-ibo</option>
+                  <option value="Dalipuga Crossing Kalubihon">
+                    Dalipuga Crossing Kalubihon
+                  </option>
+                  <option value="Dalipuga Proper">Dalipuga Proper</option>
+                  <option value="Paitan">Paitan</option>
+                  <option value="Mapalad">Mapalad</option>
+                  <option value="Boundary Lugait-Iligan">
+                    Boundary Lugait/Iligan
+                  </option>
+                </select>
+                <label for="routeto" class="form-label">To:</label>
+                <select class="form-select" id="routeto">
+                  <option selected>Select Destination</option>
+                  <option value="City Proper">City Proper</option>
+                  <option value="MSU-IIT">MSU-IIT</option>
+                  <option value="Traffic Light Tambo">
+                    Traffic Light Tambo
+                  </option>
+                  <option value="Tambo Gerona">Tambo Gerona</option>
+                  <option value="Barinaut Highway">Barinaut Highway</option>
+                  <option value="Valderama">Valderama</option>
+                  <option value="Sta Filomena">Sta. Filomena</option>
+                  <option value="Acmac Brgy Hall">Acmac Brgy. Hall</option>
+                  <option value="Purok 7 Kiwalan">Kiwalan</option>
+                  <option value="Pilmico">Pilmico</option>
+                  <option value="Tag-ibo">Tag-ibo</option>
+                  <option value="Dalipuga Crossing Kalubihon">
+                    Dalipuga Crossing Kalubihon
+                  </option>
+                  <option value="Dalipuga Proper">Dalipuga Proper</option>
+                  <option value="Paitan">Paitan</option>
+                  <option value="Mapalad">Mapalad</option>
+                  <option value="Boundary Lugait-Iligan">
+                    Boundary Lugait/Iligan
+                  </option>
+
+                  <!-- Add more options based on your routes -->
+                </select>
+                <label for="howmany" class="form-label"
+                  >How many Commuters?</label
+                >
+                <input
+                  type="number"
+                  id="howmany"
+                  class="form-control"
+                  min="1"
+                />
+                <label for="discount" class="form-label"
+                  >How many Seniors/PWD/Student</label
+                >
+                <input
+                  type="number"
+                  id="discount"
+                  class="form-control"
+                  min="1"
+                />
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+              <button
+                type="button"
+                class="btn btn-info"
+                id="confirmSelectionBtn"
+              >
+                Confirm Selection
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="fare-container" id="fare-container"></div>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+      crossorigin="anonymous"
+    ></script>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <script type="module">
+      // Define global variables to store the last clicked latitude and longitude
+      var lastClickedLat;
+      var lastClickedLng;
+      // access map variables to alll other functions
+      var map;
+
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+      import {
+        getFirestore,
+        collection,
+        addDoc,
+        connectFirestoreEmulator,
+        query,
+        getDocs,
+        getDoc,
+        updateDoc,
+        setDoc,
+        doc,
+        where,
+        onSnapshot,
+        deleteDoc,
+        orderBy,
+      } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
+
+      import {
+        getAuth,
+        onAuthStateChanged,
+        signInWithEmailAndPassword,
+        createUserWithEmailAndPassword,
+        signOut,
+      } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
+
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyDYPv8S_ljSo3tuMNoRYPI2tleWOqhqFMM",
+        authDomain: "commumeter.firebaseapp.com",
+        projectId: "commumeter",
+        storageBucket: "commumeter.appspot.com",
+        messagingSenderId: "1098693151947",
+        appId: "1:1098693151947:web:c0ce3c093e75ae8cbe1f4e",
+        measurementId: "G-71SRN52DX4",
+      };
+      import { fare } from "../assets/js/fare.js";
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      const auth = getAuth(app);
+
+      // Load map after page is ready
+      document.addEventListener("DOMContentLoaded", function () {
+        map = L.map("map").setView([8.231, 124.240967], 13);
+
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          maxZoom: 19,
+          attribution: "© OpenStreetMap contributors",
+        }).addTo(map);
+
+        // Function to capture and store map click coordinates
+        function onMapClick(e) {
+          lastClickedLat = e.latlng.lat.toFixed(5); // Adjust the precision as needed
+          lastClickedLng = e.latlng.lng.toFixed(5);
+
+          console.log(e.latlng);
+
+          // Remove previous markers if they exist in the map
+          if (window.lastMarker) {
+            map.removeLayer(window.lastMarker);
+          }
+
+          // Create a new marker at the clicked location
+          var marker = L.marker(e.latlng).addTo(map);
+
+          // Save the marker to the window object to remove it later
+          window.lastMarker = marker;
+
+          // Attach a popup to the marker displaying the latitude and longitude
+          marker
+            .bindPopup(
+              "Latitude: " + lastClickedLat + "<br>Longitude: " + lastClickedLng
+            )
+            .openPopup();
+        }
+
+        // when map is clicked, a marker is shown in the map
+        map.on("click", onMapClick);
+
+        // Function to display the modal with the stored coordinates
+        function showModalWithCoords() {
+          // Check if coordinates are available
+          // if (lastClickedLat !== undefined && lastClickedLng !== undefined) {
+          // Get the selected route
+          const selectedRoute = document.getElementById("routeSelect").value;
+
+          // // Update the modal content
+          // document.getElementById("latLngText").innerHTML =
+          //   "Latitude: " + lastClickedLat + ", Longitude: " + lastClickedLng;
+
+          // Show the modal
+          var modal = new bootstrap.Modal(
+            document.getElementById("latLngModal")
+          );
+          modal.show();
+          // } else {
+          //   alert("Please click on the map to select a location first.");
+          // }
+        }
+
+        // Attach the showModalWithCoords function to the button's click event
+        document
+          .getElementById("showCoordsBtn")
+          .addEventListener("click", function () {
+            showModalWithCoords();
+          });
+      });
+
+      // ensure that a user is logged in before they can interact with the website
+      // if not, redirect them to the login page
+      // also store "user" object that will be used later for retrieving user data
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          console.log(user.uid);
+        } else {
+          window.location.href = "logincommuter.html"; // Change "/login" to your login route
+        }
+
+        //signout function
+        document
+          .getElementById("logout")
+          .addEventListener("click", function () {
+            signOut(auth)
+              .then(() => {
+                // Sign-out successful.
+                console.log("Sign-out successful.");
+                alert("Sign-out successful.");
+                window.location.href = "../../index.html";
+              })
+              .catch((error) => {
+                // An error happened.
+                console.log("An error happened.");
+              });
+          });
+
+        // Icons
+        const redIcon = new L.Icon({
+          iconUrl: "/dist/assets/img/person-marker.png",
+          iconSize: [37, 41],
+          iconAnchor: [18, 41],
+          popupAnchor: [1, -34],
+          tooltipAnchor: [16, -28],
+          shadowUrl: "/dist/assets/img/shadowmarker.png",
+          shadowSize: [41, 41],
+          shadowAnchor: [13, 41],
+        });
+
+        const tealIcon = new L.Icon({
+          iconUrl: "/dist/assets/img/person-marker.png",
+          iconSize: [37, 41],
+          iconAnchor: [18, 41],
+          popupAnchor: [1, -34],
+          tooltipAnchor: [16, -28],
+          shadowUrl: "/dist/assets/img/shadowmarker.png",
+          shadowSize: [41, 41],
+          shadowAnchor: [13, 41],
+        });
+
+        const greenIcon = new L.Icon({
+          iconUrl: "/dist/assets/img/person-marker.png",
+          iconSize: [37, 41],
+          iconAnchor: [18, 41],
+          popupAnchor: [1, -34],
+          tooltipAnchor: [16, -28],
+          shadowUrl: "/dist/assets/img/shadowmarker.png",
+          shadowSize: [41, 41],
+          shadowAnchor: [13, 41],
+        });
+
+        const yellowIcon = new L.Icon({
+          iconUrl: "/dist/assets/img/person-marker.png",
+          iconSize: [37, 41],
+          iconAnchor: [18, 41],
+          popupAnchor: [1, -34],
+          tooltipAnchor: [16, -28],
+          shadowUrl: "/dist/assets/img/shadowmarker.png",
+          shadowSize: [41, 41],
+          shadowAnchor: [13, 41],
+        });
+        const defaultIcon = new L.Icon({
+          iconUrl:
+            "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+          iconSize: [25, 41],
+          iconAnchor: [12, 41],
+          popupAnchor: [1, -34],
+          tooltipAnchor: [16, -28],
+          shadowUrl:
+            "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+          shadowSize: [41, 41],
+          shadowAnchor: [13, 41],
+        });
+
+        // Function to get the appropriate icon based on the route
+        // Can add more icons and routes if necessary
+
+        function getIconForRoute(commuterlocation) {
+          switch (commuterlocation) {
+            case "City Proper":
+              return redIcon;
+            case "Dalipuga Proper":
+              return tealIcon;
+            case "MSU-IIT":
+              return greenIcon;
+            case "Tambo Gerona":
+              return yellowIcon;
+            default:
+              return defaultIcon;
+          }
+        }
+
+        let selectedlocation = "all";
+
+        // Function to filter and display markers
+        async function filterMarker() {
+          const q = query(
+            collection(db, "commutermark"),
+            where("userId", "==", user.uid)
+          );
+          const querySnapshot = await getDocs(q);
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            console.log(data.commuterlocation);
+            if (data.display == true) {
+              if (
+                selectedlocation === "all" ||
+                data.commuterlocation === selectedlocation
+              ) {
+                const marker = L.marker([data.latitude, data.longitude], {
+                  icon: getIconForRoute(data.commuterlocation),
+                }).addTo(map);
+                marker.bindPopup(
+                  `From: ${data.commuterlocation}<br>Destination: ${data.to}`
+                );
+              }
+            }
+          });
+        }
+
+        function setupRealtimeListener() {
+          const collectionRef = query(
+            collection(db, "commutermark"),
+            where("userId", "==", user.uid)
+          );
+          const markers = {};
+
+          onSnapshot(collectionRef, (snapshot) => {
+            snapshot.docChanges().forEach((change) => {
+              const data = change.doc.data();
+              const id = change.doc.id;
+              //set number of commuter to 1 if user did not put number of commuters.
+              const commuternumber = data.howmany || 1;
+
+              if (change.type === "added" || change.type === "modified") {
+                if (data.display == true) {
+                  // Remove the previous marker if it exists
+                  if (markers[id]) {
+                    map.removeLayer(markers[id]);
+                    delete markers[id];
+                  }
+
+                  // Add the updated marker to the map
+                  const marker = L.marker(
+                    [data.locationlatitude, data.locationlongitude],
+                    {
+                      icon: getIconForRoute(data.commuterlocation),
+                    }
+                  ).addTo(map);
+                  marker.bindPopup(
+                    `Location: ${data.commuterlocation}<br>Destination: ${data.to}<br>Number of Commuters: ${commuternumber}`
+                  );
+                  markers[id] = marker;
+                  updateFareOverlay(data.fare);
+                } else {
+                  // If the display is false, remove the marker from the map
+                  if (markers[id]) {
+                    map.removeLayer(markers[id]);
+                    delete markers[id];
+                  }
+                }
+              } else if (change.type === "removed") {
+                // Remove the marker from the map when the document is removed
+                if (markers[id]) {
+                  map.removeLayer(markers[id]);
+                  delete markers[id];
+                }
+              }
+            });
+          });
+        }
+
+        // Call the setupRealtimeListener function to start listening for real-time updates
+        setupRealtimeListener();
+
+        var latlnglocation, latlongdestination;
+
+        async function getCommuterLocation() {
+          const commuterLocation =
+            document.getElementById("commuterlocation").value;
+          latlnglocation = await getLatLngFromCommuterLocation(
+            commuterLocation
+          );
+
+          const commuterdestination = document.getElementById("routeto").value;
+          latlongdestination = await getLatLngFromCommuterLocation(
+            commuterdestination
+          );
+          console.log(latlnglocation, latlongdestination);
+          updateLatLongText(latlnglocation, latlongdestination);
+        }
+
+        function updateLatLongText(latLng, latLngdestination) {
+          const latLngText = document.getElementById("latLngText");
+          latLngText.innerText = `Location - Latitude: ${latLng[0]}, Longitude: ${latLng[1]}`;
+
+          const latLngTextDestination = document.getElementById(
+            "destinationlatLngText"
+          );
+          latLngTextDestination.innerText = `Destination - Latitude: ${latLngdestination[0]}, Longitude: ${latLngdestination[1]}`;
+        }
+
+        document
+          .getElementById("commuterlocation")
+          .addEventListener("change", getCommuterLocation);
+
+        document
+          .getElementById("routeto")
+          .addEventListener("change", getCommuterLocation);
+
+        console.log(latlnglocation, latlongdestination);
+        // Define a function to get the latLng from the commuter location
+        async function getLatLngFromCommuterLocation(commuterLocation) {
+          switch (commuterLocation) {
+            case "City Proper":
+              return [8.245198, 124.256668];
+            case "Tambo Gerona":
+              return [8.253515, 124.260909];
+            case "Barinaut Highway":
+              return [8.258147, 124.257752];
+            case "Valderama":
+              return [8.265286, 124.256665];
+            case "Sta Filomena":
+              return [8.268636, 124.259879];
+            case "Acmac Brgy Hall":
+              return [8.273719, 124.264736];
+            case "Purok 7 Kiwalan":
+              return [8.28155, 124.266137];
+            case "Pilmico":
+              return [8.289696, 124.259903];
+            case "Tag-ibo":
+              return [8.292846, 124.257338];
+            case "Dalipuga Crossing Kalubihon":
+              return [8.30294, 124.255531];
+            case "Dalipuga Proper":
+              return [8.305013, 124.255681];
+            case "Paitan":
+              return [8.313266, 124.251974];
+            case "Mapalad":
+              return [8.319363, 124.248871];
+            case "Boundary Lugait-Iligan":
+              return [8.32272, 124.24745];
+            case "Traffic Light Tambo":
+              return [8.245201, 124.256384];
+            case "MSU-IIT":
+              return [8.23977, 124.244834];
+
+            // Add more cases for additional commuter locations
+            default:
+              return [0, 0];
+          }
+        }
+
+        //fare display
+        function updateFareOverlay(FareContainer) {
+          const fareContainer = document.getElementById("fare-container");
+          fareContainer.innerHTML = `<b> Your total Fare: is  ₱${FareContainer.toFixed(
+            2
+          )} `;
+        }
+
+        //update button text content if mark already exists
+        document
+          .getElementById("latLngModal")
+          .addEventListener("show.bs.modal", async function () {
+            const userId = user.uid; // Ensure you have the user's UID available
+            const markExists = await checkIfMarkExists(userId);
+            const button = document.getElementById("confirmSelectionBtn");
+            button.textContent = markExists
+              ? "Update Selection"
+              : "Confirm Selection";
+          });
+
+        let routingControl = null;
+        let startMarker = null;
+
+        let lastUpdateTimestamp = 0;
+        const UPDATE_INTERVAL = 60000;
+
+        //open bootstrap modal dialog
+        document
+          .getElementById("confirmSelectionBtn")
+          .addEventListener("click", async function () {
+            //avoid abuse by user by limiting the number of updates
+            //once every minute
+            if (Date.now() - lastUpdateTimestamp < UPDATE_INTERVAL) {
+              console.log(
+                "Please wait at least 1 minute before updating again."
+              );
+              alert("Please wait at least 1 minute before updating again.");
+              return; // Exit the function if update is too frequent
+            }
+
+            // Update the last update timestamp
+            lastUpdateTimestamp = Date.now();
+
+            var selectedlocation =
+              document.getElementById("commuterlocation").value;
+            var selectedto = document.getElementById("routeto").value;
+
+            var commuterfare = fare;
+            var howmany = document.getElementById("howmany").value || 1;
+            var numberOfCommuters = parseInt(howmany);
+
+            console.log("Selected Route:", selectedlocation);
+            console.log("How many commuters: ", howmany);
+            console.log("The fair is", commuterfare);
+
+            var taxiIcon = L.icon({
+              iconUrl: "assets/img/jeep1.png",
+              iconSize: [55, 55],
+            });
+
+            try {
+              // Remove the existing marker and routing control if they exist
+              if (startMarker) {
+                map.removeLayer(startMarker);
+              }
+              if (routingControl) {
+                map.removeControl(routingControl);
+              }
+
+              startMarker = L.marker([latlnglocation[0], latlnglocation[1]], {
+                icon: taxiIcon,
+              }).addTo(map);
+
+              // Create the routing control with new waypoints
+              routingControl = L.Routing.control({
+                waypoints: [
+                  L.latLng(latlnglocation[0], latlnglocation[1]),
+                  L.latLng(latlongdestination[0], latlongdestination[1]),
+                ],
+                routeWhileDragging: false,
+                draggableWaypoints: false,
+                addWaypoints: false,
+              });
+
+              // Listen for the routing control event to update the marker's position
+              routingControl.on("routeselected", function (e) {
+                var route = e.route;
+                var coordinates = route.coordinates;
+                var index = 0;
+
+                startMarker.setLatLng([
+                  coordinates[index].lat,
+                  coordinates[index].lng,
+                ]);
+
+                // Update marker position for each point on the route
+                var updateInterval = setInterval(function () {
+                  index++;
+                  if (index < coordinates.length) {
+                    startMarker.setLatLng([
+                      coordinates[index].lat,
+                      coordinates[index].lng,
+                    ]);
+                  } else {
+                    clearInterval(updateInterval);
+                  }
+                }, 100);
+              });
+
+              // Add the routing control to the map after removing the previous one
+              routingControl.addTo(map);
+            } catch (error) {
+              console.error(error);
+            }
+
+            // Check if a mark already exists for the user
+            const markExists = await checkIfMarkExists(user.uid);
+
+            if (markExists) {
+              // Update the existing marker to the new location
+              updateMarkInFirebase(
+                latlnglocation[0],
+                latlnglocation[1],
+                latlongdestination[0],
+                latlongdestination[1],
+                selectedlocation,
+                selectedto,
+                user.uid,
+                numberOfCommuters,
+                commuterfare
+              ).then(() => {
+                // Hide the modal after the update is successful
+                var modalEl = document.getElementById("latLngModal");
+                var modalInstance = bootstrap.Modal.getInstance(modalEl);
+                updateFareOverlay(commuterfare);
+                modalInstance.hide();
+              });
+            } else {
+              saveDataToFirebase(
+                latlnglocation[0],
+                latlnglocation[1],
+                latlongdestination[0],
+                latlongdestination[1],
+                selectedlocation,
+                selectedto,
+                user.uid,
+                numberOfCommuters,
+                commuterfare
+              );
+
+              // close the modal programmatically after selection
+              var modalEl = document.getElementById("latLngModal");
+              var modalInstance = bootstrap.Modal.getInstance(modalEl);
+              updateFareOverlay(commuterfare);
+              modalInstance.hide();
+            }
+          });
+
+        // check if the user already has a marker, if yes, set the button
+        // confirm selection to update selection
+        async function checkIfMarkExists(userId) {
+          const querySnapshot = await getDocs(
+            query(collection(db, "commutermark"), where("userId", "==", userId))
+          );
+          return !querySnapshot.empty;
+        }
+        // Function to save data to Firebase
+        async function saveDataToFirebase(
+          locationlat,
+          locationlng,
+          destinationlat,
+          destinationlng,
+          commuterlocation,
+          to,
+          userId,
+          howmany,
+          commuterfare
+        ) {
+          try {
+            //save latlong to Firebase
+            const docRef = await addDoc(collection(db, "commutermark"), {
+              userId: userId, // Include the userId in the document
+              locationlatitude: locationlat,
+              locationlongitude: locationlng,
+              destinationlatitude: destinationlat,
+              destinationlongitude: destinationlng,
+              commuterlocation: commuterlocation,
+              to: to,
+              howmany: parseInt(howmany),
+              fare: commuterfare,
+              date: new Date(),
+              display: true,
+            });
+
+            //for logging
+            const logging = await addDoc(collection(db, "userlogging"), {
+              userId: userId,
+              locationlatitude: locationlat,
+              locationlongitude: locationlng,
+              destinationlatitude: destinationlat,
+              destinationlongitude: destinationlng,
+              commuterlocation: commuterlocation,
+              to: to,
+              howmany: parseInt(howmany),
+              fare: commuterfare,
+              date: new Date(),
+              display: true,
+            });
+
+            // Display success message
+            alert(
+              "Coordinates and route saved successfully! Estimated route will be shown in the map."
+            );
+          } catch (error) {
+            console.error("Error adding document: ", error);
+            alert("An error occurred while saving coordinates and route.");
+          }
+        }
+
+        // update the marker if marker already exists
+        async function updateMarkInFirebase(
+          locationlat,
+          locationlng,
+          destinationlat,
+          destinationlng,
+          commuterlocation,
+          to,
+          userId,
+          howmany,
+          commuterfare
+        ) {
+          console.log("Updating marker for user:", userId);
+          const querySnapshot = await getDocs(
+            query(collection(db, "commutermark"), where("userId", "==", userId))
+          );
+          querySnapshot.forEach(async (doc) => {
+            try {
+              await updateDoc(doc.ref, {
+                userId: userId, // Include the userId in the document
+                locationlatitude: locationlat,
+                locationlongitude: locationlng,
+                destinationlatitude: destinationlat,
+                destinationlongitude: destinationlng,
+                commuterlocation: commuterlocation,
+                to: to,
+                howmany: parseInt(howmany),
+                fare: commuterfare,
+                date: new Date(),
+                display: true,
+              });
+
+              alert(
+                "Marker updated successfully! Estimated route will be updated in the map."
+              );
+            } catch (error) {
+              console.error("Error updating document: ", error);
+              alert("An error occurred while updating the marker.");
+            }
+          });
+          try {
+            const updatelogging = await addDoc(collection(db, "userlogging"), {
+              userId: userId, // Include the userId in the document
+              locationlatitude: locationlat,
+              locationlongitude: locationlng,
+              destinationlatitude: destinationlat,
+              destinationlongitude: destinationlng,
+              commuterlocation: commuterlocation,
+              to: to,
+              howmany: parseInt(howmany),
+              fare: commuterfare,
+              date: new Date(),
+              display: true,
+            });
+          } catch (error) {
+            console.error("Error updating document: ", error);
+          }
+        }
+
+        const collectionFare = query(collection(db, "fare"));
+
+        onSnapshot(collectionFare, (snapshot) => {
+          snapshot.forEach((doc) => {
+            const data = doc.data();
+
+            console.log(data);
+          });
+        });
+      });
+
+      // Update the onAuthStateChanged function to fetch user profile information
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          userId = user.uid;
+          const email = user.email;
+          document.getElementById(
+            "user-info"
+          ).textContent = `Logged in as ${email}`;
+
+          const userDocRef = doc(db, "users", user.uid);
+
+          getDoc(userDocRef)
+            .then((docSnapshot) => {
+              if (docSnapshot.exists()) {
+                const userData = docSnapshot.data();
+                // Update user profile information
+                document.getElementById("user-name").textContent =
+                  userData.name;
+                if (userData.profilePicture) {
+                  const profilePicURL = userData.profilePicture;
+                  console.log("Profile Picture URL:", profilePicURL);
+                  document.getElementById("user-profile-pic").src = profilePicURL;
+                  document.getElementById('profile-icon').src = profilePicURL; // update the navigation icon
+                }
+              } else {
+                console.log("User profile not found in user data.");
+                // If the user profile document doesn't exist, create it with default values
+                setDoc(userDocRef, {
+                  email: email,
+                  name: "New User",
+                  profilePicture: "",
+                })
+                  .then(() => {
+                    console.log("User profile created successfully.");
+                    // Now that the profile document is created, you can update the display name
+                    document.getElementById("user-name").textContent =
+                      "Display Name: New User";
+                  })
+                  .catch((error) => {
+                    console.error("Error creating user profile:", error);
+                  });
+              }
+            })
+            .catch((error) => {
+              console.error("Error fetching user profile:", error);
+            });
+          // Enable edit button
+          document.getElementById("edit-button").disabled = false;
+        } else {
+          document.getElementById("user-info").textContent = "Not logged in";
+          console.log("User is signed out");
+          // Disable edit button
+          document.getElementById("edit-button").disabled = true;
+        }
+
+        const collectionRef = query(
+          collection(db, "userlogging"),
+          where("userId", "==", user.uid)
+        );
+
+        let table;
+
+        onSnapshot(collectionRef, (snapshot) => {
+          const dataset = [];
+
+          snapshot.forEach((doc) => {
+            //all data inside userlogging
+            const data = doc.data();
+
+            //formatting to readable date
+            const date = new Date(
+              data.date.seconds * 1000 + data.date.nanoseconds / 1000000
+            );
+            const options = {
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+            };
+            const formattedDate = date.toLocaleString("en-US", options);
+
+            // Generate a unique ID for the row
+            const rowId = doc.id;
+
+            dataset.push([
+              rowId, // Add the unique ID for the row
+              data.commuterlocation,
+              data.to,
+              data.fare,
+              data.howmany,
+              formattedDate,
+              // '<center><button type="button" class="btn btn-good btn-edit" style="margin-right: 7px !important;">Edit</button><button type="button" class="btn btn-bad btn-delete">Delete</button></center>',
+            ]);
+          });
+
+          // Sort dataset by date in descending order
+          dataset.sort((a, b) => new Date(b[5]) - new Date(a[5]));
+
+          // Destroy the existing DataTable instance if it exists
+          if (table) {
+            table.destroy();
+          }
+
+          // Reinitialize the DataTable with the sorted data
+          table = new DataTable("#logging", {
+            columns: [
+              { title: "DT_RowId" }, // Hidden column for the row ID
+              { title: "Location" },
+              { title: "Destination" },
+              { title: "Fare" },
+              { title: "Number" },
+              { title: "Date" },
+              // { title: "Action" },
+            ],
+            data: dataset,
+            // retrieve: true,
+            paging: true,
+            searching: true,
+            order: [[5, "desc"]], // Sort by the Date column in descending order
+            columnDefs: [
+              { targets: 0, visible: false }, // Hide the DT_RowId column
+            ],
+            responsive: true,
+            autoWidth: false,
+            scrollX: true,
+          });
+        });
+      });
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          const userDocRef = doc(db, "users", user.uid);
+  
+          getDoc(userDocRef).then((docSnapshot) => {
+            if (docSnapshot.exists()) {
+              const userData = docSnapshot.data();
+              if (userData.profilePicture) {
+                const profilePicURL = userData.profilePicture;
+                console.log("Profile Picture", profilePicURL);
+                document.getElementById("profile-icon").src = profilePicURL;
+              }
+            }
+          });
+        } else {
+          window.location.href = "/dist/login.html";
+        }
+      });
+    </script>
+
+    <script>
+      // Attach event listener to the "Confirm Selection" button
+    </script>
+    <!-- =========== Scripts =========  -->
+    <script src="../assets/js/main.js"></script>
+    <!-- <script src="assets/js/fare.js"></script> -->
+    <script type="module" src="../assets/js/fare.js"></script>
+    <!-- ====== ionicons ======= -->
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"
+    ></script>
+  </body>
+</html>
