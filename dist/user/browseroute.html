@@ -234,7 +234,7 @@
                                     styles: [{ color: 'yellow', opacity: 2, weight: 7 }] // Green color for alternative route
                                 },
                                 lineOptions: { // Customize main route options
-                                    styles: [{ color: 'blue', opacity: 1, weight: 5 }] // Blue color for main route
+                                    styles: [{ color: 'purple', opacity: 1, weight: 5 }] // Blue color for main route
                                 }
                             }).addTo(map);
                 
@@ -268,7 +268,7 @@
                 
                     // Function to calculate discounted fare
                     function calculateDiscountedFare(distance) {
-                        if (distance < 4) {
+                        if (distance < 4.9) {
                             return 11; // Minimum fare for 4km
                         } else {
                             const regularFare = calculateRegularFare(distance);
