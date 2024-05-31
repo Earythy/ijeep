@@ -51,51 +51,47 @@
 
         .details.data {
             padding: 20px;
+            overflow-x: auto; /* Add horizontal scroll for small screens */
         }
 
-        /** adjustments for smaller screen **/
 
+        /* Adjustments for smaller screens */
         @media screen and (max-width: 768px) {
-            .container {
-                flex-direction: column;
-            }
-            .navigation {
-                width: 100%;
-                min-width: 0; 
-            }
-            .main {
-                width: 100%;
-                min-width: 0; 
-            }
+            .container,
+            .navigation,
+            .main,
             .details.data {
-                padding: 10px;
+                width: 100%; /* Adjust width for small screens */
+                min-width: 0; /* Ensure minimum width */
+            }
+
+            .details.data {
+                padding: 10px; /* Reduce padding for small screens */
             }
             
-            .navigation ul {
-                display: none;
+            .dataRecord {
+                overflow-x: auto; /* Add horizontal scroll for small screens */
             }
-            .toggle {
-                display: block;
-            }
-            .toggle ion-icon {
-                display: inline-block;
-            }
-            .dropdown-content {
-                display: none;
-            }
-            .dropdown:hover .dropdown-content {
-                display: block;
+            table {
+                width: 100%; /* Make table fill container width */
             }
         }
-        /* Hide the header of the column */
-        #myTable th:nth-child(1) {
-        display: none;
+
+        .details .dataRecord {
+            padding: 2rem; /* Adjust padding for desktop */
         }
-    
-        /* Hide the cells in the column */
-        #myTable td:nth-child(1) {
-        display: none;
+        
+        @media screen and (max-width: 768px) {
+
+            .details.data {
+                padding: 10px;
+                overflow-x: auto; /* Add horizontal scroll for small screen*/
+            }
+            .details .dataRecord {
+                padding: 1rem; /* Adjust padding for smaller screens */
+            }
         }
+        
     </style>
 
 </head>
