@@ -159,59 +159,97 @@
     <div class="navcontainer">
       <div class="navigation">
         <ul>
-          <li>
-            <a href="#">
-              <span class="icon">
-                <ion-icon name="bus"></ion-icon>
-              </span>
-              <span class="title">iJeep</span>
-            </a>
-          </li>
+            <li>
+                <a href="#" style="justify-content: center; align-items: center; margin-top: 10px;">
+                    <img style="height: 50px;" src="assets/img/ijeep.png">
+                    <span class="title">iJeep</span>
+                </a>
+            </li>
 
-          <li>
-            <a href="dashboard.html">
-              <span class="icon">
-                <ion-icon name="home-outline"></ion-icon>
-              </span>
-              <span class="title">Dashboard</span>
-            </a>
-          </li>
+            <li>
+                <a href="dashboard.html">
+                    <span class="icon">
+                        <ion-icon name="home-outline"></ion-icon>
+                    </span>
+                    <span class="title">Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="routes.html">
+                    <span class="icon">
+                        <ion-icon name="trail-sign-outline"></ion-icon>
+                    </span>
+                    <span class="title">Routes</span>
+                </a>
+            </li>
+            <li>
+                <a href="fare.html">
+                    <span class="icon">
+                        <ion-icon name="cash-outline"></ion-icon>
+                    </span>
+                    <span class="title">Fare</span>
+                </a>
+            </li>
+            <li>
+             <!--  <a href="trackingjeeps.html"> --> 
+                    <a href="trackroute.html">
+                    <span class="icon">
+                        <ion-icon name="bus-outline"></ion-icon>
+                    </span>
+                    <span class="title">Where are the Jeeps?</span>
+                </a>
+            </li>
 
-          <li>
-            <a href="map.html">
-              <span class="icon">
-                <ion-icon name="map-outline"></ion-icon>
-              </span>
-              <span class="title">Map</span>
-            </a>
-          </li>
+            <li>
+                <!--  <a href="trackingjeeps.html"> --> 
+                       <a href="adminmap.html">
+                       <span class="icon">
+                           <ion-icon name="people-outline"></ion-icon>
+                       </span>
+                       <span class="title">Passengers Location</span>
+                   </a>
+               </li>
+            <li>
+                <a href="barangays.html">
+                    <span class="icon">
+                        <ion-icon name="compass-outline"></ion-icon>
+                    </span>
+                    <span class="title">Barangays</span>
+                </a>
+            </li>
+            <li>
+                <a href="records.html">
+                    <span class="icon">
+                        <ion-icon name="server-outline"></ion-icon>
+                    </span>
+                    <span class="title">Mobility Data</span>
+                </a>
+            </li>
+            <li>
+                <a href="map.html">
+                    <span class="icon">
+                        <ion-icon name="map-outline"></ion-icon>
+                    </span>
+                    <span class="title">Map</span>
+                </a>
+            </li>
+            <li>
+                <a href="charts.html">
+                    <span class="icon">
+                        <ion-icon name="analytics"></ion-icon>
+                    </span>
+                    <span class="title">Visualizations</span>
+                </a>
+            </li>
 
-          <li>
-            <a href="records.html">
-              <span class="icon">
-                <ion-icon name="server-outline"></ion-icon>
-              </span>
-              <span class="title">Mobility Data</span>
-            </a>
-          </li>
-
-          <li>
-            <a href="charts.html">
-              <span class="icon">
-                <ion-icon name="analytics"></ion-icon>
-              </span>
-              <span class="title">Visualizations</span>
-            </a>
-          </li>
-
-          <li>
-            <a href="#">
-              <span class="icon">
-                <ion-icon name="log-out-outline"></ion-icon>
-              </span>
-              <span class="title" id="logout">Sign Out</span>
-            </a>
-          </li>
+            <li>
+                <a href="#">
+                    <span class="icon">
+                        <ion-icon name="log-out-outline"></ion-icon>
+                    </span>
+                    <span class="title" id="logout">Sign Out</span>
+                </a>
+            </li>
         </ul>
       </div>
 
@@ -559,11 +597,7 @@
       // ensure that a user is logged in before they can interact with the website
       // if not, redirect them to the login page
       onAuthStateChanged(auth, (user) => {
-        if (user) {
-          console.log(user.uid);
-        } else {
-          window.location.href = "logindriver.html"; // Change driver's to your login route
-        }
+
         document
           .getElementById("logout")
           .addEventListener("click", function () {
