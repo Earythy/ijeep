@@ -32,7 +32,7 @@ body {
   background: #543c52;
   border-left: 10px solid #543c52;
   transition: 0.5s;
-  overflow-y: auto;
+  overflow: auto;
 }
 .navigation.active {
   width: 80px;
@@ -557,5 +557,3 @@ input, .selectInput{
   min-width: 66%;
   border: black 1px solid;
 }
-
-
