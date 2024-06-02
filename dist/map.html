@@ -74,13 +74,21 @@
       .button-container button:hover {
         background-color: #f5f5f5;
       }
+      /* this will fix map and navbar interaction */
+      .leaflet-top,
+      .leaflet-bottom {
+        position: absolute;
+        z-index: 600;
+        pointer-events: none;
+      }
     </style>
   </head>
 
   <body>
     <!-- =============== Navigation ================ -->
     <div class="container">
-      <div class="navigation">
+      <!-- z-index will fix map and navbar interaction -->
+      <div class="navigation" style="z-index: 1000">
         <ul>
           <li>
             <a
@@ -206,261 +214,261 @@
 
         <!-- =============== MAP ============= -->
         <div id="map"></div>
-        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
-        <script>
-          document.addEventListener("DOMContentLoaded", function () {
-            // Initialize the map
-            /*
-                const map = L.map('map').setView([8.308987, 124.257553], 15); // Adjust the center based on the polygon coordinates          
-                // Add a Tile Layer (OpenStreetMap)
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                  attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                }).addTo(map);
-                */
-
-            var map = L.map("map").setView([8.231, 124.240967], 15);
-
-            var tiles = L.tileLayer(
-              "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-              {
-                maxZoom: 15,
-                minZoom: 13,
-                attribution:
-                  '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-              }
-            ).addTo(map);
-
-            // Add button container to map
-            var buttonContainer = L.control({ position: "topleft" });
-
-            buttonContainer.onAdd = function (map) {
-              var div = L.DomUtil.create("div", "leaflet-bar leaflet-control");
-
-              // Add buttons
-              div.innerHTML +=
-                '<h2 class="chart-title">Yearly Population</h2>' +
-                "<br>" +
-                '<select class="btn btn-good" id="year_filter" style="margin-left: auto; border: none;"></select>';
-
-              // Modify CSS to make the border invisible
-              div.style.border = "none";
-
-              return div;
-            };
-
-            buttonContainer.addTo(map);
-            console.log("added to map");
-
-            // Add any other map initialization logic here
-            var currentYear = new Date().getFullYear();
-            var filterYear = document.getElementById("year_filter");
-
-            for (var year = 2000; year <= 2100; year++) {
-              var option = document.createElement("option");
-              option.text = year;
-              option.value = year;
-              if (year === currentYear) {
-                option.selected = true;
-              }
-              filterYear.add(option);
-            }
-
-            var years_filter = document.getElementById("year_filter");
-            document
-              .getElementById("year_filter")
-              .addEventListener("change", async function () {
-                year_filter = document.getElementById("year_filter").value;
-              });
-
-            // L.geoJson(baranggayData).addTo(map);
-
-            function getColor(d) {
-              return d > 10000
-                ? "#49006a"
-                : d > 8000
-                ? "#7a0177"
-                : d > 6000
-                ? "#ae017e"
-                : d > 4000
-                ? "#dd3497"
-                : d > 2000
-                ? "#f768a1"
-                : d > 500
-                ? "#fa9fb5"
-                : d > 100
-                ? "#fcc5c0"
-                : "#fde0dd";
-            }
-
-            function style(feature) {
-              return {
-                fillColor: getColor(feature.properties.density),
-                weight: 2,
-                opacity: 1,
-                color: "white",
-                dashArray: "3",
-                fillOpacity: 0.7,
-              };
-            }
-
-            setTimeout(() => {
-              L.geoJson(window.baranggayData, { style: style }).addTo(map);
-            }, 5000);
-
-            function highlightFeature(e) {
-              var layer = e.target;
-
-              layer.setStyle({
-                weight: 7,
-                color: "#666",
-                dashArray: "",
-                fillOpacity: 0.7,
-              });
-
-              if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-                layer.bringToFront();
-              }
-
-              info.update(layer.feature.properties);
-            }
-
-            function resetHighlight(e) {
-              geojson.resetStyle(e.target);
-              info.update();
-            }
-
-            var geojson;
-            // ... our listeners
-
-            setTimeout(() => {
-              geojson = L.geoJson(window.baranggayData);
-            }, 5000);
-
-            function zoomToFeature(e) {
-              map.fitBounds(e.target.getBounds());
-            }
-
-            function onEachFeature(feature, layer) {
-              layer.on({
-                mouseover: highlightFeature,
-                mouseout: resetHighlight,
-                click: zoomToFeature,
-              });
-            }
-
-            setTimeout(() => {
-              geojson = L.geoJson(window.baranggayData, {
-                style: style,
-                onEachFeature: onEachFeature,
-              }).addTo(map);
-            }, 5000);
-
-            var info = L.control();
-
-            info.onAdd = function (map) {
-              this._div = L.DomUtil.create("div", "info"); // create a div with a class "info"
-              this.update();
-              return this._div;
-            };
-
-            // method that we will use to update the control based on feature properties passed
-            info.update = function (props) {
-              this._div.innerHTML =
-                "<h4>Population Density</h4>" +
-                (props
-                  ? "<b>" +
-                    props.name +
-                    "</b><br />" +
-                    props.density +
-                    " people / km<sup>2</sup>"
-                  : "Select a Baranggay/Purok");
-            };
-
-            info.addTo(map);
-
-            var legend = L.control({ position: "bottomright" });
-
-            legend.onAdd = function (map) {
-              var div = L.DomUtil.create("div", "info legend"),
-                grades = [0, 100, 500, 2000, 4000, 6000, 8000, 10000],
-                labels = [];
-
-              // loop through our density intervals and generate a label with a colored square for each interval
-              for (var i = 0; i < grades.length; i++) {
-                div.innerHTML +=
-                  '<i style="background:' +
-                  getColor(grades[i] + 1) +
-                  '"></i> ' +
-                  grades[i] +
-                  (grades[i + 1] ? "&ndash;" + grades[i + 1] + "<br>" : "+");
-              }
-
-              return div;
-            };
-
-            legend.addTo(map);
-
-            /* HTML COORDINATES ORIG HERE */
-
-            // Try HTML5 geolocation to get the user's location
-            if (navigator.geolocation) {
-              navigator.geolocation.getCurrentPosition(
-                (position) => {
-                  const userLocation = [
-                    position.coords.latitude,
-                    position.coords.longitude,
-                  ];
-
-                  // Center the map on the user's location
-                  //map.setView(userLocation);
-
-                  map.setView(8.298504, 124.254389); //temporary
-
-                  // Add a custom marker with the 'jeep.png' image
-                  const customIcon = L.icon({
-                    iconUrl: "img/jeep.png", // Path to your custom marker image
-                    iconSize: [50, 50], // Size of the icon
-                    iconAnchor: [15, 30], // Anchor point of the icon, similar to the center
-                    popupAnchor: [0, -30], // Point from which the popup should open relative to the iconAnchor
-                  });
-
-                  L.marker(userLocation, { icon: customIcon })
-                    .addTo(map)
-                    .bindPopup(
-                      `Your Location: ${position.coords.latitude}, ${position.coords.longitude}`
-                    )
-                    .openPopup();
-                },
-                () => {
-                  // Handle errors
-                  alert("Error: The Geolocation service failed.");
-                }
-              );
-            } else {
-              // Browser doesn't support Geolocation
-              alert("Error: Your browser doesn't support geolocation.");
-            }
-          });
-        </script>
       </div>
     </div>
+  </body>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-    <!-- =========== Scripts =========  -->
-    <script src="assets/js/main.js"></script>
-    <!-- ====== ionicons ======= -->
-    <script
-      type="module"
-      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"
-    ></script>
-    <script
-      nomodule
-      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"
-    ></script>
-    <!-- Coordinates
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Initialize the map
+      /*
+          const map = L.map('map').setView([8.308987, 124.257553], 15); // Adjust the center based on the polygon coordinates          
+          // Add a Tile Layer (OpenStreetMap)
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+          }).addTo(map);
+          */
+
+      var map = L.map("map").setView([8.231, 124.240967], 15);
+
+      var tiles = L.tileLayer(
+        "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {
+          maxZoom: 15,
+          minZoom: 13,
+          attribution:
+            '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        }
+      ).addTo(map);
+
+      // Add button container to map
+      var buttonContainer = L.control({ position: "topleft" });
+
+      buttonContainer.onAdd = function (map) {
+        var div = L.DomUtil.create("div", "leaflet-bar leaflet-control");
+
+        // Add buttons
+        div.innerHTML +=
+          '<h2 class="chart-title">Yearly Population</h2>' +
+          "<br>" +
+          '<select class="btn btn-good" id="year_filter" style="margin-left: auto; border: none;"></select>';
+
+        // Modify CSS to make the border invisible
+        div.style.border = "none";
+
+        return div;
+      };
+
+      buttonContainer.addTo(map);
+      console.log("added to map");
+
+      // Add any other map initialization logic here
+      var currentYear = new Date().getFullYear();
+      var filterYear = document.getElementById("year_filter");
+
+      for (var year = 2000; year <= 2100; year++) {
+        var option = document.createElement("option");
+        option.text = year;
+        option.value = year;
+        if (year === currentYear) {
+          option.selected = true;
+        }
+        filterYear.add(option);
+      }
+
+      var years_filter = document.getElementById("year_filter");
+      document
+        .getElementById("year_filter")
+        .addEventListener("change", async function () {
+          year_filter = document.getElementById("year_filter").value;
+        });
+
+      // L.geoJson(baranggayData).addTo(map);
+
+      function getColor(d) {
+        return d > 10000
+          ? "#49006a"
+          : d > 8000
+          ? "#7a0177"
+          : d > 6000
+          ? "#ae017e"
+          : d > 4000
+          ? "#dd3497"
+          : d > 2000
+          ? "#f768a1"
+          : d > 500
+          ? "#fa9fb5"
+          : d > 100
+          ? "#fcc5c0"
+          : "#fde0dd";
+      }
+
+      function style(feature) {
+        return {
+          fillColor: getColor(feature.properties.density),
+          weight: 2,
+          opacity: 1,
+          color: "white",
+          dashArray: "3",
+          fillOpacity: 0.7,
+        };
+      }
+
+      setTimeout(() => {
+        L.geoJson(window.baranggayData, { style: style }).addTo(map);
+      }, 5000);
+
+      function highlightFeature(e) {
+        var layer = e.target;
+
+        layer.setStyle({
+          weight: 7,
+          color: "#666",
+          dashArray: "",
+          fillOpacity: 0.7,
+        });
+
+        if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+          layer.bringToFront();
+        }
+
+        info.update(layer.feature.properties);
+      }
+
+      function resetHighlight(e) {
+        geojson.resetStyle(e.target);
+        info.update();
+      }
+
+      var geojson;
+      // ... our listeners
+
+      setTimeout(() => {
+        geojson = L.geoJson(window.baranggayData);
+      }, 5000);
+
+      function zoomToFeature(e) {
+        map.fitBounds(e.target.getBounds());
+      }
+
+      function onEachFeature(feature, layer) {
+        layer.on({
+          mouseover: highlightFeature,
+          mouseout: resetHighlight,
+          click: zoomToFeature,
+        });
+      }
+
+      setTimeout(() => {
+        geojson = L.geoJson(window.baranggayData, {
+          style: style,
+          onEachFeature: onEachFeature,
+        }).addTo(map);
+      }, 5000);
+
+      var info = L.control();
+
+      info.onAdd = function (map) {
+        this._div = L.DomUtil.create("div", "info"); // create a div with a class "info"
+        this.update();
+        return this._div;
+      };
+
+      // method that we will use to update the control based on feature properties passed
+      info.update = function (props) {
+        this._div.innerHTML =
+          "<h4>Population Density</h4>" +
+          (props
+            ? "<b>" +
+              props.name +
+              "</b><br />" +
+              props.density +
+              " people / km<sup>2</sup>"
+            : "Select a Baranggay/Purok");
+      };
+
+      info.addTo(map);
+
+      var legend = L.control({ position: "bottomright" });
+
+      legend.onAdd = function (map) {
+        var div = L.DomUtil.create("div", "info legend"),
+          grades = [0, 100, 500, 2000, 4000, 6000, 8000, 10000],
+          labels = [];
+
+        // loop through our density intervals and generate a label with a colored square for each interval
+        for (var i = 0; i < grades.length; i++) {
+          div.innerHTML +=
+            '<i style="background:' +
+            getColor(grades[i] + 1) +
+            '"></i> ' +
+            grades[i] +
+            (grades[i + 1] ? "&ndash;" + grades[i + 1] + "<br>" : "+");
+        }
+
+        return div;
+      };
+
+      legend.addTo(map);
+
+      /* HTML COORDINATES ORIG HERE */
+
+      // Try HTML5 geolocation to get the user's location
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const userLocation = [
+              position.coords.latitude,
+              position.coords.longitude,
+            ];
+
+            // Center the map on the user's location
+            //map.setView(userLocation);
+
+            map.setView(8.298504, 124.254389); //temporary
+
+            // Add a custom marker with the 'jeep.png' image
+            const customIcon = L.icon({
+              iconUrl: "img/jeep.png", // Path to your custom marker image
+              iconSize: [50, 50], // Size of the icon
+              iconAnchor: [15, 30], // Anchor point of the icon, similar to the center
+              popupAnchor: [0, -30], // Point from which the popup should open relative to the iconAnchor
+            });
+
+            L.marker(userLocation, { icon: customIcon })
+              .addTo(map)
+              .bindPopup(
+                `Your Location: ${position.coords.latitude}, ${position.coords.longitude}`
+              )
+              .openPopup();
+          },
+          () => {
+            // Handle errors
+            alert("Error: The Geolocation service failed.");
+          }
+        );
+      } else {
+        // Browser doesn't support Geolocation
+        alert("Error: Your browser doesn't support geolocation.");
+      }
+    });
+  </script>
+
+  <!-- =========== Scripts =========  -->
+  <script src="assets/js/main.js"></script>
+  <!-- ====== ionicons ======= -->
+  <script
+    type="module"
+    src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"
+  ></script>
+  <script
+    nomodule
+    src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"
+  ></script>
+  <!-- Coordinates
 
 -->
-  </body>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
