@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>iJeep</title>
+    <!-- ======= Styles ====== -->
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script type="module" src="assets/js/routeCoords.js"></script>
+    <script type="module" src="assets/js/route.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css"
+    />
+    <style>
+      #map {
+        height: 665px;
+        width: 100%;
+      }
+      .dropdown {
+        position: relative;
+        display: inline-block;
+      }
+
+      .dropdown-toggle {
+        background-color: #6c5ce7; /* Purple background */
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      .dropdown-toggle:hover {
+        background-color: #5c4ccf; /* Darker purple on hover */
+      }
+
+      .dropdown-menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 1000;
+        display: none;
+        float: left;
+        min-width: 160px;
+        padding: 5px 0;
+        margin: 2px 0 0;
+        font-size: 14px;
+        text-align: left;
+        list-style: none;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+      }
+
+      .dropdown-menu li {
+        margin-bottom: 5px;
+      }
+
+      .dropdown-menu li a {
+        color: #6c5ce7;
+        text-decoration: none;
+      }
+
+      .dropdown-menu li a:hover {
+        background-color: #f5f5f5;
+        color: #5c4ccf;
+      }
+
+      .dropdown-menu li.disabled a {
+        color: #ccc;
+        cursor: not-allowed;
+      }
+
+      .caret {
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 0 5px 5px 5px;
+        border-color: transparent transparent #fff transparent;
+        position: absolute;
+        top: 50%;
+        right: 15px;
+        margin-top: -3px;
+      }
+      .leaflet-bar.leaflet-control select {
+        background-color: #6c5ce7; /* Purple background */
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      .leaflet-bar.leaflet-control select option {
+        background-color: #6c5ce7; /* Purple background */
+        color: #fff;
+      }
+
+      .leaflet-bar.leaflet-control select:hover {
+        background-color: #5c4ccf; /* Darker purple on hover */
+      }
+
+      .leaflet-bar.leaflet-control select:focus {
+        outline: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- =============== Navigation ================ -->
+    <div class="navcontainer">
+      <div class="navigation">
+        <ul>
+          <li>
+            <a
+              href="#"
+              style="
+                justify-content: center;
+                align-items: center;
+                margin-top: 10px;
+              "
+            >
+              <img style="height: 50px" src="assets/img/ijeep.png" />
+              <span class="title">iJeep</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="dashboard.html">
+              <span class="icon">
+                <ion-icon name="home-outline"></ion-icon>
+              </span>
+              <span class="title">Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="routes.html">
+              <span class="icon">
+                <ion-icon name="trail-sign-outline"></ion-icon>
+              </span>
+              <span class="title">Routes</span>
+            </a>
+          </li>
+          <li>
+            <a href="fare.html">
+              <span class="icon">
+                <ion-icon name="cash-outline"></ion-icon>
+              </span>
+              <span class="title">Fare</span>
+            </a>
+          </li>
+          <li>
+            <!--  <a href="trackingjeeps.html"> -->
+            <a href="trackroute.html">
+              <span class="icon">
+                <ion-icon name="bus-outline"></ion-icon>
+              </span>
+              <span class="title">Where are the Jeeps?</span>
+            </a>
+          </li>
+
+          <li>
+            <!--  <a href="trackingjeeps.html"> -->
+            <a href="adminmap.html">
+              <span class="icon">
+                <ion-icon name="people-outline"></ion-icon>
+              </span>
+              <span class="title">Passengers Location</span>
+            </a>
+          </li>
+          <li>
+            <a href="barangays.html">
+              <span class="icon">
+                <ion-icon name="compass-outline"></ion-icon>
+              </span>
+              <span class="title">Barangays</span>
+            </a>
+          </li>
+          <li>
+            <a href="records.html">
+              <span class="icon">
+                <ion-icon name="server-outline"></ion-icon>
+              </span>
+              <span class="title">Mobility Data</span>
+            </a>
+          </li>
+          <li>
+            <a href="log.html">
+              <span class="icon">
+                <ion-icon name="reader-outline"></ion-icon>
+              </span>
+              <span class="title">Logs</span>
+            </a>
+          </li>
+          <li>
+            <a href="map.html">
+              <span class="icon">
+                <ion-icon name="map-outline"></ion-icon>
+              </span>
+              <span class="title">Map</span>
+            </a>
+          </li>
+          <li>
+            <a href="charts.html">
+              <span class="icon">
+                <ion-icon name="analytics"></ion-icon>
+              </span>
+              <span class="title">Visualizations</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="#">
+              <span class="icon">
+                <ion-icon name="log-out-outline"></ion-icon>
+              </span>
+              <span class="title" id="logout">Sign Out</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- ========================= Main ==================== -->
+      <div class="main">
+        <div class="topbar">
+          <div class="toggle">
+            <ion-icon name="menu-outline"></ion-icon>
+          </div>
+        </div>
+        <h2 style="padding-left: 20px">Browse Route</h2>
+
+        <div id="button-container" class="button-container">
+          <!-- Buttons will be added here -->
+        </div>
+
+        <!-- =============== MAP ============= -->
+        <div id="map"></div>
+        <div class="fare-container" id="fare-container"></div>
+        <!-- Added fare container -->
+        <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
+        <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+      </div>
+    </div>
+
+    <!-- =========== Scripts =========  -->
+    <script src="../assets/js/main.js"></script>
+    <!-- ====== ionicons ======= -->
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"
+    ></script>
+  </body>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-analytics.js";
+    import {
+      getAuth,
+      signInWithEmailAndPassword,
+      onAuthStateChanged,
+      signOut,
+    } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      connectFirestoreEmulator,
+      query,
+      getDocs,
+      getDoc,
+      updateDoc,
+      setDoc,
+      doc,
+      onSnapshot,
+      deleteDoc,
+      orderBy,
+      where,
+    } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDYPv8S_ljSo3tuMNoRYPI2tleWOqhqFMM",
+      authDomain: "commumeter.firebaseapp.com",
+      projectId: "commumeter",
+      storageBucket: "commumeter.appspot.com",
+      messagingSenderId: "1098693151947",
+      appId: "1:1098693151947:web:c0ce3c093e75ae8cbe1f4e",
+      measurementId: "G-71SRN52DX4",
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const analytics = getAnalytics(app);
+    const auth = getAuth();
+    console.log(app);
+
+    document.getElementById("logout").addEventListener("click", function () {
+      signOut(auth)
+        .then(() => {
+          // Sign-out successful.
+          console.log("Sign-out successful.");
+          alert("Sign-out successful.");
+          window.location.href = "../../index.html";
+        })
+        .catch((error) => {
+          // An error happened.
+          console.log("An error happened.");
+        });
+    });
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const userDocRef = doc(db, "users", user.uid);
+
+        getDoc(userDocRef).then((docSnapshot) => {
+          if (docSnapshot.exists()) {
+            const userData = docSnapshot.data();
+            if (userData.profilePicture) {
+              const profilePicURL = userData.profilePicture;
+              console.log("Profile Picture", profilePicURL);
+              document.getElementById("profile-icon").src = profilePicURL;
+            }
+          }
+        });
+      } else {
+        window.location.href = "index.html";
+      }
+    });
+  </script>
+</html>

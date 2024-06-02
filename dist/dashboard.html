@@ -1,610 +1,707 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>iJeep</title>
     <!-- ======= Styles ====== -->
-    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/style.css" />
 
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css"
+    />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+    <style>
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: Arial, sans-serif;
+      }
 
-</head>
+      .container {
+        display: flex;
+        flex-direction: column;
+        /*min-height: 100vh;*/
+        height: 100%;
+      }
 
-<body>
+      .navigation {
+        flex: 0 0 auto;
+      }
+
+      .navigation ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .navigation ul li a {
+        text-decoration: none;
+        color: white;
+        display: flex;
+        align-items: center;
+      }
+
+      .navigation ul li a .icon {
+        margin-right: 10px;
+      }
+
+      .main {
+        flex: 1 0 auto;
+        overflow-y: auto; /*enable scrolling for content*/
+        padding: 20px;
+      }
+
+      .logo {
+        max-width: 100%;
+      }
+
+      /*** for smaller screens ***/
+
+      .cardBox {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: space-between;
+      }
+
+      .card {
+        text-align: center;
+        flex: 1 1 calc(25% - 20px);
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        box-sizing: border-box;
+        transition: transform 0.3s ease;
+      }
+
+      .card:hover {
+        transform: scale(1.05);
+      }
+
+      .dashchartsBx {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+      }
+
+      .charts {
+        text-align: center;
+        flex: 1 1 400px;
+      }
+
+      .charts canvas {
+        max-width: 100%;
+      }
+
+      .details {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+        position: relative;
+        width: 100%;
+        padding: 20px;
+        overflow-x: auto; /* Add horizontal scroll for small screens */
+      }
+
+      .details .dataRecord {
+        width: 100%; /* Ensure the record container fills the available width */
+        background: #edd2cb;
+        padding: 1rem; /* Adjust padding */
+        overflow-x: auto;
+      }
+
+      /* #myTable {
+        width: 100%; 
+        overflow-x: auto;
+      }
+
+      #myTable input[type="text"],
+      #myTable input[type="date"] {
+        width: 100%;
+        box-sizing: border-box; 
+        margin-bottom: 10px;
+      }
+
+      @media screen and (max-width: 768px) {
+        #myTable input[type="text"],
+        #myTable input[type="date"] {
+          margin-bottom: 5px; 
+        }
+      }
+
+      @media screen and (max-width: 480px) {
+        #myTable input[type="text"],
+        #myTable input[type="date"] {
+          margin-bottom: 5px; 
+        }
+      } */
+
+      .popularLocations {
+        flex: 1 1 100%; /* Ensure the popular locations section takes up full width */
+      }
+
+      .popularLocations .cardHeader {
+        margin-bottom: 10px; /* Add spacing below card header */
+      }
+
+      .popularLocations table {
+        width: 100%; /* Make the table inside popular locations fill its container */
+      }
+
+      @media screen and (max-width: 1200px) {
+        .card {
+          flex: 1 1 calc(33.33% - 20px);
+        }
+
+        .charts {
+          flex: 1 1 45%;
+        }
+      }
+
+      @media screen and (max-width: 768px) {
+        .card {
+          flex: 1 1 calc(50% - 20px);
+        }
+
+        .charts {
+          flex: 1 1 100%;
+        }
+
+        .main {
+          margin-left: 0;
+          overflow-y: auto;
+        }
+
+        .details .dataRecord {
+          padding: 10px;
+        }
+      }
+
+      @media screen and (max-width: 480px) {
+        .card {
+          flex: 1 1 calc(100% - 20px);
+        }
+
+        .charts {
+          flex: 1 1 100%;
+        }
+
+        .navigation ul {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .topbar {
+          display: flex;
+          justify-content: space-between;
+        }
+
+        .details {
+          flex-wrap: wrap; /* Stack elements vertically on smaller screens */
+        }
+
+        .details .dataRecord,
+        .popularLocations {
+          width: 100%; /* Ensure elements take up full width */
+        }
+
+        .details .dataRecord {
+          padding: 10px; /* Adjust padding for smaller screens */
+        }
+      }
+
+      .charts {
+        text-align: center;
+        flex: 1 1 400px;
+      }
+
+      .charts canvas {
+        max-width: 100%;
+      }
+
+      .details.data {
+        padding: 20px;
+        overflow-x: auto; /* Add horizontal scroll for small screens */
+      }
+
+      .main .tables-content {
+        width: 100%;
+        max-width: 900px;
+        margin: 20px auto; /* Center and provide margin */
+        padding: 20px;
+
+        /* border: 1px solid #ccc; */
+        /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+        border-radius: 10px; /* rounded corners */
+        /* text-align: center; Center text within the box */
+        background: #edd2cb; /* Optional: for better contrast */
+      }
+
+      .tables-content table {
+        background: #edd2cb;
+      }
+
+      .tables-content th,
+      .tables-content td {
+        background: #edd2cb;
+      }
+
+      .tables-content thead {
+        background: #edd2cb;
+      }
+
+      .textinput {
+        max-width: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
     <!-- =============== Navigation ================ -->
     <div class="container">
-        <div class="navigation">
-            <ul>
-                <li>
-                    <a href="#">
-                        <span class="icon">
-                            <ion-icon name="speedometer"></ion-icon>
-                        </span>
-                        <span class="title">CommuMeter</span>
-                    </a>
-                </li>
+      <div class="navigation">
+        <ul>
+          <li>
+            <a
+              href="#"
+              style="
+                justify-content: center;
+                align-items: center;
+                margin-top: 10px;
+              "
+            >
+              <img style="height: 50px" src="assets/img/ijeep.png" />
+              <span class="title">iJeep</span>
+            </a>
+          </li>
 
-                <li>
-                    <a href="dashboard.html">
-                        <span class="icon">
-                            <ion-icon name="home-outline"></ion-icon>
-                        </span>
-                        <span class="title">Dashboard</span>
-                    </a>
-                </li>
+          <li>
+            <a href="dashboard.html">
+              <span class="icon">
+                <ion-icon name="home-outline"></ion-icon>
+              </span>
+              <span class="title">Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="routes.html">
+              <span class="icon">
+                <ion-icon name="trail-sign-outline"></ion-icon>
+              </span>
+              <span class="title">Routes</span>
+            </a>
+          </li>
+          <li>
+            <a href="fare.html">
+              <span class="icon">
+                <ion-icon name="cash-outline"></ion-icon>
+              </span>
+              <span class="title">Fare</span>
+            </a>
+          </li>
+          <li>
+            <!--  <a href="trackingjeeps.html"> -->
+            <a href="trackroute.html">
+              <span class="icon">
+                <ion-icon name="bus-outline"></ion-icon>
+              </span>
+              <span class="title">Where are the Jeeps?</span>
+            </a>
+          </li>
 
-                <li>
-                    <a href="map.html">
-                        <span class="icon">
-                            <ion-icon name="map-outline"></ion-icon>
-                        </span>
-                        <span class="title">Map</span>
-                    </a>
-                </li>
+          <li>
+            <!--  <a href="trackingjeeps.html"> -->
+            <a href="adminmap.html">
+              <span class="icon">
+                <ion-icon name="people-outline"></ion-icon>
+              </span>
+              <span class="title">Passengers Location</span>
+            </a>
+          </li>
+          <li>
+            <a href="barangays.html">
+              <span class="icon">
+                <ion-icon name="compass-outline"></ion-icon>
+              </span>
+              <span class="title">Barangays</span>
+            </a>
+          </li>
+          <li>
+            <a href="records.html">
+              <span class="icon">
+                <ion-icon name="server-outline"></ion-icon>
+              </span>
+              <span class="title">Mobility Data</span>
+            </a>
+          </li>
+          <li>
+            <a href="log.html">
+              <span class="icon">
+                <ion-icon name="reader-outline"></ion-icon>
+              </span>
+              <span class="title">Logs</span>
+            </a>
+          </li>
+          <li>
+            <a href="map.html">
+              <span class="icon">
+                <ion-icon name="map-outline"></ion-icon>
+              </span>
+              <span class="title">Map</span>
+            </a>
+          </li>
+          <li>
+            <a href="charts.html">
+              <span class="icon">
+                <ion-icon name="analytics"></ion-icon>
+              </span>
+              <span class="title">Visualizations</span>
+            </a>
+          </li>
 
-                <li>
-                    <a href="barangays.html">
-                        <span class="icon">
-                            <ion-icon name="compass-outline"></ion-icon>
-                        </span>
-                        <span class="title">Barangays</span>
-                    </a>
-                </li>
+          <li>
+            <a href="#">
+              <span class="icon">
+                <ion-icon name="log-out-outline"></ion-icon>
+              </span>
+              <span class="title" id="logout">Sign Out</span>
+            </a>
+          </li>
+        </ul>
+      </div>
 
-                <li>
-                    <a href="coordinates.html">
-                        <span class="icon">
-                            <ion-icon name="locate-outline"></ion-icon>
-                        </span>
-                        <span class="title">Coordinates</span>
-                    </a>
-                </li>
-                
-                <li>
-                    <a href="records.html">
-                        <span class="icon">
-                            <ion-icon name="server-outline"></ion-icon>
-                        </span>
-                        <span class="title">Mobility Data</span>
-                    </a>
-                </li>
+      <!-- ========================= Main ==================== -->
+      <div class="main">
+        <div class="topbar">
+          <div class="toggle">
+            <ion-icon name="menu-outline"></ion-icon>
+          </div>
+        </div>
+        <h2 style="padding-left: 20px">Dashboard</h2>
 
-                <li>
-                    <a href="charts.html">
-                        <span class="icon">
-                            <ion-icon name="analytics"></ion-icon>
-                        </span>
-                        <span class="title">Visualizations</span>
-                    </a>
-                </li>
+        <!-- ======================= Cards ================== -->
+        <div class="cardBox">
+          <div class="card">
+            <div>
+              <div class="numbers" id="totalBarangays"></div>
+              <div class="cardName">Barangays</div>
+            </div>
 
-                <li>
-                    <a href="#">
-                        <span class="icon">
-                            <ion-icon name="log-out-outline"></ion-icon>
-                        </span>
-                        <span class="title" id="logout">Sign Out</span>
-                    </a>
-                </li>
-            </ul>
+            <div class="iconBx">
+              <ion-icon name="location-outline"></ion-icon>
+            </div>
+          </div>
+
+          <div class="card">
+            <div>
+              <div class="numbers" id="totalPopulation"></div>
+              <div class="cardName">Overall Population for Latest Year</div>
+            </div>
+
+            <div class="iconBx">
+              <ion-icon name="people-circle-outline"></ion-icon>
+            </div>
+          </div>
+
+          <div class="card">
+            <div>
+              <div class="numbers" id="totalRoutes"></div>
+              <div class="cardName">Routes</div>
+            </div>
+
+            <div class="iconBx">
+              <ion-icon name="trail-sign-outline"></ion-icon>
+            </div>
+          </div>
         </div>
 
-        <!-- ========================= Main ==================== -->
-        <div class="main">
-            <div class="topbar">
-                <div class="toggle">
-                    <ion-icon name="menu-outline"></ion-icon>
-                </div>
+        <!-- ================ Charts ================= -->
+        <div class="dashchartsBx">
+          <div class="charts">
+            <div
+              class="btn"
+              style="display: flex; align-items: center; width: 100%"
+            >
+              <h2 class="chart-title">Barangay Population</h2>
+              <select
+                class="btn btn-good"
+                id="brgy_filter"
+                style="margin-left: auto"
+              ></select>
             </div>
-            <h2 style="padding-left: 20px;">Dashboard</h2>
-
-            <!-- ======================= Cards ================== -->
-            <div class="cardBox">
-                <div class="card">
-                    <div>
-                        <div class="numbers">16</div>
-                        <div class="cardName">On Duty Vehicles</div>
-                    </div>
-
-                    <div class="iconBx">
-                        <ion-icon name="bus-outline"></ion-icon>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div>
-                        <div class="numbers">68</div>
-                        <div class="cardName">Total Employee</div>
-                    </div>
-
-                    <div class="iconBx">
-                        <ion-icon name="people-outline"></ion-icon>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div>
-                        <div class="numbers">16</div>
-                        <div class="cardName">Barangay/Purok</div>
-                    </div>
-
-                    <div class="iconBx">
-                        <ion-icon name="location-outline"></ion-icon>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div>
-                        <div class="numbers">192,231</div>
-                        <div class="cardName">Total Commuters Accomulated</div>
-                    </div>
-
-                    <div class="iconBx">
-                        <ion-icon name="people-circle-outline"></ion-icon>
-                    </div>
-                </div>
+            <div>
+              <canvas id="areaChart" height="300" width="400"></canvas>
             </div>
+          </div>
 
-            <!-- ================ Charts ================= -->
-            <div class="dashchartsBx">
-                <div class="charts">
-                    <h2 class="chart-title">Butang lang title here</h2>
-                    <div style="height:300px; width:400px;">
-                        <canvas id="lineChart"></canvas>
-                    </div>
-                </div>
-
-                <div class="charts">
-                    <h2 class="chart-title">Butang lang title here</h2>
-                    <div style="height:300px; width:400px;">
-                        <canvas id="pieChart"></canvas>
-                    </div>
-                </div>
-
-                <div class="charts">
-                    <h2 class="chart-title">Butang lang title here</h2>
-                    <div style="height:300px; width:400px;">
-                        <canvas id="barChart"></canvas>
-                    </div>
-                </div>
-
-                <div class="charts">
-                    <h2 class="chart-title">Butang lang title here</h2>
-                    <div style="height:300px; width:400px;">
-                        <canvas id="areaChart"></canvas>
-                    </div>
-                </div>
+          <div class="charts">
+            <div
+              class="btn"
+              style="display: flex; align-items: center; width: 100%"
+            >
+              <h2 class="chart-title">Yearly Population</h2>
+              <select
+                class="btn btn-good"
+                id="year_filter"
+                style="margin-left: auto"
+              ></select>
             </div>
-
-            <!-- ================ Order Details List ================= -->
-            <div class="details">
-                <div class="dataRecord">
-                    <div class="cardHeader">
-                        <h2>Mobility Data Record</h2>
-                    </div>
-
-                    <table id="myTable">
-                        <thead>
-                            <tr>
-                                <td>No.</td>
-                                <td>Location</td>
-                                <td>Latitude</td>
-                                <td>Longitude</td>
-                                <td>Population</td>
-                                <td>Date</td>
-                                <td>Action</td>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>Sample</td>
-                                <td>1234</td>
-                                <td>5678</td>
-                                <td>12034</td>
-                                <td>01/22/2023</td>
-                                <td>
-                                    <center><button type="button" class="btn btn-good btn-edit">Edit</button>
-                                        <button type="button" class="btn btn-bad btn-delete">Delete</button>
-                                    </center>
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>2</td>
-                                <td>Test</td>
-                                <td>3455</td>
-                                <td>9847</td>
-                                <td>23784</td>
-                                <td>01/26/2023</td>
-                                <td>
-                                    <center><button type="button" class="btn btn-good btn-edit">Edit</button>
-                                        <button type="button" class="btn btn-bad btn-delete">Delete</button>
-                                    </center>
-                                </td>
-                            </tr>
-
-                        </tbody>
-                    </table>
-
-                    <div id="editModal">
-                        <h3>Edit Record</h3>
-                        <form id="editForm">
-                            <label for="location">Location:</label>
-                            <input type="text" id="location" name="location"><br>
-                            <label for="latitude">Latitude:</label>
-                            <input type="text" id="latitude" name="latitude"><br>
-                            <label for="longitude">Longitude:</label>
-                            <input type="text" id="longitude" name="longitude"><br>
-                            <label for="longitude">Population:</label>
-                            <input type="text" id="population" name="population"><br>
-                            <label for="longitude">Date:</label>
-                            <input type="date" id="date" name="date"><br>
-                            <div class="btn">
-                                <input type="button" id="cancelEdit" class="btn btn-bad" value="Cancel">
-                                <input type="button" id="update" class="btn btn-good" value="Update">
-                            </div>
-                        </form>
-                    </div>
-
-                    <div id="addModal">
-                        <h3>Add Record</h3>
-                        <form id="editForm">
-                            <label for="location">Location:</label>
-                            <input type="text" id="location" placeholder="Location" name="location"><br>
-                            <label for="latitude">Latitude:</label>
-                            <input type="text" id="latitude" placeholder="Latitude" name="latitude"><br>
-                            <label for="longitude">Longitude:</label>
-                            <input type="text" id="longitude" placeholder="Longitude" name="longitude"><br>
-                            <label for="longitude">Population:</label>
-                            <input type="text" id="population" placeholder="Population" name="population"><br>
-                            <label for="longitude">Date:</label>
-                            <input type="date" id="date" name="date"><br>
-                            <div class="btn">
-                                <input type="button" id="cancelAdd" class="btn btn-bad" value="Cancel">
-                                <input type="button" id="save" class="btn btn-good" value="Save">
-                            </div>
-                        </form>
-                    </div>
-
-                    <div id="deleteModal">
-                        <h3>Delete Confirmation</h3>
-                        <center>
-                            <p style="padding-bottom: 10px;">Are you sure you want to delete this record?</p>
-                            <div class="btn">
-                                <button id="delCancel" class="btn btn-bad">Cancel</button>
-                                <button id="delConfirm" class="btn btn-good">Confirm</button>
-                            </div>
-                        </center>
-                    </div>
-
-                    <div id="delSuccessModal">
-                        <center>
-                            <p>Successfully Deleted</p>
-                        </center>
-                    </div>
-
-                </div>
-
-                <!-- ================= New Customers ================ -->
-                <div class="popularLocations">
-                    <div class="cardHeader">
-                        <h2>Popular Locations</h2>
-                    </div>
-
-                    <table>
-                        <tr>
-                            <td width="60px">
-                                <div class="icon"><ion-icon name="location" class="loc-icon"></ion-icon></div>
-                            </td>
-                            <td>
-                                <h4 style="color: #eb4a42"><strong>Tibanga, Iligan City</strong> <br> <span
-                                        style="color: #361d32">50,000 commuters</span></h4>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
+            <div id="content" style="height: 400px; width: 400px">
+              <canvas id="pieChart"></canvas>
             </div>
+          </div>
         </div>
+
+        <!-- ================ Order Details List ================= -->
+        <div class="tables-content">
+          <div class="cardHeader">
+            <h2>Mobility Data Record</h2>
+          </div>
+
+          <div style="max-width: 100%">
+            <table id="myTable" style="width: 100%; text-align: center">
+              <thead>
+                <tr style="text-align: center">
+                  <td class="hidden-column">ID</td>
+                  <td>No.</td>
+                  <td>Barangay</td>
+                  <td>Year</td>
+                  <td>Population</td>
+                  <td>Area</td>
+                  <td>Density</td>
+                  <td>Action</td>
+                </tr>
+              </thead>
+
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="editModal">
+          <h3>Edit Record</h3>
+          <form id="editForm">
+            <label for="brgyEdit">Barangay:</label>
+            <select
+              type="text"
+              class="selectInput"
+              id="brgyEdit"
+              name="brgyEdit"
+            ></select
+            ><br />
+            <label for="yearEdit">Year:</label>
+            <select
+              type="text"
+              class="selectInput"
+              id="yearEdit"
+              name="yearEdit"
+            ></select
+            ><br />
+            <label for="populationEdit">Population:</label>
+            <input
+              class="textinput"
+              type="numberEdit"
+              id="populationEdit"
+              placeholder="Population"
+              name="populationEdit"
+            /><br />
+            <label for="areaEdit">Area:</label>
+            <input
+              class="textinput"
+              type="number"
+              id="areaEdit"
+              placeholder="Area"
+              name="areaEdit"
+              required
+            /><br />
+            <label for="densityEdit">Density:</label>
+            <input
+              class="textinput"
+              type="number"
+              id="densityEdit"
+              placeholder="Density"
+              name="densityEdit"
+              readonly
+            /><br />
+            <div class="btn">
+              <input
+                type="button"
+                id="cancelEdit"
+                class="btn btn-bad"
+                value="Cancel"
+              />
+              <input
+                type="button"
+                id="update"
+                class="btn btn-good"
+                value="Update"
+              />
+            </div>
+          </form>
+        </div>
+
+        <div id="addModal">
+          <h3>Add Record</h3>
+          <form id="editForm">
+            <label for="brgyAdd">Barangay:</label>
+            <select
+              type="text"
+              class="selectInput"
+              id="brgyAdd"
+              name="brgyAdd"
+            ></select
+            ><br />
+            <label for="yearAdd">Year:</label>
+            <select
+              type="text"
+              class="selectInput"
+              id="yearAdd"
+              name="yearAdd"
+            ></select
+            ><br />
+            <label for="populationAdd">Population:</label>
+            <input
+              type="number"
+              id="populationAdd"
+              placeholder="Population"
+              name="populationAdd"
+              required
+            /><br />
+            <label for="areaAdd">Area:</label>
+            <input
+              type="number"
+              id="areaAdd"
+              placeholder="Area"
+              name="areaAdd"
+              required
+            /><br />
+            <div class="btn">
+              <input
+                type="button"
+                id="cancelAdd"
+                class="btn btn-bad"
+                value="Cancel"
+              />
+              <input
+                type="button"
+                id="save"
+                class="btn btn-good"
+                value="Save"
+              />
+            </div>
+          </form>
+        </div>
+
+        <div id="deleteModal">
+          <h3>Delete Confirmation</h3>
+          <center>
+            <p style="padding-bottom: 10px">
+              Are you sure you want to delete this record?
+            </p>
+            <div class="btn">
+              <button id="delCancel" class="btn btn-bad">Cancel</button>
+              <button id="delConfirm" class="btn btn-good">Confirm</button>
+            </div>
+          </center>
+        </div>
+      </div>
     </div>
 
     <!-- =========== Scripts =========  -->
     <script src="assets/js/main.js"></script>
 
     <!-- ====== ionicons ======= -->
-    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-</body>
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"
+    ></script>
+  </body>
 
-<script>
+  <script>
     $(document).ready(function () {
-        $('#myTable').DataTable({
-            "autoWidth": false
-        });
+      $("#myTable").DataTable({
+        autoWidth: false,
+        order: [[1, "asc"]],
+        pageLength: 5,
+        lengthMenu: [5, 10, 25, 50, 100],
+        scrollX: true,
+        responsive: true,
+      });
 
-        // Add Data Modal Script
-        $('.btn-add').on('click', function () {
+      $("#cancelEdit").on("click", function () {
+        $("#editModal").hide();
+      });
 
-            // Show the modal
-            $('#addModal').show();
-        });
-        $('#save').on('click', function () {
+      // Delete a record Modal Script
+      $(document).on("click", ".btn-delete", function () {
+        $("#deleteModal").show();
+        var row = $(this).closest("tr");
+        var ID = row.find("td:nth-child(1)").text();
+        $("#delConfirm").data("id", ID);
+      });
 
-            //Insert add code here
+      $("#delCancel").on("click", function () {
+        // Hide the modal
+        $("#deleteModal").hide();
+      });
 
-            $('#addModal').hide();
-        });
-        $('#cancelAdd').on('click', function () {
-            // Hide the modal
-            $('#addModal').hide();
-        });
+      //Pie Chart Script
+      // extracting data from table
+      var locationData = [];
+      var populationData = [];
 
-        //Edit Data Modal Script
-        $('.btn-edit').on('click', function () {
-            // Get the data from the row
-            var row = $(this).closest('tr');
-            var location = row.find('td:nth-child(2)').text();
-            var latitude = row.find('td:nth-child(3)').text();
-            var longitude = row.find('td:nth-child(4)').text();
-            var population = row.find('td:nth-child(5)').text();
-            var date = row.find('td:nth-child(6)').text();
+      $("#myTable tbody tr").each(function () {
+        var location = $(this).find("td:nth-child(2)").text();
+        var population = $(this).find("td:nth-child(5)").text();
 
-            // Fill the form with the data
-            $('#location').val(location);
-            $('#latitude').val(latitude);
-            $('#longitude').val(longitude);
-            $('#population').val(population);
-            $('#date').val(date);
-
-            // Show the modal
-            $('#editModal').show();
-        });
-
-        //Save the update
-        $('#update').on('click', function (event) {
-            event.preventDefault();
-            // Get the data from the form
-            var location = $('#location').val();
-            var latitude = $('#latitude').val();
-            var longitude = $('#longitude').val();
-            var population = $('#population').val();
-            var date = $('#date').val();
-
-            // Update the table
-            var row = $('.btn-edit').closest('tr');
-            row.find('td:nth-child(2)').text(location);
-            row.find('td:nth-child(3)').text(latitude);
-            row.find('td:nth-child(4)').text(longitude);
-            row.find('td:nth-child(5)').text(population);
-            row.find('td:nth-child(6)').text(date);
-
-            $('#editModal').hide();
-        });
-        $('#cancelEdit').on('click', function () {
-            // Hide the modal
-            $('#editModal').hide();
-        });
-
-        //Delete a record Modal Script
-        $('.btn-delete').on('click', function () {
-
-            // Show the modal
-            $('#deleteModal').show();
-        });
-        $('#delConfirm').on('click', function () {
-
-            //Insert delete code here
-
-            $('#delSuccessModal').show();
-            setTimeout(function () {
-                $('#delSuccessModal').hide();
-            }, 500);
-            $('#deleteModal').hide();
-
-        });
-        $('#delCancel').on('click', function () {
-            // Hide the modal
-            $('#deleteModal').hide();
-        });
-
-
-        //Pie Chart Script
-        // extracting data from table
-        var locationData = [];
-        var populationData = [];
-
-        $("#myTable tbody tr").each(function () {
-            var location = $(this).find("td:nth-child(2)").text();
-            var population = $(this).find("td:nth-child(5)").text();
-
-            locationData.push(location);
-            populationData.push(population);
-        });
-
-        // creating the pie chart
-        var ctx = document.getElementById('pieChart').getContext('2d');
-
-        var chartData = {
-            datasets: [{
-                data: populationData, // population data as numbers for the pie slices
-                backgroundColor: ['#51f55c', '#f551c5', '#eff551', '#5577f5'], // colors for each location ----- add lang additional color
-                borderColor: '#361d32',
-                borderWidth: 1
-            }],
-            labels: locationData // location names as labels for the pie slices
-        };
-
-        new Chart(ctx, {
-            type: 'pie',
-            data: chartData,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                title: {
-                    display: true,
-                    text: 'Location Distribution'
-                }
-            }
-        });
-
-
-        //Line Chart Script
-        // setting the background colors for each location
-        var backgroundColors = ['#51f55c', '#f551c5', '#eff551', '#5577f5'];
-
-        // setting the border color for each location
-        var borderColor = '#361d32'; // color for the line
-
-
-        // creating the line chart
-        var ctx = document.getElementById('lineChart').getContext('2d');
-        var chartData = {
-            labels: locationData, // location names as x-axis labels
-            datasets: [{
-                data: populationData, // population data as y-axis values
-                backgroundColor: backgroundColors[0], // background color for the line
-                borderColor: borderColor, // color for the line
-                borderWidth: 1, // line width in pixels
-                pointRadius: 3, // radius of data points
-                fill: false // disable fill under the line
-            }]
-        };
-
-        new Chart(ctx, {
-            type: 'line',
-            data: chartData,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                title: {
-                    display: true,
-                    text: 'Location Population Trend'
-                },
-                scales: {
-                    x: {
-                        display: true,
-                        title: {
-                            display: true,
-                            text: 'Location'
-                        }
-                    },
-                    y: {
-                        display: true,
-                        title: {
-                            display: true,
-                            text: 'Population'
-                        }
-                    }
-                }
-            }
-        });
-
-        //Bar Chart Script
-        // creating the Bar chart
-        var ctx = document.getElementById('barChart').getContext('2d');
-        var chartData = {
-            labels: locationData, // location names as x-axis labels
-            datasets: [{
-                data: populationData, // population data as y-axis values
-                backgroundColor: backgroundColors[0], // background color for the line
-                borderColor: borderColor, // color for the line
-                borderWidth: 1, // line width in pixels
-                pointRadius: 3, // radius of data points
-                fill: false // disable fill under the line
-            }]
-        };
-
-        new Chart(ctx, {
-            type: 'bar',
-            data: chartData,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                title: {
-                    display: true,
-                    text: 'Location Population Trend'
-                },
-                scales: {
-                    x: {
-                        display: true,
-                        title: {
-                            display: true,
-                            text: 'Location'
-                        }
-                    },
-                    y: {
-                        display: true,
-                        title: {
-                            display: true,
-                            text: 'Population'
-                        }
-                    }
-                }
-            }
-        });
-
-        //Area Chart Script
-        var ctx = document.getElementById('areaChart').getContext('2d');
-        var chartData = {
-            labels: locationData, // location names as x-axis labels
-            datasets: [{
-                data: populationData, // population data as y-axis values
-                backgroundColor: 'rgba(0,123,255,0.5)', // background color for the line and the fill
-                borderColor: 'rgba(0,123,255,1)', // color for the line
-                borderWidth: 2, // line width in pixels
-                pointRadius: 3, // radius of data points
-                fill: true // enable fill under the line
-            }]
-        };
-
-        new Chart(ctx, {
-            type: 'line',
-            data: chartData,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                title: {
-                    display: true,
-                    text: 'Location Population Trend'
-                },
-                scales: {
-                    x: {
-                        display: true,
-                        title: {
-                            display: true,
-                            text: 'Location'
-                        }
-                    },
-                    y: {
-                        display: true,
-                        title: {
-                            display: true,
-                            text: 'Population'
-                        }
-                    }
-                }
-            }
-        });
-
-
+        locationData.push(location);
+        populationData.push(population);
+      });
     });
+  </script>
 
-</script>
-
-<script type="module">
+  <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-analytics.js";
-    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
-    import { getFirestore, collection, addDoc, connectFirestoreEmulator, query, getDocs, getDoc, updateDoc, setDoc, doc, onSnapshot, deleteDoc, orderBy } from 'https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js';
+    import {
+      getAuth,
+      signInWithEmailAndPassword,
+      onAuthStateChanged,
+      signOut,
+    } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      connectFirestoreEmulator,
+      query,
+      getDocs,
+      getDoc,
+      updateDoc,
+      setDoc,
+      doc,
+      onSnapshot,
+      deleteDoc,
+      orderBy,
+      where,
+      limit,
+    } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDYPv8S_ljSo3tuMNoRYPI2tleWOqhqFMM",
@@ -613,7 +710,7 @@
       storageBucket: "commumeter.appspot.com",
       messagingSenderId: "1098693151947",
       appId: "1:1098693151947:web:c0ce3c093e75ae8cbe1f4e",
-      measurementId: "G-71SRN52DX4"
+      measurementId: "G-71SRN52DX4",
     };
 
     // Initialize Firebase
@@ -622,20 +719,489 @@
     const analytics = getAnalytics(app);
     const auth = getAuth();
     console.log(app);
-    let userId, userRef, classListRef, profileRef;
 
-    document.getElementById("logout").addEventListener("click", function () {
-        signOut(auth).then(() => {
-            // Sign-out successful.
-            console.log('Sign-out successful.');
-            alert('Sign-out successful.');
-            window.location.href = "index.html";
-        }).catch((error) => {
-            // An error happened.
-            console.log('An error happened.');
-        });
+    getDocs(query(collection(db, "Routes"))).then((routeListSnapshot) => {
+      var totalRoutes = routeListSnapshot.size;
+      $("#totalRoutes").text(totalRoutes);
     });
 
-</script>
+    populateBarangaySelect("Acmac", "brgy_filter");
 
+    function populateBarangaySelect(selectedBrgy, selectId) {
+      getDocs(query(collection(db, "Barangay"), orderBy("brgy_name")))
+        .then((barangayListSnapshot) => {
+          var selectElement = document.getElementById(selectId);
+          selectElement.innerHTML = "";
+          var totalBarangays = barangayListSnapshot.size;
+
+          if (selectedBrgy === "All Barangays") {
+            var option1 = document.createElement("option");
+            option1.text = "All Barangays";
+            selectElement.appendChild(option1);
+          }
+
+          barangayListSnapshot.forEach((barangayListDoc) => {
+            var barangayListData = barangayListDoc.data();
+            var brgy_name = barangayListData.brgy_name;
+
+            var option = document.createElement("option");
+            option.value = brgy_name;
+            option.text = brgy_name;
+
+            if (brgy_name === selectedBrgy) {
+              option.selected = true;
+            }
+
+            selectElement.appendChild(option);
+          });
+          showArea();
+          $("#totalBarangays").text(totalBarangays);
+        })
+        .catch((error) => {
+          console.log("Error fetching documents: ", error);
+        });
+    }
+
+    // First, query to get the latest year
+    var latestYearRef = query(
+      collection(db, "Mobility"),
+      orderBy("year", "desc"),
+      limit(1)
+    );
+    getDocs(latestYearRef)
+      .then((snapshot) => {
+        if (snapshot.empty) {
+          console.log("No documents found");
+          return;
+        }
+
+        // Access the latest year
+        var latestYear;
+        snapshot.forEach((doc) => {
+          latestYear = doc.data().year;
+        });
+
+        // Now, construct a query to get documents for the latest year
+        var latestYearQueryRef = query(
+          collection(db, "Mobility"),
+          where("year", "==", latestYear)
+        );
+        getDocs(latestYearQueryRef)
+          .then((latestYearSnapshot) => {
+            // Calculate the total population
+            var totalPopulation = 0;
+            latestYearSnapshot.forEach((doc) => {
+              // Assuming population field is named "population"
+              totalPopulation += doc.data().population;
+            });
+            var formattedPopulation = totalPopulation.toLocaleString();
+            $("#totalPopulation").text(formattedPopulation);
+            console.log(
+              "Total population for the latest year (" +
+                latestYear +
+                "): " +
+                totalPopulation
+            );
+          })
+          .catch((error) => {
+            console.log("Error getting documents: ", error);
+          });
+      })
+      .catch((error) => {
+        console.log("Error getting documents: ", error);
+      });
+
+    // Function to populate the table with Mobility Data
+    function populateTable() {
+      var queryRef = query(collection(db, "Mobility"), orderBy("brgy_name"));
+      getDocs(queryRef)
+        .then((mobilityListSnapshot) => {
+          var count = 1;
+          var dataTable = $("#myTable").DataTable();
+          dataTable.clear().draw();
+
+          mobilityListSnapshot.forEach((mobilityListDoc) => {
+            var id = mobilityListDoc.id;
+            var mobilityListData = mobilityListDoc.data();
+            var brgy_name = mobilityListData.brgy_name;
+            var year = mobilityListData.year;
+            var population = mobilityListData.population;
+            var area = mobilityListData.area;
+            var density = mobilityListData.density;
+
+            dataTable.row
+              .add([
+                id,
+                count,
+                brgy_name,
+                year,
+                population,
+                area,
+                density,
+                '<center><button type="button" class="btn btn-good btn-edit" style="margin-right: 7px !important;">Edit</button><button type="button" class="btn btn-bad btn-delete">Delete</button></center>',
+              ])
+              .draw(false);
+            count++;
+          });
+        })
+        .catch((error) => {
+          console.log("Error fetching documents: ", error);
+        });
+    }
+
+    // Initial population of the table
+    populateTable();
+
+    // Edit Data Modal Script
+    $(document).on("click", ".btn-edit", function () {
+      var row = $(this).closest("tr");
+      var id = row.find("td:nth-child(1)").text();
+      var brgy_name = row.find("td:nth-child(3)").text();
+      var yearValue = row.find("td:nth-child(4)").text();
+      var population = row.find("td:nth-child(5)").text();
+      var area = row.find("td:nth-child(6)").text();
+      var density = row.find("td:nth-child(7)").text();
+
+      $("#populationEdit").val(population);
+      $("#areaEdit").val(area);
+      $("#densityEdit").val(density);
+
+      var editYear = document.getElementById("yearEdit");
+      var yearValueInt = parseInt(yearValue, 10);
+
+      editYear.innerHTML = "";
+
+      for (var yearEdit = 2000; yearEdit <= 2100; yearEdit++) {
+        var option = document.createElement("option");
+        option.text = yearEdit;
+        option.value = yearEdit;
+
+        if (yearEdit === yearValueInt) {
+          option.selected = true;
+        }
+
+        editYear.add(option);
+      }
+
+      populateBarangaySelect(brgy_name, "brgyEdit");
+
+      $("#editModal").show();
+      $("#update").data("id", id);
+    });
+
+    $("#update").on("click", async function (event) {
+      event.preventDefault();
+      // Get the data from the form
+      var id = $(this).data("id");
+      var brgy_name = $("#brgyEdit").val();
+      var year = $("#yearEdit").val();
+      var population = parseFloat($("#populationEdit").val());
+      var area = parseFloat($("#areaEdit").val());
+      var density;
+
+      if (!isNaN(population) && !isNaN(area) && area !== 0) {
+        density = (population / area).toFixed(2);
+        console.log("density:", density);
+      } else {
+        if (isNaN(population)) {
+          console.error("Invalid population value");
+        }
+        if (isNaN(area) || area === 0) {
+        }
+      }
+      try {
+        const querySnapshot = await getDocs(collection(db, "Mobility"));
+
+        querySnapshot.forEach(async (doc) => {
+          if (doc.id === id) {
+            try {
+              // Update the document with the new data
+              if (population != "") {
+                updateDoc(doc.ref, {
+                  brgy_name: brgy_name,
+                  year: year,
+                  population: population,
+                  area: area,
+                  density: density,
+                });
+                console.log("Document successfully updated!");
+                Swal.fire({
+                  position: "center",
+                  icon: "success",
+                  title: "Updated Successfully",
+                  showConfirmButton: false,
+                  timer: 1500,
+                });
+              } else {
+                Swal.fire({
+                  title: "Error!",
+                  text: "Population must be atleast zero",
+                  icon: "error",
+                  confirmButtonText: "Try Again",
+                });
+              }
+
+              $("#editModal").hide();
+              document.getElementById("brgyEdit").selectedIndex = -1;
+              var yearEditSelect = document.getElementById("yearEdit");
+              for (var i = 0; i < yearEditSelect.options.length; i++) {
+                if (yearEditSelect.options[i].value == "2024") {
+                  yearEditSelect.options[i].selected = true;
+                  break;
+                }
+              }
+              document.getElementById("populationEdit").value = "";
+            } catch (error) {
+              console.error("Error updating document: ", error);
+              Swal.fire({
+                title: "Invalid!",
+                text: "Failed to update record. Please try again.",
+                icon: "error",
+                confirmButtonText: "OK",
+              });
+            }
+          }
+        });
+      } catch (error) {
+        console.error("Error updating document: ", error);
+        // Show an error message if updating fails
+        Swal.fire({
+          title: "Error!",
+          text: "Failed to update record. Please try again.",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+      }
+    });
+
+    $("#delConfirm").on("click", async function () {
+      try {
+        var id = $(this).data("id");
+        const querySnapshot = await getDocs(collection(db, "Mobility"));
+
+        querySnapshot.forEach(async (doc) => {
+          if (doc.id === id) {
+            try {
+              await deleteDoc(doc.ref);
+              console.log("Document successfully deleted!");
+              Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Deleted Successfully",
+                showConfirmButton: false,
+                timer: 1500,
+              });
+            } catch (error) {
+              console.error("Error deleting document: ", error);
+              Swal.fire({
+                title: "Error!",
+                text: "Failed to delete record. Please try again.",
+                icon: "error",
+                confirmButtonText: "OK",
+              });
+            }
+          }
+        });
+
+        $("#deleteModal").hide();
+      } catch (error) {
+        console.error("Error deleting document: ", error);
+        Swal.fire({
+          title: "Error!",
+          text: "Failed to delete record. Please try again.",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+      }
+    });
+
+    document
+      .getElementById("brgy_filter")
+      .addEventListener("change", async function () {
+        showPie();
+        showArea();
+      });
+
+    function showArea() {
+      var queryRef = query(
+        collection(db, "Mobility"),
+        where("brgy_name", "==", document.getElementById("brgy_filter").value)
+      );
+      getDocs(queryRef)
+        .then((mobilityListSnapshot) => {
+          var years = [];
+          var populations = [];
+
+          mobilityListSnapshot.forEach((mobilityListDoc) => {
+            var id = mobilityListDoc.id;
+            var mobilityListData = mobilityListDoc.data();
+            var year = mobilityListData.year;
+            var population = mobilityListData.population;
+
+            years.push(year);
+            populations.push(population);
+          });
+
+          // Get the canvas element
+          var ctx = document.getElementById("areaChart").getContext("2d");
+
+          // Destroy the existing chart instance (if it exists)
+          if (window.myChart) {
+            window.myChart.destroy();
+          }
+
+          // Create a new chart instance with updated data
+          window.myChart = new Chart(ctx, {
+            type: "line",
+            data: {
+              labels: years,
+              datasets: [
+                {
+                  label: "Population",
+                  data: populations,
+                  backgroundColor: "rgba(255, 99, 132, 0.5)",
+                  borderColor: "rgba(255, 99, 132, 1)",
+                  borderWidth: 1,
+                  fill: true,
+                },
+              ],
+            },
+            options: {
+              scales: {
+                y: {
+                  beginAtZero: true,
+                },
+              },
+            },
+          });
+        })
+        .catch((error) => {
+          console.log("Error fetching documents: ", error);
+        });
+    }
+
+    var currentYear = new Date().getFullYear();
+    var filterYear = document.getElementById("year_filter");
+
+    for (var year = 2000; year <= 2100; year++) {
+      var option = document.createElement("option");
+      option.text = year;
+      option.value = year;
+      if (year === currentYear) {
+        option.selected = true;
+      }
+      filterYear.add(option);
+    }
+
+    showPie();
+    document
+      .getElementById("year_filter")
+      .addEventListener("change", async function () {
+        showPie();
+        showArea();
+        $(".pcontent").empty();
+      });
+    function showPie() {
+      console.log("showPie function called");
+      var queryRef = query(
+        collection(db, "Mobility"),
+        where("year", "==", document.getElementById("year_filter").value)
+      );
+      console.log(document.getElementById("year_filter").value);
+      getDocs(queryRef)
+        .then((mobilityYearSnapshot) => {
+          console.log(mobilityYearSnapshot);
+          var barangays = [];
+          var populations = [];
+
+          mobilityYearSnapshot.forEach((mobilityYearDoc) => {
+            var id = mobilityYearDoc.id;
+            var mobilityYearData = mobilityYearDoc.data();
+            var barangay = mobilityYearData.brgy_name; // Assuming you have a field named "barangay" in your document
+            var population = mobilityYearData.population;
+
+            // Add barangay name and population to their respective arrays
+            barangays.push(barangay);
+            populations.push(population);
+          });
+
+          console.log("Length of barangays:", barangays.length);
+          if (barangays.length > 0) {
+            $(".pcontent").empty();
+            // Get the canvas element
+            var ptx = document.getElementById("pieChart").getContext("2d");
+
+            // Destroy the existing chart instance (if it exists)
+            if (window.pieChart instanceof Chart) {
+              window.pieChart.destroy();
+            }
+
+            // Create a new chart instance with updated data
+            window.pieChart = new Chart(ptx, {
+              type: "pie",
+              data: {
+                labels: barangays, // Use barangay names as labels
+                datasets: [
+                  {
+                    label: "Population",
+                    data: populations,
+                    backgroundColor: [
+                      "#488f31",
+                      "#679f51",
+                      "#83af70",
+                      "#9fc08f",
+                      "#bad0af",
+                      "#d5e0cf",
+                      "#f1f1f1",
+                      "#f1d4d4",
+                      "#f0b8b8",
+                      "#ec9c9d",
+                      "#e67f83",
+                      "#de6069",
+                      "#de425b",
+                    ],
+                    borderWidth: 1,
+                    fill: true,
+                  },
+                ],
+              },
+              options: {
+                plugins: {
+                  legend: {
+                    position: "right", // Position legend on the right side
+                  },
+                },
+              },
+            });
+          } else {
+            console.log("no data for this year");
+            $(".pcontent").empty();
+            // Destroy the existing chart instance (if it exists)
+            if (window.pieChart instanceof Chart) {
+              window.pieChart.destroy();
+            }
+            $("#content").append(
+              '<center><p class="pcontent">No Data Available For This Year</p></center>'
+            );
+          }
+        })
+        .catch((error) => {
+          console.log("Error fetching documents: ", error);
+        });
+    }
+
+    document.getElementById("logout").addEventListener("click", function () {
+      signOut(auth)
+        .then(() => {
+          // Sign-out successful.
+          console.log("Sign-out successful.");
+          alert("Sign-out successful.");
+          window.location.href = "index.html";
+        })
+        .catch((error) => {
+          // An error happened.
+          console.log("An error happened.");
+        });
+    });
+  </script>
 </html>
