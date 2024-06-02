@@ -110,13 +110,22 @@
           0.8
         ); /* Adjusted hover background color with transparency */
       }
+
+      /* this will fix map and navbar interaction */
+      .leaflet-top,
+      .leaflet-bottom {
+        position: absolute;
+        z-index: 600;
+        pointer-events: none;
+      }
     </style>
   </head>
 
   <body>
     <!-- =============== Navigation ================ -->
     <div class="navcontainer">
-      <div class="navigation">
+      <!-- z-index will fix map and navbar interaction -->
+      <div class="navigation" style="z-index: 1000">
         <ul style="padding-left: 0">
           <li>
             <a
