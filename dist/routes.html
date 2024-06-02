@@ -20,69 +20,40 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
-      .container {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-      }
-
-      .navigation {
-        flex: 1;
-        overflow-y: auto;
-      }
-
       .main {
-        flex: 3;
+        flex: 1 0 auto;
         overflow-y: auto;
-      }
-
-      .details.data {
         padding: 20px;
       }
 
-      /** adjustments for smaller screen **/
+      .main .tables-content {
+        width: 100%;
+        max-width: 900px;
+        margin: 20px auto; /* Center and provide margin */
+        padding: 20px;
 
-      @media screen and (max-width: 768px) {
-        .container {
-          flex-direction: column;
-        }
-        .navigation {
-          width: 100%;
-          min-width: 0;
-        }
-        .main {
-          width: 100%;
-          min-width: 0;
-        }
-        .details.data {
-          padding: 10px;
-        }
-
-        .navigation ul {
-          display: none;
-        }
-        .toggle {
-          display: block;
-        }
-        .toggle ion-icon {
-          display: inline-block;
-        }
-        .dropdown-content {
-          display: none;
-        }
-        .dropdown:hover .dropdown-content {
-          display: block;
-        }
+        border: 1px solid #ccc;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 10px; /* rounded corners */
+        /* text-align: center; Center text within the box */
+        background: #edd2cb; /* Optional: for better contrast */
       }
 
-      /* Hide the header of the column */
-      #myTable th:nth-child(1) {
-        display: none;
+      .textinput {
+        max-width: 100%;
       }
 
-      /* Hide the cells in the column */
-      #myTable td:nth-child(1) {
-        display: none;
+      .tables-content table {
+        background: #edd2cb;
+      }
+
+      .tables-content th,
+      .tables-content td {
+        background: #edd2cb;
+      }
+
+      .tables-content thead {
+        background: #edd2cb;
       }
     </style>
   </head>
@@ -210,23 +181,22 @@
         </div>
 
         <!-- ================ Barangays Table ================= -->
-        <div class="details data">
-          <div class="dataRecord">
-            <div class="cardHeader">
-              <h2>Route List</h2>
+        <div class="tables-content">
+          <div class="cardHeader">
+            <h2>Route List</h2>
 
-              <div class="btn">
-                <button class="btn btn-good btn-add" class="icon" id="add">
-                  <ion-icon
-                    name="add-circle"
-                    style="padding-right: 5px; text-align: center"
-                  ></ion-icon
-                  >Add Route
-                </button>
-              </div>
+            <div class="btn">
+              <button class="btn btn-good btn-add" class="icon" id="add">
+                <ion-icon
+                  name="add-circle"
+                  style="padding-right: 5px; text-align: center"
+                ></ion-icon
+                >Add Route
+              </button>
             </div>
-
-            <table id="myTable">
+          </div>
+          <div style="max-width: 100%">
+            <table id="myTable" style="width: 100%; text-align: center">
               <thead>
                 <tr>
                   <td>ID</td>
@@ -239,107 +209,99 @@
               </thead>
               <tbody></tbody>
             </table>
-
-            <div
-              id="editModal"
-              style="height: 483px !important; overflow-y: auto"
-            >
-              <h3>Edit Route</h3>
-              <form id="editForm">
-                <label for="routeNameEdit">Route Name:</label>
-                <input
-                  type="text"
-                  name="routeName"
-                  placeholder="Route Name"
-                  id="routeNameEdit"
-                  class="routeNameEdit"
-                  required
-                /><br />
-                <!-- Longitude input fields -->
-                <div id="editFields" style="text-align: center"></div>
-                <div class="btn">
-                  <button type="button" id="cancelEdit" class="btn btn-bad">
-                    Cancel
-                  </button>
-                  <button type="button" id="update" class="btn btn-good">
-                    Update
-                  </button>
-                </div>
-              </form>
-            </div>
-
-            <div
-              id="addModal"
-              style="height: 483px !important; overflow-y: auto"
-            >
-              <h3>Add Route</h3>
-              <form id="editForm">
-                <label for="routeNameAdd">Route Name:</label>
-                <input
-                  type="text"
-                  name="routeName"
-                  placeholder="Route Name"
-                  id="routeNameAdd"
-                  required
-                /><br />
-                <label for="latAdd1">Latitude 1:</label>
-                <input
-                  type="number"
-                  step="any"
-                  name="latitude"
-                  placeholder="Latitude 1"
-                  id="latAdd1"
-                  class="additional-lat"
-                  required
-                /><br />
-                <label for="longAdd">Longitude 1:</label>
-                <input
-                  type="number"
-                  step="any"
-                  name="longitude"
-                  placeholder="Longitude 1"
-                  id="longAdd1"
-                  class="additional-long"
-                  required
-                /><br />
-                <div id="additionalFields" style="text-align: center"></div>
-                <button
-                  type="button"
-                  class="btn btn-good btn-add"
-                  class="icon"
-                  id="addField"
-                  style="min-width: 66%"
-                >
-                  <ion-icon
-                    name="add-circle"
-                    style="padding-right: 5px; text-align: center"
-                  ></ion-icon
-                  >Add Coordinates</button
-                ><br />
-                <div class="btn">
-                  <button type="button" id="cancelAdd" class="btn btn-bad">
-                    Cancel
-                  </button>
-                  <button type="button" id="save" class="btn btn-good">
-                    Save
-                  </button>
-                </div>
-              </form>
-            </div>
-
-            <div id="deleteModal">
-              <h3>Delete Confirmation</h3>
-              <center>
-                <p style="padding-bottom: 10px">
-                  Are you sure you want to delete this record?
-                </p>
-                <div class="btn">
-                  <button id="delCancel" class="btn btn-bad">Cancel</button>
-                  <button id="delConfirm" class="btn btn-good">Confirm</button>
-                </div>
-              </center>
-            </div>
           </div>
+        </div>
+
+        <div id="editModal" style="height: 483px !important; overflow-y: auto">
+          <h3>Edit Route</h3>
+          <form id="editForm">
+            <label for="routeNameEdit">Route Name:</label>
+            <input
+              type="text"
+              name="routeName"
+              placeholder="Route Name"
+              id="routeNameEdit"
+              class="routeNameEdit"
+              required
+            /><br />
+            <!-- Longitude input fields -->
+            <div id="editFields" style="text-align: center"></div>
+            <div class="btn">
+              <button type="button" id="cancelEdit" class="btn btn-bad">
+                Cancel
+              </button>
+              <button type="button" id="update" class="btn btn-good">
+                Update
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div id="addModal" style="height: 483px !important; overflow-y: auto">
+          <h3>Add Route</h3>
+          <form id="editForm">
+            <label for="routeNameAdd">Route Name:</label>
+            <input
+              type="text"
+              name="routeName"
+              placeholder="Route Name"
+              id="routeNameAdd"
+              required
+            /><br />
+            <label for="latAdd1">Latitude 1:</label>
+            <input
+              type="number"
+              step="any"
+              name="latitude"
+              placeholder="Latitude 1"
+              id="latAdd1"
+              class="additional-lat"
+              required
+            /><br />
+            <label for="longAdd">Longitude 1:</label>
+            <input
+              type="number"
+              step="any"
+              name="longitude"
+              placeholder="Longitude 1"
+              id="longAdd1"
+              class="additional-long"
+              required
+            /><br />
+            <div id="additionalFields" style="text-align: center"></div>
+            <button
+              type="button"
+              class="btn btn-good btn-add"
+              class="icon"
+              id="addField"
+              style="min-width: 66%"
+            >
+              <ion-icon
+                name="add-circle"
+                style="padding-right: 5px; text-align: center"
+              ></ion-icon
+              >Add Coordinates</button
+            ><br />
+            <div class="btn">
+              <button type="button" id="cancelAdd" class="btn btn-bad">
+                Cancel
+              </button>
+              <button type="button" id="save" class="btn btn-good">Save</button>
+            </div>
+          </form>
+        </div>
+
+        <div id="deleteModal">
+          <h3>Delete Confirmation</h3>
+          <center>
+            <p style="padding-bottom: 10px">
+              Are you sure you want to delete this record?
+            </p>
+            <div class="btn">
+              <button id="delCancel" class="btn btn-bad">Cancel</button>
+              <button id="delConfirm" class="btn btn-good">Confirm</button>
+            </div>
+          </center>
         </div>
       </div>
     </div>
@@ -568,6 +530,9 @@
     $("#myTable").DataTable({
       autoWidth: false,
       order: [[1, "asc"]],
+      scrollX: true,
+      lengthChange: true,
+      responsive: true,
     });
 
     function populateTable() {
