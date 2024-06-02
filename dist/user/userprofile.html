@@ -4,16 +4,11 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="./assets/img/ijeep.png" />
     <title>iJeep</title>
     <!-- ======= Styles ====== -->
 
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
-      crossorigin="anonymous"
-    />
-    <link rel="stylesheet" href="/dist/assets/css/style.css" />
+    <link rel="stylesheet" href="../assets/css/style.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css"
@@ -21,6 +16,13 @@
     <link
       rel="stylesheet"
       href="https://cdn.datatables.net/2.0.7/css/dataTables.bootstrap5.css"
+    />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
     />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -32,7 +34,7 @@
         height: 100%;
       }
       .container {
-        display: flex;
+        max-width: 100%;
         flex-direction: column;
         min-height: 100vh;
       }
@@ -66,14 +68,15 @@
       /* Additional CSS for User Details */
       .main .user-details {
         width: 100%;
-        max-width: 600px;
+        max-width: 800px;
         margin: 20px auto; /* Center and provide margin */
         padding: 20px;
+
         border: 1px solid #ccc;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         border-radius: 10px; /* rounded corners */
         text-align: center; /* Center text within the box */
-        background: #ffffff; /* Optional: for better contrast */
+        background: #edd2cb; /* Optional: for better contrast */
       }
       /*
         .main .user-details img {
@@ -101,8 +104,9 @@
         position: absolute;
         top: 50%;
         left: 50%;
+        max-width: 500px;
         transform: translate(-50%, -50%);
-        background-color: #fff;
+        background-color: #f1e8e6;
         padding: 20px;
         border-radius: 10px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -133,7 +137,7 @@
       #save-button,
       #edit-button {
         padding: 10px 20px;
-        background-color: #333;
+        background-color: #e9a184;
         color: #fff;
         border: none;
         border-radius: 5px;
@@ -163,7 +167,7 @@
       #edit-button {
         padding: 5px 10px;
         margin-top: 20px;
-        background-color: #333;
+        background-color: #e9a184;
         color: #fff;
         border: none;
         border-radius: 5px;
@@ -179,6 +183,14 @@
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         object-fit: cover; /* Ensure the image covers the container without distortion */
       }
+
+      .dt-scroll-headInner,
+      .table-striped {
+        width: 100%;
+      }
+      table.dataTable {
+        width: 100% !important;
+      }
     </style>
   </head>
 
@@ -186,31 +198,67 @@
     <!-- =============== Navigation ================ -->
     <div class="navcontainer">
       <div class="navigation">
-        <ul>
+        <ul style="padding-left: 0">
           <li>
-            <a href="#">
-              <span class="icon">
-                <ion-icon name="bus"></ion-icon>
-              </span>
+            <a
+              href="#"
+              style="
+                justify-content: center;
+                align-items: center;
+                margin-top: 10px;
+              "
+            >
+              <img style="height: 50px" src="../assets/img/ijeep.png" />
               <span class="title">iJeep</span>
             </a>
           </li>
 
           <li>
-            <a href="/dist/user/map.html">
+            <a href="userprofile.html">
               <span class="icon">
-                <ion-icon name="map-outline"></ion-icon>
+                <!---<ion-icon name="person-outline"></ion-icon>-->
+                <img
+                  id="profile-icon"
+                  src="default_profile_picture.png"
+                  alt=""
+                  style="
+                    width: 30px;
+                    height: 30px;
+                    border-radius: 50%;
+                    top: 15px;
+                    right: 15px;
+                    position: absolute;
+                  "
+                />
               </span>
-              <span class="title">Map</span>
+              <span class="title">Profile</span>
             </a>
           </li>
 
           <li>
-            <a href="/dist/user/profile.html">
+            <a href="commuter.html">
               <span class="icon">
-                <ion-icon name="person-outline"></ion-icon>
+                <ion-icon name="log-in-outline"></ion-icon>
               </span>
-              <span class="title">Profile</span>
+              <span class="title">Book a Route</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="trackroute1.html">
+              <span class="icon">
+                <ion-icon name="bus-outline"></ion-icon>
+              </span>
+              <span class="title">Where are the Jeeps?</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="browseroute.html">
+              <span class="icon">
+                <ion-icon name="location-outline"></ion-icon>
+              </span>
+              <span class="title">Trip Estimator</span>
             </a>
           </li>
 
@@ -234,13 +282,7 @@
         </div>
         <h2 style="padding: 20px">Account Details</h2>
         <div class="user-details">
-          <!---
-                <div class="profile-pic-container">
-                    <svg id="user-profile-pic" class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" width="50" height="50">
-                        <path d="M12 2c-2.21 0-4 2.24-4 5s1.79 5 4 5 4-2.24 4-5-1.79-5-4-5zm0 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0 11c-2.67 0-8 1.34-8 4v1h16v-1c0-2.66-5.33-4-8-4z"/>
-                    </svg>
-                </div>
-                -->
+          <h3>Profile</h3>
           <img id="user-profile-pic" src="#" />
           <div id="user-name">Display Name:</div>
           <div id="user-info" style="padding-top: 20px">
@@ -249,8 +291,20 @@
           <button id="edit-button">Edit Profile</button>
 
           <!-- Make sure this element exists with the correct ID -->
-          <div id="edit-profile" style="display: none">
+          <div id="edit-profile" style="display: none; margin: 0 auto">
             <!-- Edit profile content -->
+          </div>
+        </div>
+        <div class="user-details">
+          <div class="py-4">
+            <h3>Commuter Logging</h3>
+            <div class="container-sm" style="max-width: 100%">
+              <table
+                id="logging"
+                class="table table-striped"
+                style="width: 100%"
+              ></table>
+            </div>
           </div>
         </div>
       </div>
@@ -260,6 +314,7 @@
 
     <div id="edit-profile-modal" class="modal">
       <div class="modal-content">
+        <h3>Edit Profile</h3>
         <span class="close">&times;</span>
         <input
           type="text"
@@ -267,12 +322,9 @@
           placeholder="Enter display name"
         />
         <input type="file" id="profile-pic-input" accept="image/*" />
+
         <button id="save-button">Save</button>
       </div>
-    </div>
-
-    <div class="container">
-      <table id="logging" class="table table-striped"></table>
     </div>
 
     <script>
@@ -304,7 +356,7 @@
     </script>
 
     <!-- =========== Scripts =========  -->
-    <script src="/dist/assets/js/main.js"></script>
+    <script src="../assets/js/main.js"></script>
 
     <!-- ====== ionicons ======= -->
     <script
@@ -391,6 +443,7 @@
                   console.log("Profile Picture URL:", profilePicURL);
                   document.getElementById("user-profile-pic").src =
                     profilePicURL;
+                  document.getElementById("profile-icon").src = profilePicURL; // update the navigation icon
                 }
               } else {
                 console.log("User profile not found in user data.");
@@ -445,6 +498,9 @@
               hour: "2-digit",
               minute: "2-digit",
               second: "2-digit",
+              year: "numeric",
+              month: "numeric",
+              day: "numeric",
             };
             const formattedDate = date.toLocaleString("en-US", options);
 
@@ -490,6 +546,8 @@
               { targets: 0, visible: false }, // Hide the DT_RowId column
             ],
             responsive: true,
+            autoWidth: false,
+            scrollX: true,
           });
         });
       });
@@ -552,7 +610,10 @@
                       console.log(
                         "Profile picture updated successfully in Firestore."
                       );
+                      // update the profile picture on the page
                       document.getElementById("user-profile-pic").src = url;
+                      // also update the profile icon in the navigation
+                      document.getElementById("profile-icon").src = url;
                     })
                     .catch((error) => {
                       console.error(
@@ -580,7 +641,7 @@
           .then(() => {
             console.log("Sign-out successful.");
             alert("Sign-out successful.");
-            window.location.href = "/dist/index.html";
+            window.location.href = "../../index.html";
           })
           .catch((error) => {
             console.log("Error signing out:", error);

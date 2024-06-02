@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iJeep</title>
+    <!-- ======= Styles ====== -->
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script type="module" src="./assets/js/coords.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+  <style>
+    #map {
+      height: 550px;
+      width: 100%;
+    }
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+    
+    .dropdown-toggle {
+        background-color: #6c5ce7; /* Purple background */
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    
+    .dropdown-toggle:hover {
+        background-color: #5c4ccf; /* Darker purple on hover */
+    }
+    
+    .dropdown-menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 1000;
+        display: none;
+        float: left;
+        min-width: 160px;
+        padding: 5px 0;
+        margin: 2px 0 0;
+        font-size: 14px;
+        text-align: left;
+        list-style: none;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    }
+    
+    .dropdown-menu li {
+        margin-bottom: 5px;
+    }
+    
+    .dropdown-menu li a {
+        color: #6c5ce7;
+        text-decoration: none;
+    }
+    
+    .dropdown-menu li a:hover {
+        background-color: #f5f5f5;
+        color: #5c4ccf;
+    }
+    
+    .dropdown-menu li.disabled a {
+        color: #ccc;
+        cursor: not-allowed;
+    }
+    
+    .caret {
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 0 5px 5px 5px;
+        border-color: transparent transparent #fff transparent;
+        position: absolute;
+        top: 50%;
+        right: 15px;
+        margin-top: -3px;
+    }
+    .leaflet-bar.leaflet-control select {
+        background-color: #6c5ce7; /* Purple background */
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    
+    .leaflet-bar.leaflet-control select option {
+        background-color: #6c5ce7; /* Purple background */
+        color: #fff;
+    }
+    
+    .leaflet-bar.leaflet-control select:hover {
+        background-color: #5c4ccf; /* Darker purple on hover */
+    }
+    
+    .leaflet-bar.leaflet-control select:focus {
+        outline: none;
+    }
+  </style>
+
+</head>
+
+<body>
+    <!-- =============== Navigation ================ -->
+    <div class="container">
+        <div class="navigation">
+            <ul>
+                <li>
+                    <a href="#">
+                        <span class="icon">
+                            <ion-icon name="speedometer"></ion-icon>
+                        </span>
+                        <span class="title">CommuMeter</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="dashboard.html">
+                        <span class="icon">
+                            <ion-icon name="home-outline"></ion-icon>
+                        </span>
+                        <span class="title">Dashboard</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="map.html">
+                        <span class="icon">
+                            <ion-icon name="map-outline"></ion-icon>
+                        </span>
+                        <span class="title">Map</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="trackroute.html">
+                        <span class="icon">
+                            <ion-icon name="location-outline"></ion-icon>
+                        </span>
+                        <span class="title">Track Route</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="barangays.html">
+                        <span class="icon">
+                            <ion-icon name="compass-outline"></ion-icon>
+                        </span>
+                        <span class="title">Barangays</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="coordinates.html">
+                        <span class="icon">
+                            <ion-icon name="locate-outline"></ion-icon>
+                        </span>
+                        <span class="title">Coordinates</span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a href="records.html">
+                        <span class="icon">
+                            <ion-icon name="server-outline"></ion-icon>
+                        </span>
+                        <span class="title">Mobility Data</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="charts.html">
+                        <span class="icon">
+                            <ion-icon name="analytics"></ion-icon>
+                        </span>
+                        <span class="title">Visualizations</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="icon">
+                            <ion-icon name="log-out-outline"></ion-icon>
+                        </span>
+                        <span class="title" id="logout">Sign Out</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- ========================= Main ==================== -->
+        <div class="main">
+            <div class="topbar">
+                <div class="toggle">
+                    <ion-icon name="menu-outline"></ion-icon>
+                </div>
+            </div>
+            <h2 style="padding-left: 20px;">MAP | Track Driver's route </h2> 
+
+            <div id="button-container" class="button-container">
+                <!-- Buttons will be added here -->
+              </div>
+
+            <!-- =============== MAP ============= -->
+            <div id="map"> </div>
+            <div class="fare-container" id="fare-container"></div> <!-- Added fare container -->
+        <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
+        <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+          
+        <script>
+            // Map configuration
+            const mapConfig = { center: [8.2333, 124.2333], zoom: 13, };
+        
+            // Create the map const
+            const map = L.map('map').setView(mapConfig.center, mapConfig.zoom);
+        
+            // Add tile layer
+            L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+                attribution: 'Leaflet © <a href="http://openstreetmap.org">OpenStreetMap</a>, contribution',
+                maxZoom: 18,
+                minZoom: 13,
+            }).addTo(map);
+
+var purpleLine = [
+
+[	8.317750, 124.252199	]	,
+[	8.317746, 124.252190	]	,
+[	8.317740, 124.252181	]	,
+[	8.317735, 124.252174	]	,
+[	8.317731, 124.252167	]	,
+[	8.317727, 124.252158	]	,
+[	8.317720, 124.252145	]	,
+[	8.317714, 124.252137	]	,
+[	8.317705, 124.252125	]	,
+[	8.317692, 124.252103	]	,
+[	8.317684, 124.252087	]	,
+[	8.317672, 124.252065	]	,
+[	8.317658, 124.252042	]	,
+[	8.317641, 124.252010	]	,
+[	8.317625, 124.251981	]	,
+[	8.317540, 124.251801	]	,
+[	8.317500, 124.251696	]	,
+[	8.317476, 124.251627	]	,
+[	8.317439, 124.251525	]	,
+[	8.317410, 124.251460	]	,
+[	8.317394, 124.251432	]	,
+[	8.317382, 124.251405	]	,
+[	8.317372, 124.251383	]	,
+[	8.317357, 124.251350	]	,
+[	8.317352, 124.251328	]	,
+[	8.317347, 124.251304	]	,
+[	8.317351, 124.251275	]	,
+[	8.317363, 124.251245	]	,
+[	8.317390, 124.251210	]	,
+[	8.317416, 124.251173	]	,
+[	8.317439, 124.251137	]	,
+[	8.317457, 124.251094	]	,
+[	8.317473, 124.251058	]	,
+[	8.317479, 124.251031	]	,
+[	8.317474, 124.250998	]	,
+[	8.317465, 124.250956	]	,
+[	8.317452, 124.250915	]	,
+[	8.317441, 124.250880	]	,
+[	8.317427, 124.250840	]	,
+[	8.317409, 124.250805	]	,
+[	8.317383, 124.250752	]	,
+[	8.317342, 124.250675	]	,
+[	8.317308, 124.250610	]	,
+[	8.317242, 124.250491	]	,
+[	8.317190, 124.250389	]	,
+[	8.317149, 124.250312	]	,
+[	8.317112, 124.250241	]	,
+[	8.317079, 124.250178	]	,
+[	8.317046, 124.250107	]	,
+[	8.317029, 124.250076	]	,
+[	8.317013, 124.250044	]	,
+[	8.316996, 124.250011	]	,
+[	8.316986, 124.249988	]	,
+[	8.316978, 124.249977	]	,
+[	8.316971, 124.249977	]	,
+[	8.316961, 124.249980	]	,
+[	8.316936, 124.249994	]	,
+[	8.316921, 124.250001	]	,
+[	8.316907, 124.250009	]	,
+[	8.316888, 124.250017	]	,
+[	8.316872, 124.250026	]	,
+[	8.316842, 124.250042	]	,
+[	8.316820, 124.250054	]	,
+[	8.316793, 124.250067	]	,
+[	8.316760, 124.250084	]	,
+[	8.316734, 124.250097	]	,
+[	8.316711, 124.250111	]	,
+[	8.316686, 124.250123	]	,
+[	8.316644, 124.250145	]	,
+[	8.316619, 124.250158	]	,
+[	8.316604, 124.250166	]	,
+[	8.316578, 124.250178	]	,
+[	8.316551, 124.250194	]	,
+[	8.316529, 124.250202	]	,
+[	8.316517, 124.250211	]	,
+[	8.316492, 124.250224	]	,
+[	8.316466, 124.250239	]	,
+[	8.316442, 124.250249	]	,
+[	8.316417, 124.250262	]	,
+[	8.316389, 124.250278	]	,
+[	8.316367, 124.250288	]	,
+[	8.316349, 124.250300	]	,
+[	8.316328, 124.250308	]	,
+[	8.316304, 124.250322	]	,
+[	8.316285, 124.250331	]	,
+[	8.316263, 124.250344	]	,
+[	8.316241, 124.250353	]	,
+[	8.316223, 124.250364	]	,
+[	8.316207, 124.250371	]	,
+[	8.316182, 124.250384	]	,
+[	8.316161, 124.250394	]	,
+[	8.316138, 124.250408	]	,
+[	8.316111, 124.250423	]	,
+[	8.316093, 124.250431	]	,
+[	8.316083, 124.250436	]	,
+[	8.316069, 124.250443	]	,
+[	8.316046, 124.250454	]	,
+[	8.316025, 124.250466	]	,
+[	8.316013, 124.250473	]	,
+[	8.315998, 124.250481	]	,
+[	8.315979, 124.250490	]	,
+[	8.315955, 124.250503	]	,
+[	8.315929, 124.250515	]	,
+[	8.315904, 124.250528	]	,
+[	8.315884, 124.250539	]	,
+[	8.315873, 124.250546	]	,
+[	8.315855, 124.250555	]	,
+[	8.315833, 124.250567	]	,
+[	8.315793, 124.250585	]	,
+[	8.315761, 124.250601	]	,
+[	8.315809, 124.250578	]	,
+[	8.315773, 124.250597	]	,
+[	8.315733, 124.250620	]	,
+[	8.315701, 124.250633	]	,
+[	8.315671, 124.250648	]	,
+[	8.315618, 124.250675	]	,
+[	8.315592, 124.250688	]	,
+[	8.315556, 124.250707	]	,
+[	8.315519, 124.250726	]	,
+[	8.315478, 124.250746	]	,
+[	8.315452, 124.250762	]	,
+[	8.315403, 124.250785	]	,
+[	8.315364, 124.250805	]	,
+[	8.315336, 124.250817	]	,
+[	8.315292, 124.250844	]	,
+[	8.315256, 124.250861	]	,
+[	8.315223, 124.250878	]	,
+[	8.315186, 124.250896	]	,
+[	8.315155, 124.250914	]	,
+[	8.315127, 124.250930	]	,
+[	8.315099, 124.250942	]	,
+[	8.315073, 124.250958	]	,
+[	8.315035, 124.250978	]	,
+[	8.315009, 124.250993	]	,
+[	8.314966, 124.251015	]	,
+[	8.314912, 124.251043	]	,
+[	8.314868, 124.251065	]	,
+[	8.314829, 124.251088	]	,
+[	8.314794, 124.251106	]	,
+[	8.314766, 124.251119	]	,
+[	8.314728, 124.251139	]	,
+[	8.314700, 124.251155	]	,
+[	8.314672, 124.251171	]	,
+[	8.314631, 124.251191	]	,
+[	8.314589, 124.251214	]	,
+[	8.314560, 124.251228	]	,
+[	8.314528, 124.251247	]	,
+[	8.314470, 124.251276	]	,
+[	8.314439, 124.251291	]	,
+[	8.314410, 124.251307	]	,
+[	8.314370, 124.251326	]	,
+[	8.314342, 124.251340	]	,
+[	8.314314, 124.251356	]	,
+[	8.314281, 124.251374	]	,
+[	8.314232, 124.251398	]	,
+[	8.314214, 124.251409	]	,
+[	8.314192, 124.251418	]	,
+[	8.314167, 124.251430	]
+];
+
+var polyline = L.polyline(purpleLine, {color: 'brown'}).addTo(map);
+
+// Add dropdown menu to Leaflet map
+var dropdownOptions = {
+    "Select Driver": {
+        "disabled": true, // Disable the "Select Page" option
+        "hide": true // Hide the "Select Page" option from the dropdown list
+    },
+    "Driver 1": {
+        "href": "trackroute.html" // Link to the Map page
+    },
+    "Driver 2": {
+        "href": "trackroute1.html" // Link to the Browse Route page
+    },
+    "Driver 3": {
+        "href": "trackroute2.html" // Link to the Track Route page
+    }
+};
+
+// Define custom control
+var CustomControl = L.Control.extend({
+    onAdd: function (map) {
+        var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
+        container.innerHTML = `
+            <select name="dropdown" onchange="window.location.href=this.options[this.selectedIndex].value;">
+                ${Object.keys(dropdownOptions).map(option => {
+                    if (dropdownOptions[option].disabled) {
+                        return `<option disabled selected>${option}</option>`;
+                    } else if (dropdownOptions[option].hide) {
+                        return `<option disabled style="display:none">${option}</option>`;
+                    } else {
+                        return `<option value="${dropdownOptions[option].href}">${option}</option>`;
+                    }
+                }).join('')}
+            </select>
+        `;
+        return container;
+    }
+});
+
+// Add custom control to map
+map.addControl(new CustomControl({ position: 'topright' }));
+
+// Function to move markers along the line
+function moveMarkers() {
+    const line = [
+    [	8.317750, 124.252199	]	,
+    [	8.317746, 124.252190	]	,
+    [	8.317740, 124.252181	]	,
+    [	8.317735, 124.252174	]	,
+    [	8.317731, 124.252167	]	,
+    [	8.317727, 124.252158	]	,
+    [	8.317720, 124.252145	]	,
+    [	8.317714, 124.252137	]	,
+    [	8.317705, 124.252125	]	,
+    [	8.317692, 124.252103	]	,
+    [	8.317684, 124.252087	]	,
+    [	8.317672, 124.252065	]	,
+    [	8.317658, 124.252042	]	,
+    [	8.317641, 124.252010	]	,
+    [	8.317625, 124.251981	]	,
+    [	8.317540, 124.251801	]	,
+    [	8.317500, 124.251696	]	,
+    [	8.317476, 124.251627	]	,
+    [	8.317439, 124.251525	]	,
+    [	8.317410, 124.251460	]	,
+    [	8.317394, 124.251432	]	,
+    [	8.317382, 124.251405	]	,
+    [	8.317372, 124.251383	]	,
+    [	8.317357, 124.251350	]	,
+    [	8.317352, 124.251328	]	,
+    [	8.317347, 124.251304	]	,
+    [	8.317351, 124.251275	]	,
+    [	8.317363, 124.251245	]	,
+    [	8.317390, 124.251210	]	,
+    [	8.317416, 124.251173	]	,
+    [	8.317439, 124.251137	]	,
+    [	8.317457, 124.251094	]	,
+    [	8.317473, 124.251058	]	,
+    [	8.317479, 124.251031	]	,
+    [	8.317474, 124.250998	]	,
+    [	8.317465, 124.250956	]	,
+    [	8.317452, 124.250915	]	,
+    [	8.317441, 124.250880	]	,
+    [	8.317427, 124.250840	]	,
+    [	8.317409, 124.250805	]	,
+    [	8.317383, 124.250752	]	,
+    [	8.317342, 124.250675	]	,
+    [	8.317308, 124.250610	]	,
+    [	8.317242, 124.250491	]	,
+    [	8.317190, 124.250389	]	,
+    [	8.317149, 124.250312	]	,
+    [	8.317112, 124.250241	]	,
+    [	8.317079, 124.250178	]	,
+    [	8.317046, 124.250107	]	,
+    [	8.317029, 124.250076	]	,
+    [	8.317013, 124.250044	]	,
+    [	8.316996, 124.250011	]	,
+    [	8.316986, 124.249988	]	,
+    [	8.316978, 124.249977	]	,
+    [	8.316971, 124.249977	]	,
+    [	8.316961, 124.249980	]	,
+    [	8.316936, 124.249994	]	,
+    [	8.316921, 124.250001	]	,
+    [	8.316907, 124.250009	]	,
+    [	8.316888, 124.250017	]	,
+    [	8.316872, 124.250026	]	,
+    [	8.316842, 124.250042	]	,
+    [	8.316820, 124.250054	]	,
+    [	8.316793, 124.250067	]	,
+    [	8.316760, 124.250084	]	,
+    [	8.316734, 124.250097	]	,
+    [	8.316711, 124.250111	]	,
+    [	8.316686, 124.250123	]	,
+    [	8.316644, 124.250145	]	,
+    [	8.316619, 124.250158	]	,
+    [	8.316604, 124.250166	]	,
+    [	8.316578, 124.250178	]	,
+    [	8.316551, 124.250194	]	,
+    [	8.316529, 124.250202	]	,
+    [	8.316517, 124.250211	]	,
+    [	8.316492, 124.250224	]	,
+    [	8.316466, 124.250239	]	,
+    [	8.316442, 124.250249	]	,
+    [	8.316417, 124.250262	]	,
+    [	8.316389, 124.250278	]	,
+    [	8.316367, 124.250288	]	,
+    [	8.316349, 124.250300	]	,
+    [	8.316328, 124.250308	]	,
+    [	8.316304, 124.250322	]	,
+    [	8.316285, 124.250331	]	,
+    [	8.316263, 124.250344	]	,
+    [	8.316241, 124.250353	]	,
+    [	8.316223, 124.250364	]	,
+    [	8.316207, 124.250371	]	,
+    [	8.316182, 124.250384	]	,
+    [	8.316161, 124.250394	]	,
+    [	8.316138, 124.250408	]	,
+    [	8.316111, 124.250423	]	,
+    [	8.316093, 124.250431	]	,
+    [	8.316083, 124.250436	]	,
+    [	8.316069, 124.250443	]	,
+    [	8.316046, 124.250454	]	,
+    [	8.316025, 124.250466	]	,
+    [	8.316013, 124.250473	]	,
+    [	8.315998, 124.250481	]	,
+    [	8.315979, 124.250490	]	,
+    [	8.315955, 124.250503	]	,
+    [	8.315929, 124.250515	]	,
+    [	8.315904, 124.250528	]	,
+    [	8.315884, 124.250539	]	,
+    [	8.315873, 124.250546	]	,
+    [	8.315855, 124.250555	]	,
+    [	8.315833, 124.250567	]	,
+    [	8.315793, 124.250585	]	,
+    [	8.315761, 124.250601	]	,
+    [	8.315809, 124.250578	]	,
+    [	8.315773, 124.250597	]	,
+    [	8.315733, 124.250620	]	,
+    [	8.315701, 124.250633	]	,
+    [	8.315671, 124.250648	]	,
+    [	8.315618, 124.250675	]	,
+    [	8.315592, 124.250688	]	,
+    [	8.315556, 124.250707	]	,
+    [	8.315519, 124.250726	]	,
+    [	8.315478, 124.250746	]	,
+    [	8.315452, 124.250762	]	,
+    [	8.315403, 124.250785	]	,
+    [	8.315364, 124.250805	]	,
+    [	8.315336, 124.250817	]	,
+    [	8.315292, 124.250844	]	,
+    [	8.315256, 124.250861	]	,
+    [	8.315223, 124.250878	]	,
+    [	8.315186, 124.250896	]	,
+    [	8.315155, 124.250914	]	,
+    [	8.315127, 124.250930	]	,
+    [	8.315099, 124.250942	]	,
+    [	8.315073, 124.250958	]	,
+    [	8.315035, 124.250978	]	,
+    [	8.315009, 124.250993	]	,
+    [	8.314966, 124.251015	]	,
+    [	8.314912, 124.251043	]	,
+    [	8.314868, 124.251065	]	,
+    [	8.314829, 124.251088	]	,
+    [	8.314794, 124.251106	]	,
+    [	8.314766, 124.251119	]	,
+    [	8.314728, 124.251139	]	,
+    [	8.314700, 124.251155	]	,
+    [	8.314672, 124.251171	]	,
+    [	8.314631, 124.251191	]	,
+    [	8.314589, 124.251214	]	,
+    [	8.314560, 124.251228	]	,
+    [	8.314528, 124.251247	]	,
+    [	8.314470, 124.251276	]	,
+    [	8.314439, 124.251291	]	,
+    [	8.314410, 124.251307	]	,
+    [	8.314370, 124.251326	]	,
+    [	8.314342, 124.251340	]	,
+    [	8.314314, 124.251356	]	,
+    [	8.314281, 124.251374	]	,
+    [	8.314232, 124.251398	]	,
+    [	8.314214, 124.251409	]	,
+    [	8.314192, 124.251418	]	,
+    [	8.314167, 124.251430	]
+    
+    ];
+
+    const markerPositions = localStorage.getItem('markerPositions') ? JSON.parse(localStorage.getItem('markerPositions')) : [0, Math.floor(line.length / 2), line.length - 1];
+
+    const taxiIcon = L.icon({
+      iconUrl: 'assets/img/car.png',
+      iconSize: [25, 25],
+    });
+
+    const busIcon = L.icon({
+      iconUrl: 'assets/img/car.png',
+      iconSize: [25, 25],
+    });
+
+    const truckIcon = L.icon({
+      iconUrl: 'assets/img/car.png',
+      iconSize: [25, 25],
+    });
+
+    const markers = [
+      L.marker(line[markerPositions[0]], { icon: taxiIcon }).addTo(map),
+      L.marker(line[markerPositions[1]], { icon: busIcon }).addTo(map),
+      L.marker(line[markerPositions[2]], { icon: truckIcon }).addTo(map)
+    ];
+
+    setInterval(() => {
+      markerPositions.forEach((position, index) => {
+        markerPositions[index] = (position + 1) % line.length;
+        markers[index].setLatLng(line[markerPositions[index]]);
+      });
+
+      localStorage.setItem('markerPositions', JSON.stringify(markerPositions));
+    }, 1500);
+  }
+
+  moveMarkers();
+</script>
+        </div>
+    </div>
+    
+    <!-- =========== Scripts =========  -->
+    <script src="assets/js/main.js"></script>
+    <!-- ====== ionicons ======= -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-analytics.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
+    import { getFirestore, collection, addDoc, connectFirestoreEmulator, query, getDocs, getDoc, updateDoc, setDoc, doc, onSnapshot, deleteDoc, orderBy, where } from 'https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js';
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDYPv8S_ljSo3tuMNoRYPI2tleWOqhqFMM",
+      authDomain: "commumeter.firebaseapp.com",
+      projectId: "commumeter",
+      storageBucket: "commumeter.appspot.com",
+      messagingSenderId: "1098693151947",
+      appId: "1:1098693151947:web:c0ce3c093e75ae8cbe1f4e",
+      measurementId: "G-71SRN52DX4"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const analytics = getAnalytics(app);
+    const auth = getAuth();
+    console.log(app);
+
+    document.getElementById("logout").addEventListener("click", function () {
+        signOut(auth).then(() => {
+            // Sign-out successful.
+            console.log('Sign-out successful.');
+            alert('Sign-out successful.');
+            window.location.href = "index.html";
+        }).catch((error) => {
+            // An error happened.
+            console.log('An error happened.');
+        });
+    });
+</script>
+</html>

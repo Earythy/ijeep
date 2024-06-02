@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CommuMeter</title>
+
+    <script
+      href="https://cdn.datatables.net/2.0.7/js/dataTables.bootstrap5.js"
+    ></script>
+    <!-- <script
+      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"
+    ></script>
+
+    <link rel="stylesheet"
+    href=https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css
+    /> -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/2.0.7/css/dataTables.bootstrap5.css"
+    />
+
+    <!-- ======= Styles ====== -->
+    <link rel="stylesheet" href="./assets/css/style.css" />
+
+    <!-- ======= DataTables ====== -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.css"
+    />
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Sweet Alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+      .main {
+        flex: 1 0 auto;
+        overflow-y: auto;
+        padding: 20px;
+      }
+
+      .main .tables-content {
+        width: 100%;
+        max-width: 900px;
+        margin: 20px auto; /* Center and provide margin */
+        padding: 20px;
+
+        border: 1px solid #ccc;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 10px; /* rounded corners */
+        /* text-align: center; Center text within the box */
+        background: #edd2cb; /* Optional: for better contrast */
+      }
+
+      .textinput {
+        max-width: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- =============== Navigation ================ -->
+    <div class="navcontainer">
+      <div class="navigation">
+        <ul>
+          <li>
+            <a
+              href="#"
+              style="
+                justify-content: center;
+                align-items: center;
+                margin-top: 10px;
+              "
+            >
+              <img style="height: 50px" src="assets/img/ijeep.png" />
+              <span class="title">iJeep</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="dashboard.html">
+              <span class="icon">
+                <ion-icon name="home-outline"></ion-icon>
+              </span>
+              <span class="title">Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="routes.html">
+              <span class="icon">
+                <ion-icon name="trail-sign-outline"></ion-icon>
+              </span>
+              <span class="title">Routes</span>
+            </a>
+          </li>
+          <li>
+            <a href="fare.html">
+              <span class="icon">
+                <ion-icon name="cash-outline"></ion-icon>
+              </span>
+              <span class="title">Fare</span>
+            </a>
+          </li>
+          <li>
+            <!--  <a href="trackingjeeps.html"> -->
+            <a href="trackroute.html">
+              <span class="icon">
+                <ion-icon name="bus-outline"></ion-icon>
+              </span>
+              <span class="title">Where are the Jeeps?</span>
+            </a>
+          </li>
+
+          <li>
+            <!--  <a href="trackingjeeps.html"> -->
+            <a href="adminmap.html">
+              <span class="icon">
+                <ion-icon name="people-outline"></ion-icon>
+              </span>
+              <span class="title">Passengers Location</span>
+            </a>
+          </li>
+          <li>
+            <a href="barangays.html">
+              <span class="icon">
+                <ion-icon name="compass-outline"></ion-icon>
+              </span>
+              <span class="title">Barangays</span>
+            </a>
+          </li>
+          <li>
+            <a href="records.html">
+              <span class="icon">
+                <ion-icon name="server-outline"></ion-icon>
+              </span>
+              <span class="title">Mobility Data</span>
+            </a>
+          </li>
+          <li>
+            <a href="log.html">
+              <span class="icon">
+                <ion-icon name="reader-outline"></ion-icon>
+              </span>
+              <span class="title">Logs</span>
+            </a>
+          </li>
+          <li>
+            <a href="map.html">
+              <span class="icon">
+                <ion-icon name="map-outline"></ion-icon>
+              </span>
+              <span class="title">Map</span>
+            </a>
+          </li>
+          <li>
+            <a href="charts.html">
+              <span class="icon">
+                <ion-icon name="analytics"></ion-icon>
+              </span>
+              <span class="title">Visualizations</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="#">
+              <span class="icon">
+                <ion-icon name="log-out-outline"></ion-icon>
+              </span>
+              <span class="title" id="logout">Sign Out</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- ========================= Main ==================== -->
+      <div class="main">
+        <div class="topbar">
+          <div class="toggle">
+            <ion-icon name="menu-outline"></ion-icon>
+          </div>
+        </div>
+
+        <!-- ================ Barangays Table ================= -->
+        <div class="tables-content">
+          <div class="py-4">
+            <h3>Commuter Logging</h3>
+            <div class="container-sm" style="max-width: 100%">
+              <table
+                id="logging"
+                class="table table-striped"
+                style="width: 100%"
+              ></table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <!-- =========== Scripts =========  -->
+  <script src="assets/js/main.js"></script>
+
+  <!-- ====== ionicons ======= -->
+  <script
+    type="module"
+    src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"
+  ></script>
+  <script
+    nomodule
+    src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"
+  ></script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-analytics.js";
+    import {
+      getAuth,
+      signInWithEmailAndPassword,
+      onAuthStateChanged,
+      signOut,
+    } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      connectFirestoreEmulator,
+      query,
+      getDocs,
+      getDoc,
+      updateDoc,
+      setDoc,
+      doc,
+      onSnapshot,
+      deleteDoc,
+      where,
+      orderBy,
+    } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDYPv8S_ljSo3tuMNoRYPI2tleWOqhqFMM",
+      authDomain: "commumeter.firebaseapp.com",
+      projectId: "commumeter",
+      storageBucket: "commumeter.appspot.com",
+      messagingSenderId: "1098693151947",
+      appId: "1:1098693151947:web:c0ce3c093e75ae8cbe1f4e",
+      measurementId: "G-71SRN52DX4",
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const analytics = getAnalytics(app);
+    const auth = getAuth();
+    console.log(app);
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // Query the Firestore collection and order by date in ascending order
+        const collectionRef = query(
+          collection(db, "userlogging"),
+          orderBy("date", "desc")
+        );
+
+        let table;
+
+        onSnapshot(collectionRef, (snapshot) => {
+          const dataset = [];
+
+          snapshot.forEach((doc) => {
+            // All data inside userlogging
+            const data = doc.data();
+
+            // Formatting to readable date
+            const date = new Date(
+              data.date.seconds * 1000 + data.date.nanoseconds / 1000000
+            );
+            const options = {
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+              year: "numeric",
+              month: "numeric",
+              day: "numeric",
+            };
+            const formattedDate = date.toLocaleString("en-US", options);
+
+            // Generate a unique ID for the row
+            const rowId = doc.id;
+
+            dataset.push([
+              rowId, // Add the unique ID for the row
+              data.commuterlocation,
+              data.to,
+              data.fare,
+              data.howmany,
+              formattedDate,
+              // '<center><button type="button" class="btn btn-good btn-edit" style="margin-right: 7px !important;">Edit</button><button type="button" class="btn btn-bad btn-delete">Delete</button></center>',
+            ]);
+          });
+
+          // Destroy the existing DataTable instance if it exists
+          if (table) {
+            table.destroy();
+            document.querySelector("#logging").innerHTML = ""; // Clear the table content
+          }
+
+          // Sort dataset by date in descending order
+          dataset.sort((a, b) => new Date(b[5]) - new Date(a[5]));
+
+          // Reinitialize the DataTable with the sorted data
+          table = new DataTable("#logging", {
+            columns: [
+              { title: "DT_RowId" }, // Hidden column for the row ID
+              { title: "Location" },
+              { title: "Destination" },
+              { title: "Fare" },
+              { title: "Number" },
+              { title: "Date" },
+              // { title: "Action" },
+            ],
+            data: dataset,
+            paging: true,
+            searching: true,
+            columnDefs: [
+              { targets: 0, visible: false }, // Hide the DT_RowId column
+            ],
+            responsive: true,
+            autoWidth: false,
+            scrollX: true,
+          });
+        });
+      }
+    });
+  </script>
+
+  <script src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
+  <script src="https://cdn.datatables.net/2.0.7/js/dataTables.bootstrap5.js"></script>
+</html>

@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iJeep</title>
+    <!-- ======= Styles ====== -->
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script type="module" src="./assets/js/coords.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+  <style>
+    #map {
+      height: 550px;
+      width: 100%;
+    }
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+    
+    .dropdown-toggle {
+        background-color: #6c5ce7; /* Purple background */
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    
+    .dropdown-toggle:hover {
+        background-color: #5c4ccf; /* Darker purple on hover */
+    }
+    
+    .dropdown-menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 1000;
+        display: none;
+        float: left;
+        min-width: 160px;
+        padding: 5px 0;
+        margin: 2px 0 0;
+        font-size: 14px;
+        text-align: left;
+        list-style: none;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    }
+    
+    .dropdown-menu li {
+        margin-bottom: 5px;
+    }
+    
+    .dropdown-menu li a {
+        color: #6c5ce7;
+        text-decoration: none;
+    }
+    
+    .dropdown-menu li a:hover {
+        background-color: #f5f5f5;
+        color: #5c4ccf;
+    }
+    
+    .dropdown-menu li.disabled a {
+        color: #ccc;
+        cursor: not-allowed;
+    }
+    
+    .caret {
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 0 5px 5px 5px;
+        border-color: transparent transparent #fff transparent;
+        position: absolute;
+        top: 50%;
+        right: 15px;
+        margin-top: -3px;
+    }
+    .leaflet-bar.leaflet-control select {
+        background-color: #6c5ce7; /* Purple background */
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    
+    .leaflet-bar.leaflet-control select option {
+        background-color: #6c5ce7; /* Purple background */
+        color: #fff;
+    }
+    
+    .leaflet-bar.leaflet-control select:hover {
+        background-color: #5c4ccf; /* Darker purple on hover */
+    }
+    
+    .leaflet-bar.leaflet-control select:focus {
+        outline: none;
+    }
+  </style>
+
+</head>
+
+<body>
+    <!-- =============== Navigation ================ -->
+    <div class="container">
+        <div class="navigation">
+            <ul>
+                <li>
+                    <a href="#">
+                        <span class="icon">
+                            <ion-icon name="speedometer"></ion-icon>
+                        </span>
+                        <span class="title">CommuMeter</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="dashboard.html">
+                        <span class="icon">
+                            <ion-icon name="home-outline"></ion-icon>
+                        </span>
+                        <span class="title">Dashboard</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="map.html">
+                        <span class="icon">
+                            <ion-icon name="map-outline"></ion-icon>
+                        </span>
+                        <span class="title">Map</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="trackroute.html">
+                        <span class="icon">
+                            <ion-icon name="location-outline"></ion-icon>
+                        </span>
+                        <span class="title">Track Route</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="barangays.html">
+                        <span class="icon">
+                            <ion-icon name="compass-outline"></ion-icon>
+                        </span>
+                        <span class="title">Barangays</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="coordinates.html">
+                        <span class="icon">
+                            <ion-icon name="locate-outline"></ion-icon>
+                        </span>
+                        <span class="title">Coordinates</span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a href="records.html">
+                        <span class="icon">
+                            <ion-icon name="server-outline"></ion-icon>
+                        </span>
+                        <span class="title">Mobility Data</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="charts.html">
+                        <span class="icon">
+                            <ion-icon name="analytics"></ion-icon>
+                        </span>
+                        <span class="title">Visualizations</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="icon">
+                            <ion-icon name="log-out-outline"></ion-icon>
+                        </span>
+                        <span class="title" id="logout">Sign Out</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- ========================= Main ==================== -->
+        <div class="main">
+            <div class="topbar">
+                <div class="toggle">
+                    <ion-icon name="menu-outline"></ion-icon>
+                </div>
+            </div>
+            <h2 style="padding-left: 20px;">MAP | Track Driver's route </h2> 
+
+            <div id="button-container" class="button-container">
+                <!-- Buttons will be added here -->
+              </div>
+
+            <!-- =============== MAP ============= -->
+            <div id="map"> </div>
+            <div class="fare-container" id="fare-container"></div> <!-- Added fare container -->
+        <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
+        <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+          
+        <script>
+            // Map configuration
+            const mapConfig = { center: [8.2333, 124.2333], zoom: 13, };
+        
+            // Create the map const
+            const map = L.map('map').setView(mapConfig.center, mapConfig.zoom);
+        
+            // Add tile layer
+            L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+                attribution: 'Leaflet © <a href="http://openstreetmap.org">OpenStreetMap</a>, contribution',
+                maxZoom: 18,
+                minZoom: 13,
+            }).addTo(map);
+
+var purpleLine = [
+[	8.317762,124.252194	]	,
+[	8.317529,124.251834	]	,
+[	8.317332,124.251324	]	,
+[	8.317465,124.250986	]	,
+[	8.316982,124.249971	]	,
+[   8.307206,124.255127	]	,
+[	8.305896,124.255646	]	,
+[	8.298361,124.255141	]	,
+[	8.297039,124.255375	]	,
+[	8.296126,124.255740	]	,
+[	8.290576,124.258373 ]	,
+[	8.289960,124.259060	]	,
+[	8.288814,124.261873	]	,
+[	8.288177,124.262431	]	,
+[	8.279973,124.266949	]	,
+[	8.279267,124.267222	]	,
+[	8.278386,124.267174	]	,
+[	8.275418,124.266125	]	,
+[	8.263399,124.254785	]	,
+[	8.262943,124.254505	]	,
+[	8.262348,124.254366	]	,
+[	8.261743,124.254441	]	,
+[	8.259354,124.255133	]	,
+[	8.258871,124.255482	]	,
+[	8.258393,124.256277	]	,
+[	8.257907,124.258236	]	,
+[	8.257586,124.258837	]	,
+[	8.257029,124.259288	]	,
+[	8.252941,124.261080	]	,
+[	8.251954,124.261327	]	,
+[	8.250563,124.261359	]	,
+[	8.248917,124.260968	]	,
+[	8.247738,124.260334	]	,
+[	8.247027,124.259765	]	,
+[	8.246114,124.258681	]	,
+[	8.241240,124.246483	]	,
+[	8.240895,124.245941	]	,
+[	8.239233,124.244508	]	,
+[	8.237317,124.243874	]	,
+[	8.233908,124.242274	]	,
+[	8.233186,124.241764	]	,
+[	8.232443,124.241147	]	,
+[	8.231047,124.239417 ]   ,
+[	8.230569,124.238616	]	,
+[	8.230861,124.238386	]	,
+[	8.230999,124.237097	]	,
+[	8.231174,124.234768	]	,
+[	8.231227,124.234682	]	,
+[	8.231217,124.234591	]	,
+[	8.231599,124.233727	]	,
+[	8.230696,124.233270	]	,
+[	8.230457,124.233646	]	,
+[	8.229810,124.234049	]	,
+[	8.229592,124.233759	]	,
+[	8.228583,124.233736	]	,
+[	8.228488,124.235435	]	,
+[	8.228251,124.237624	]	,
+[	8.227847,124.240351	]	,
+[	8.227412,124.242917	]	,
+[	8.228262,124.243089	]	,
+[	8.228623,124.240459	]	,
+[	8.230205,124.240706	]	,
+[	8.232443,124.241147	]
+];
+
+var polyline = L.polyline(purpleLine, {color: 'brown'}).addTo(map);
+
+// Add dropdown menu to Leaflet map
+var dropdownOptions = {
+    "Select Driver": {
+        "disabled": true, // Disable the "Select Page" option
+        "hide": true // Hide the "Select Page" option from the dropdown list
+    },
+    "Driver 1": {
+        "href": "trackroute.html" // Link to the Map page
+    },
+    "Driver 2": {
+        "href": "trackroute1.html" // Link to the Browse Route page
+    },
+    "Driver 3": {
+        "href": "trackroute2.html" // Link to the Track Route page
+    }
+};
+
+// Define custom control
+var CustomControl = L.Control.extend({
+    onAdd: function (map) {
+        var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
+        container.innerHTML = `
+            <select name="dropdown" onchange="window.location.href=this.options[this.selectedIndex].value;">
+                ${Object.keys(dropdownOptions).map(option => {
+                    if (dropdownOptions[option].disabled) {
+                        return `<option disabled selected>${option}</option>`;
+                    } else if (dropdownOptions[option].hide) {
+                        return `<option disabled style="display:none">${option}</option>`;
+                    } else {
+                        return `<option value="${dropdownOptions[option].href}">${option}</option>`;
+                    }
+                }).join('')}
+            </select>
+        `;
+        return container;
+    }
+});
+
+// Add custom control to map
+map.addControl(new CustomControl({ position: 'topright' }));
+</script>
+                
+            
+
+        </div>
+    </div>
+    
+    <!-- =========== Scripts =========  -->
+    <script src="assets/js/main.js"></script>
+    <!-- ====== ionicons ======= -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-analytics.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
+    import { getFirestore, collection, addDoc, connectFirestoreEmulator, query, getDocs, getDoc, updateDoc, setDoc, doc, onSnapshot, deleteDoc, orderBy, where } from 'https://www.gstatic.com/firebasejs/9.10.0/firebase-firestore.js';
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDYPv8S_ljSo3tuMNoRYPI2tleWOqhqFMM",
+      authDomain: "commumeter.firebaseapp.com",
+      projectId: "commumeter",
+      storageBucket: "commumeter.appspot.com",
+      messagingSenderId: "1098693151947",
+      appId: "1:1098693151947:web:c0ce3c093e75ae8cbe1f4e",
+      measurementId: "G-71SRN52DX4"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const analytics = getAnalytics(app);
+    const auth = getAuth();
+    console.log(app);
+
+    document.getElementById("logout").addEventListener("click", function () {
+        signOut(auth).then(() => {
+            // Sign-out successful.
+            console.log('Sign-out successful.');
+            alert('Sign-out successful.');
+            window.location.href = "index.html";
+        }).catch((error) => {
+            // An error happened.
+            console.log('An error happened.');
+        });
+    });
+</script>
+</html>

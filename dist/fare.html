@@ -33,32 +33,31 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Sweet Alert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+      .main {
+        flex: 1 0 auto;
+        overflow-y: auto;
+        padding: 20px;
+      }
+
+      .main .tables-content {
+        width: 100%;
+        max-width: 900px;
+        margin: 20px auto; /* Center and provide margin */
+        padding: 20px;
+
+        border: 1px solid #ccc;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 10px; /* rounded corners */
+        /* text-align: center; Center text within the box */
+        background: #edd2cb; /* Optional: for better contrast */
+      }
+
+      .textinput {
+        max-width: 100%;
+      }
+    </style>
   </head>
-
-  <style>
-    .main {
-      flex: 1 0 auto;
-      overflow-y: auto;
-      padding: 20px;
-    }
-
-    .main .tables-content {
-      width: 100%;
-      max-width: 800px;
-      margin: 20px auto; /* Center and provide margin */
-      padding: 20px;
-
-      border: 1px solid #ccc;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      border-radius: 10px; /* rounded corners */
-      text-align: center; /* Center text within the box */
-      background: #edd2cb; /* Optional: for better contrast */
-    }
-
-    .textinput {
-      max-width: 100%;
-    }
-  </style>
 
   <body>
     <!-- =============== Navigation ================ -->
@@ -66,11 +65,16 @@
       <div class="navigation">
         <ul>
           <li>
-            <a href="#">
-              <span class="icon">
-                <ion-icon name="speedometer"></ion-icon>
-              </span>
-              <span class="title">CommuMeter</span>
+            <a
+              href="#"
+              style="
+                justify-content: center;
+                align-items: center;
+                margin-top: 10px;
+              "
+            >
+              <img style="height: 50px" src="assets/img/ijeep.png" />
+              <span class="title">iJeep</span>
             </a>
           </li>
 
@@ -82,16 +86,41 @@
               <span class="title">Dashboard</span>
             </a>
           </li>
-
           <li>
-            <a href="map.html">
+            <a href="routes.html">
               <span class="icon">
-                <ion-icon name="map-outline"></ion-icon>
+                <ion-icon name="trail-sign-outline"></ion-icon>
               </span>
-              <span class="title">Map</span>
+              <span class="title">Routes</span>
+            </a>
+          </li>
+          <li>
+            <a href="fare.html">
+              <span class="icon">
+                <ion-icon name="cash-outline"></ion-icon>
+              </span>
+              <span class="title">Fare</span>
+            </a>
+          </li>
+          <li>
+            <!--  <a href="trackingjeeps.html"> -->
+            <a href="trackroute.html">
+              <span class="icon">
+                <ion-icon name="bus-outline"></ion-icon>
+              </span>
+              <span class="title">Where are the Jeeps?</span>
             </a>
           </li>
 
+          <li>
+            <!--  <a href="trackingjeeps.html"> -->
+            <a href="adminmap.html">
+              <span class="icon">
+                <ion-icon name="people-outline"></ion-icon>
+              </span>
+              <span class="title">Passengers Location</span>
+            </a>
+          </li>
           <li>
             <a href="barangays.html">
               <span class="icon">
@@ -100,16 +129,6 @@
               <span class="title">Barangays</span>
             </a>
           </li>
-
-          <li>
-            <a href="coordinates.html">
-              <span class="icon">
-                <ion-icon name="locate-outline"></ion-icon>
-              </span>
-              <span class="title">Coordinates</span>
-            </a>
-          </li>
-
           <li>
             <a href="records.html">
               <span class="icon">
@@ -118,7 +137,22 @@
               <span class="title">Mobility Data</span>
             </a>
           </li>
-
+          <li>
+            <a href="log.html">
+              <span class="icon">
+                <ion-icon name="reader-outline"></ion-icon>
+              </span>
+              <span class="title">Logs</span>
+            </a>
+          </li>
+          <li>
+            <a href="map.html">
+              <span class="icon">
+                <ion-icon name="map-outline"></ion-icon>
+              </span>
+              <span class="title">Map</span>
+            </a>
+          </li>
           <li>
             <a href="charts.html">
               <span class="icon">
@@ -148,7 +182,6 @@
         </div>
 
         <!-- ================ Barangays Table ================= -->
-
         <div class="tables-content">
           <div class="cardHeader">
             <h2>Fare</h2>
@@ -162,111 +195,114 @@
                 >Add Fare
               </button>
             </div>
-          </div>
 
-          <div class="container-sm" style="max-width: 100%">
-            <table id="myTable" style="width: 100%"></table>
-          </div>
+            <div style="max-width: 100%">
+              <table
+                id="myTable"
+                style="width: 100%; text-align: center"
+              ></table>
+            </div>
 
-          <div id="editModal">
-            <h3>Edit Record</h3>
-            <form id="editForm">
-              <div id="origin">Location -</div>
-              <input
-                class="textinput"
-                type="text"
-                id="location_edit"
-                name="location_edit"
-              /><br />
-              <div id="destination">Destination -</div>
-              <input
-                class="textinput"
-                type="text"
-                id="destination_edit"
-                name="destination_edit"
-              /><br />
-              <label for="fare_edit">Fare:</label>
-              <input
-                class="textinput"
-                type="number"
-                id="fare_edit"
-                name="fare_edit"
-              /><br />
-              <div class="btn">
+            <div id="editModal">
+              <h3>Edit Record</h3>
+              <form id="editForm">
+                <div id="origin">Location -</div>
                 <input
-                  type="button"
-                  id="cancelEdit"
-                  class="btn btn-bad"
-                  value="Cancel"
-                />
+                  class="textinput"
+                  type="text"
+                  id="location_edit"
+                  name="location_edit"
+                /><br />
+                <div id="destination">Destination -</div>
                 <input
-                  type="button"
-                  id="update"
-                  class="btn btn-good"
-                  value="Update"
-                />
-              </div>
-            </form>
-          </div>
+                  class="textinput"
+                  type="text"
+                  id="destination_edit"
+                  name="destination_edit"
+                /><br />
+                <label for="fare_edit">Fare:</label>
+                <input
+                  class="textinput"
+                  type="number"
+                  id="fare_edit"
+                  name="fare_edit"
+                /><br />
+                <div class="btn">
+                  <input
+                    type="button"
+                    id="cancelEdit"
+                    class="btn btn-bad"
+                    value="Cancel"
+                  />
+                  <input
+                    type="button"
+                    id="update"
+                    class="btn btn-good"
+                    value="Update"
+                  />
+                </div>
+              </form>
+            </div>
 
-          <div id="addModal">
-            <h3>Add Fare</h3>
-            <form id="editForm">
-              <label for="locationAdd">Location:</label>
-              <input
-                class="textinput"
-                type="text"
-                id="locationAdd"
-                placeholder="Origin Location"
-                name="locationAdd"
-                required
-              /><br />
-              <label for="destinationAdd">Destination:</label>
-              <input
-                class="textinput"
-                type="text"
-                id="destinationAdd"
-                placeholder="Destination"
-                name="destinationAdd"
-                required
-              />
-              <label for="fareAdd">Fare:</label>
-              <input
-                class="textinput"
-                type="text"
-                id="fareAdd"
-                placeholder="Cost"
-                name="fareAdd"
-                required
-              />
-              <div class="btn">
+            <div id="addModal">
+              <h3>Add Fare</h3>
+              <form id="editForm">
+                <label for="locationAdd">Location:</label>
                 <input
-                  type="button"
-                  id="cancelAdd"
-                  class="btn btn-bad"
-                  value="Cancel"
-                />
+                  class="textinput"
+                  type="text"
+                  id="locationAdd"
+                  placeholder="Origin Location"
+                  name="locationAdd"
+                  required
+                /><br />
+                <label for="destinationAdd">Destination:</label>
                 <input
-                  type="button"
-                  id="saveAdd"
-                  class="btn btn-good"
-                  value="Save"
+                  class="textinput"
+                  type="text"
+                  id="destinationAdd"
+                  placeholder="Destination"
+                  name="destinationAdd"
+                  required
                 />
-              </div>
-            </form>
-          </div>
+                <label for="fareAdd">Fare:</label>
+                <input
+                  class="textinput"
+                  type="text"
+                  id="fareAdd"
+                  placeholder="Cost"
+                  name="fareAdd"
+                  required
+                />
+                <div class="btn">
+                  <input
+                    type="button"
+                    id="cancelAdd"
+                    class="btn btn-bad"
+                    value="Cancel"
+                  />
+                  <input
+                    type="button"
+                    id="saveAdd"
+                    class="btn btn-good"
+                    value="Save"
+                  />
+                </div>
+              </form>
+            </div>
 
-          <div id="deleteModal">
-            <h3>Delete Confirmation</h3>
-            <center>
-              <p style="padding-bottom: 10px">
-                Are you sure you want to delete this record?
-              </p>
-              <div class="btn">
-                <button id="delCancel" class="btn btn-bad">Cancel</button>
-                <button id="delConfirm" class="btn btn-good">Confirm</button>
-              </div>
-            </center>
+            <div id="deleteModal">
+              <h3>Delete Confirmation</h3>
+              <center>
+                <p style="padding-bottom: 10px">
+                  Are you sure you want to delete this record?
+                </p>
+                <div class="btn">
+                  <button id="delCancel" class="btn btn-bad">Cancel</button>
+                  <button id="delConfirm" class="btn btn-good">Confirm</button>
+                </div>
+              </center>
+            </div>
           </div>
         </div>
       </div>
@@ -347,9 +383,6 @@
     const destinationAddField = document.getElementById("destinationAdd");
     const fareAddField = document.getElementById("fareAdd");
 
-    //lantawa ang code ani, lahi ra kaayo
-    //sa uban CRUD code...
-
     async function getFareData(docId) {
       try {
         const docRef = doc(db, "fare", docId);
@@ -398,7 +431,6 @@
         const data = await getFareData(docId);
         if (data) {
           if (!data[location]) {
-            //wa ko kasabot ani
             data[location] = {};
           }
           data[location][destination] = fare;
@@ -552,6 +584,7 @@
         searching: true,
         stateSave: true,
         scrollX: true,
+        lengthChange: false,
         responsive: true,
       });
     });
@@ -627,6 +660,20 @@
           console.error(error);
         }
       });
+
+    document.getElementById("logout").addEventListener("click", function () {
+      signOut(auth)
+        .then(() => {
+          // Sign-out successful.
+          console.log("Sign-out successful.");
+          alert("Sign-out successful.");
+          window.location.href = "index.html";
+        })
+        .catch((error) => {
+          // An error happened.
+          console.log("An error happened.");
+        });
+    });
   </script>
 
   <script src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
