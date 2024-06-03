@@ -641,6 +641,9 @@
         pageLength: 5,
         lengthMenu: [5, 10, 25, 50, 100],
         scrollX: true,
+        columnDefs: [
+          { targets: 0, visible: false }, // Hide the DT_RowId column
+        ],
         responsive: true,
       });
 
