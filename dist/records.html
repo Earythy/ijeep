@@ -441,6 +441,9 @@
           autoWidth: false,
           order: [[1, "asc"]],
           responsive: true,
+          columnDefs: [
+            { targets: 0, visible: false }, // Hide the DT_RowId column
+          ],
           scrollX: true,
         });
         $("#cancelAdd").on("click", function () {
