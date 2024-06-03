@@ -531,6 +531,9 @@
       autoWidth: false,
       order: [[1, "asc"]],
       scrollX: true,
+      columnDefs: [
+        { targets: 0, visible: false }, // Hide the DT_RowId column
+      ],
       lengthChange: true,
       responsive: true,
     });
