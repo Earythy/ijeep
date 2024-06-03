@@ -79,11 +79,19 @@ getRouteCoords((data) => {
           ${Object.keys(dropdownOptions)
             .map((option) => {
               if (dropdownOptions[option].disabled) {
-                return `<option disabled selected>${option}</option>`;
+                return (
+                  <option disabled selected>
+                    ${option}
+                  </option>
+                );
               } else if (dropdownOptions[option].hide) {
-                return `<option disabled style="display:none">${option}</option>`;
+                return (
+                  <option disabled style="display:none">
+                    ${option}
+                  </option>
+                );
               } else {
-                return `<option value="${option}">${option}</option>`;
+                return <option value="${option}">${option}</option>;
               }
             })
             .join("")}
@@ -97,6 +105,8 @@ getRouteCoords((data) => {
 
   // Variable to store the currently displayed polyline
   let currentPolyline = null;
+  let vehicleMarker = null;
+  let unsubscribe = null;
 
   window.dropdown = function () {
     const dropdown = document.getElementById("routeDropdown");
@@ -118,49 +128,78 @@ getRouteCoords((data) => {
       currentPolyline = L.polyline(purpleLine, { color: "black" }).addTo(map);
     }
 
+    // Remove the marker if the selected option is not "Dalipuga Route"
+    if (vehicleMarker && dropdown.value !== "Dalipuga Route") {
+      map.removeLayer(vehicleMarker);
+      vehicleMarker = null; // Reset the marker variable
+    }
+
+    if (unsubscribe) {
+      unsubscribe();
+      unsubscribe = null;
+    }
+
     if (dropdown.value === "Dalipuga Route") {
       const vehicleDocRef = doc(db, "Vehicle", "Vehicle1");
-      const unsubscribe = onSnapshot(collection(db, "Vehicle"), (snapshot) => {
-        getDoc(vehicleDocRef)
-          .then((docSnapshot) => {
-            if (docSnapshot.exists()) {
-              console.log("Document data:", docSnapshot.data());
-              if (docSnapshot.data().Latitude && docSnapshot.data().Longitude) {
-                // Convert latitude and longitude from strings to numbers
-                const latitude = parseFloat(docSnapshot.data().Latitude);
-                const longitude = parseFloat(docSnapshot.data().Longitude);
-                if (!isNaN(latitude) && !isNaN(longitude)) {
-                  const vehicleLocation = [latitude, longitude];
-                  // Define custom icon
-                  const vehicleIcon = L.icon({
-                    iconUrl: "./assets/img/car.png",
-                    iconSize: [38, 38],
-                    iconAnchor: [19, 38],
-                    popupAnchor: [0, -38],
-                  });
+      let timeoutId;
+      let updateCount = 0; // Track the number of updates received
+      unsubscribe = onSnapshot(
+        vehicleDocRef,
+        (docSnapshot) => {
+          clearTimeout(timeoutId); // Clear previous timeout
 
-                  // Add a marker with custom icon at the vehicle location
-                  L.marker(vehicleLocation, { icon: vehicleIcon })
-                    .addTo(map)
-                    .bindPopup("I'm on the way")
-                    .openPopup();
+          if (docSnapshot.exists()) {
+            console.log("Document data:", docSnapshot.data());
+            if (docSnapshot.data().Latitude && docSnapshot.data().Longitude) {
+              // Convert latitude and longitude from strings to numbers
+              const latitude = parseFloat(docSnapshot.data().Latitude);
+              const longitude = parseFloat(docSnapshot.data().Longitude);
+              if (!isNaN(latitude) && !isNaN(longitude)) {
+                const vehicleLocation = [latitude, longitude];
 
-                  // Optionally, center the map on the vehicle location
-                  map.setView(vehicleLocation, mapConfig.zoom);
+                // Define custom icon
+                const vehicleIcon = L.icon({
+                  iconUrl: "../assets/img/car.png",
+                  iconSize: [38, 38],
+                  iconAnchor: [19, 38],
+                  popupAnchor: [0, -38],
+                });
+
+                // Update the marker's location or create a new marker if it doesn't exist
+                if (vehicleMarker) {
+                  vehicleMarker.setLatLng(vehicleLocation);
                 } else {
-                  console.log("Invalid latitude or longitude!");
+                  if (updateCount >= 1) {
+                    // Show icon only from the second update onwards
+                    vehicleMarker = L.marker(vehicleLocation, {
+                      icon: vehicleIcon,
+                    }).addTo(map);
+                  }
                 }
+
+                updateCount++; // Increment the update count
               } else {
-                console.log("Location data is missing!");
+                console.log("Invalid latitude or longitude!");
               }
             } else {
-              console.log("No such document!");
+              console.log("Location data is missing!");
             }
-          })
-          .catch((error) => {
-            console.error("Error getting document:", error);
-          });
-      });
+          } else {
+            console.log("No such document!");
+          }
+
+          // Set a timeout to remove the marker if no update received within 10 minutes (600,000 milliseconds)
+          timeoutId = setTimeout(() => {
+            if (vehicleMarker) {
+              map.removeLayer(vehicleMarker);
+              vehicleMarker = null; // Reset the marker variable
+            }
+          }, 600000); // 10 minutes interval (600,000 milliseconds)
+        },
+        (error) => {
+          console.error("Error getting document:", error);
+        }
+      );
     }
   };
 
