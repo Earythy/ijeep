@@ -26,6 +26,7 @@
       integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
       crossorigin=""
     ></script>
+    <script src="https://unpkg.com/leaflet-pip@latest/leaflet-pip.min.js"></script>
     <script src="../assets/js/north-baranggay.js"></script>
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
     <link
@@ -38,6 +39,7 @@
       rel="stylesheet"
       href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css"
     />
+
     <style>
       #map {
         height: 665px;
@@ -147,6 +149,10 @@
         z-index: 600;
         pointer-events: none;
       }
+
+      .area-tooltip {
+        color: black;
+      }
     </style>
   </head>
 
@@ -160,7 +166,7 @@
             <a
               href="#"
               style="
-                justify-content: center;
+                /* justify-content: center; */
                 align-items: center;
                 margin-top: 10px;
               "
@@ -197,7 +203,7 @@
               <span class="icon">
                 <ion-icon name="log-in-outline"></ion-icon>
               </span>
-              <span class="title">Book a Route</span>
+              <span class="title">Locate Me</span>
             </a>
           </li>
 
@@ -438,11 +444,23 @@
         measurementId: "G-71SRN52DX4",
       };
       import { fare } from "../assets/js/fare.js";
+      import { faredata } from "../assets/js/fare.js";
 
       // Initialize Firebase
       const app = initializeApp(firebaseConfig);
       const db = getFirestore(app);
       const auth = getAuth(app);
+
+      function updateFareOverlay(fareAmount) {
+        const fareContainer = document.getElementById("fare-container");
+        if (fareAmount > 0) {
+          fareContainer.innerHTML = `<b> Your total Fare: is  ₱${fareAmount.toFixed(
+            2
+          )} </b>`;
+        } else {
+          fareContainer.innerHTML = "";
+        }
+      }
 
       // Load map after page is ready
       document.addEventListener("DOMContentLoaded", function () {
@@ -473,14 +491,153 @@
 
           // Attach a popup to the marker displaying the latitude and longitude
           marker
-            .bindPopup(
-              "Latitude: " + lastClickedLat + "<br>Longitude: " + lastClickedLng
-            )
+            .bindPopup("[" + lastClickedLat + "," + " " + lastClickedLng + "],")
             .openPopup();
         }
 
         // when map is clicked, a marker is shown in the map
         map.on("click", onMapClick);
+
+        // Function to show area name on hover
+        function onPolygonMouseOver(e) {
+          var layer = e.target;
+          var areaName = layer.options.areaName;
+          layer
+            .bindTooltip(areaName, {
+              permanent: true,
+              direction: "center",
+              className: "area-tooltip",
+            })
+            .openTooltip();
+        }
+
+        function onPolygonMouseOut(e) {
+          var layer = e.target;
+          layer.closeTooltip();
+        }
+
+        // Define the polygon coordinates for "City Proper"
+        var cityProperCoordinates = [
+          [8.22726, 124.23941],
+          [8.22884, 124.23765],
+          [8.23071, 124.23653],
+          [8.2324, 124.23765],
+          [8.23389, 124.23966],
+          [8.23466, 124.24211],
+          [8.23355, 124.24421],
+          [8.23189, 124.24524],
+          [8.23011, 124.24524],
+          [8.2285, 124.2446],
+          [8.22756, 124.24293],
+          [8.22739, 124.24117],
+        ];
+        var MSUIITCoordinates = [
+          [8.23464, 124.24214],
+          [8.2336, 124.24423],
+          [8.23471, 124.24572],
+          [8.23594, 124.24668],
+          [8.23656, 124.2469],
+          [8.23762, 124.24726],
+          [8.239, 124.24747],
+          [8.24036, 124.24651],
+          [8.24061, 124.24567],
+          [8.24106, 124.24434],
+          [8.23989, 124.24235],
+          [8.23768, 124.24175],
+          [8.23626, 124.24162],
+          [8.23531, 124.24157],
+        ];
+
+        // Create the polygon
+        var cityProperPolygon = L.polygon(cityProperCoordinates, {
+          areaName: "City Proper",
+        }).addTo(map);
+        var MSUIITPolygon = L.polygon(MSUIITCoordinates, {
+          areaName: "MSU-IIT",
+        }).addTo(map);
+
+        //Hover the polygon and will show area name
+        cityProperPolygon.on("mouseover", onPolygonMouseOver);
+        cityProperPolygon.on("mouseout", onPolygonMouseOut);
+
+        MSUIITPolygon.on("mouseover", onPolygonMouseOver);
+        MSUIITPolygon.on("mouseout", onPolygonMouseOut);
+
+        // Function to check if a point is inside a polygon
+        function isPointInPolygon(point, polygon) {
+          var polyPoints = polygon.getLatLngs()[0];
+          var x = point.lat,
+            y = point.lng;
+          var inside = false;
+          for (
+            var i = 0, j = polyPoints.length - 1;
+            i < polyPoints.length;
+            j = i++
+          ) {
+            var xi = polyPoints[i].lat,
+              yi = polyPoints[i].lng;
+            var xj = polyPoints[j].lat,
+              yj = polyPoints[j].lng;
+
+            var intersect =
+              yi > y != yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
+            if (intersect) inside = !inside;
+          }
+          return inside;
+        }
+
+        // Track the first and second clicks
+        let firstClick = null;
+        let secondClick = null;
+        let routeControl = null;
+
+        // Add a click event listener to the map
+        map.on("click", function (e) {
+          var clickedLatLng = e.latlng;
+          var currentArea = null;
+
+          // Check if the clicked location is within any of the polygons
+          if (isPointInPolygon(clickedLatLng, cityProperPolygon)) {
+            currentArea = "City Proper";
+          } else if (isPointInPolygon(clickedLatLng, MSUIITPolygon)) {
+            currentArea = "MSU-IIT";
+          } else {
+            console.log("Clicked outside defined areas");
+          }
+
+          if (currentArea) {
+            console.log("Clicked in:", currentArea);
+            if (!firstClick) {
+              firstClick = { latlng: clickedLatLng, area: currentArea };
+              console.log(`First click: ${currentArea}`);
+            } else if (!secondClick) {
+              secondClick = { latlng: clickedLatLng, area: currentArea };
+              console.log(`Second click: ${currentArea}`);
+
+              // Calculate the fare
+              const fare = faredata[firstClick.area][secondClick.area];
+              console.log(
+                `Fare from ${firstClick.area} to ${secondClick.area}: ${fare}`
+              );
+
+              // Update the fare container
+              updateFareOverlay(fare);
+
+              // Add the route using Leaflet Routing Machine
+              if (routeControl) {
+                map.removeControl(routeControl);
+              }
+              routeControl = L.Routing.control({
+                waypoints: [firstClick.latlng, secondClick.latlng],
+                routeWhileDragging: true,
+              }).addTo(map);
+
+              // Reset the clicks
+              firstClick = null;
+              secondClick = null;
+            }
+          }
+        });
 
         // Function to display the modal with the stored coordinates
         function showModalWithCoords() {
@@ -760,18 +917,6 @@
             // Add more cases for additional commuter locations
             default:
               return [0, 0];
-          }
-        }
-
-        //fare display
-        function updateFareOverlay(FareContainer) {
-          const fareContainer = document.getElementById("fare-container");
-          if (FareContainer > 0) {
-            fareContainer.innerHTML = `<b> Your total Fare: is  ₱${FareContainer.toFixed(
-              2
-            )} `;
-          } else {
-            fareContainer.innerHTML = "";
           }
         }
 
