@@ -47,15 +47,15 @@ const fareDisplay = document.getElementById("fareDisplay");
 
 const collectionRef = query(collection(db, "fare"));
 
-let data;
+export let faredata;
 
 onSnapshot(collectionRef, (snapshot) => {
   snapshot.forEach((doc) => {
-    data = doc.data();
+    faredata = doc.data();
 
-    console.log(data);
-    console.log(data.Mapalad);
-    console.log(data["Barinaut Highway"]);
+    console.log(faredata);
+    console.log(faredata.Mapalad);
+    console.log(faredata["Barinaut Highway"]);
   });
 });
 
@@ -84,7 +84,7 @@ function calculateFare() {
   const numberOfCommuters = parseInt(howManyInput.value) || 1; // Default to 1 if input is empty or invalid
   const discountValue = parseInt(discountInput.value) || 0; // Default to 0 if input is empty or invalid
 
-  fare = data[selectedLocation][selectedDestination];
+  fare = faredata[selectedLocation][selectedDestination];
   console.log(`Computed fare before multiplying: ${fare}`);
 
   fare *= numberOfCommuters;
