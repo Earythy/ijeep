@@ -454,7 +454,7 @@
       function updateFareOverlay(fareAmount) {
         const fareContainer = document.getElementById("fare-container");
         if (fareAmount > 0) {
-          fareContainer.innerHTML = `<b> Your total Fare: is  ₱${fareAmount.toFixed(
+          fareContainer.innerHTML = `<b> Your Fare: is  ₱${fareAmount.toFixed(
             2
           )} </b>`;
         } else {
@@ -467,7 +467,8 @@
         map = L.map("map").setView([8.231, 124.240967], 13);
 
         L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-          maxZoom: 19,
+          maxZoom: 20,
+          minZoom: 14,
           attribution: "© OpenStreetMap contributors",
         }).addTo(map);
 
@@ -538,30 +539,328 @@
           [8.23594, 124.24668],
           [8.23656, 124.2469],
           [8.23762, 124.24726],
-          [8.239, 124.24747],
-          [8.24036, 124.24651],
-          [8.24061, 124.24567],
-          [8.24106, 124.24434],
-          [8.23989, 124.24235],
-          [8.23768, 124.24175],
-          [8.23626, 124.24162],
-          [8.23531, 124.24157],
+          [8.23808, 124.24793],
+          [8.23952, 124.24829],
+          [8.2412, 124.2478],
+          [8.24202, 124.24639],
+          [8.24309, 124.24396],
+          [8.24179, 124.2424],
+          [8.24005, 124.24217],
+          [8.2387, 124.24224],
+          [8.23683, 124.24235],
         ];
 
-        // Create the polygon
-        var cityProperPolygon = L.polygon(cityProperCoordinates, {
-          areaName: "City Proper",
-        }).addTo(map);
-        var MSUIITPolygon = L.polygon(MSUIITCoordinates, {
-          areaName: "MSU-IIT",
-        }).addTo(map);
+        var TRAFFICLIGHTTAMBOCoordinates = [
+          [8.24028, 124.24807],
+          [8.24043, 124.25254],
+          [8.24243, 124.25735],
+          [8.24472, 124.25889],
+          [8.24553, 124.25855],
+          [8.2474, 124.257],
+          [8.24803, 124.254],
+          [8.24748, 124.24996],
+          [8.24523, 124.24743],
+          [8.24202, 124.2464],
+          [8.24119, 124.24781],
+          [8.23951, 124.2483],
+        ];
 
-        //Hover the polygon and will show area name
-        cityProperPolygon.on("mouseover", onPolygonMouseOver);
-        cityProperPolygon.on("mouseout", onPolygonMouseOut);
+        var TAMBOGERONACoordinates = [
+          [8.24761, 124.25601],
+          [8.24964, 124.25618],
+          [8.25242, 124.2581],
+          [8.25427, 124.2593],
+          [8.25482, 124.26136],
+          [8.25401, 124.26271],
+          [8.2524, 124.26391],
+          [8.24985, 124.26486],
+          [8.24792, 124.26425],
+          [8.2465, 124.26307],
+          [8.24461, 124.2614],
+          [8.24467, 124.25891],
+          [8.24553, 124.25856],
+          [8.24741, 124.257],
+        ];
 
-        MSUIITPolygon.on("mouseover", onPolygonMouseOver);
-        MSUIITPolygon.on("mouseout", onPolygonMouseOut);
+        var BARINAUTHIGHWAYCoordinates = [
+          [8.25427, 124.2593],
+          [8.25483, 124.26136],
+          [8.2579, 124.26144],
+          [8.25998, 124.25913],
+          [8.26104, 124.2576],
+          [8.26129, 124.25486],
+          [8.26032, 124.25378],
+          [8.25821, 124.25367],
+          [8.25625, 124.25561],
+          [8.25497, 124.25716],
+        ];
+
+        var BARINAUTHIGHWAYCoordinates = [
+          [8.25427, 124.2593],
+          [8.25483, 124.26136],
+          [8.2579, 124.26144],
+          [8.25998, 124.25913],
+          [8.26104, 124.2576],
+          [8.26129, 124.25486],
+          [8.26032, 124.25378],
+          [8.25821, 124.25367],
+          [8.25625, 124.25561],
+          [8.25497, 124.25716],
+        ];
+
+        var VALDERAMACoordinates = [
+          [8.26104, 124.2576],
+          [8.26274, 124.2581],
+          [8.26541, 124.2589],
+          [8.26668, 124.25898],
+          [8.2674, 124.25759],
+          [8.26621, 124.25641],
+          [8.26569, 124.25509],
+          [8.26411, 124.25358],
+          [8.26293, 124.25328],
+          [8.26137, 124.25359],
+          [8.26032, 124.25378],
+          [8.2613, 124.25485],
+        ];
+
+        var STAFILOMENACoordinates = [
+          [8.26668, 124.25898],
+          [8.26737, 124.26149],
+          [8.26884, 124.26327],
+          [8.27128, 124.26363],
+          [8.27266, 124.26217],
+          [8.2707, 124.25936],
+          [8.26865, 124.25797],
+          [8.2674, 124.25759],
+        ];
+
+        var STAFILOMENACoordinates = [
+          [8.26668, 124.25898],
+          [8.26737, 124.26149],
+          [8.26884, 124.26327],
+          [8.27128, 124.26363],
+          [8.27266, 124.26217],
+          [8.2707, 124.25936],
+          [8.26865, 124.25797],
+          [8.2674, 124.25759],
+        ];
+
+        var ACMACCoordinates = [
+          [8.27129, 124.26363],
+          [8.27271, 124.26696],
+          [8.27555, 124.26936],
+          [8.27887, 124.2682],
+          [8.27895, 124.2658],
+          [8.2756, 124.26391],
+          [8.2739, 124.26267],
+          [8.27266, 124.26217],
+        ];
+
+        var KIWALANCoordinates = [
+          [8.27887, 124.2682],
+          [8.2818, 124.2697],
+          [8.28621, 124.26919],
+          [8.28774, 124.2664],
+          [8.28749, 124.26451],
+          [8.28622, 124.26251],
+          [8.28514, 124.26348],
+          [8.28349, 124.26435],
+          [8.28278, 124.26454],
+          [8.28032, 124.26458],
+          [8.27895, 124.2658],
+        ];
+
+        var PILMICOCoordinates = [
+          [8.2876, 124.26525],
+          [8.29038, 124.26443],
+          [8.2922, 124.26104],
+          [8.29271, 124.25868],
+          [8.2919, 124.25722],
+          [8.2908, 124.25719],
+          [8.28879, 124.25739],
+          [8.28807, 124.25827],
+          [8.28758, 124.26114],
+          [8.28626, 124.26255],
+          [8.28749, 124.26451],
+        ];
+
+        var TAGIBOCoordinates = [
+          [8.2926, 124.25917],
+          [8.29525, 124.25921],
+          [8.29769, 124.25846],
+          [8.29897, 124.25651],
+          [8.29941, 124.25451],
+          [8.29716, 124.25459],
+          [8.29569, 124.25526],
+          [8.29489, 124.25577],
+          [8.29445, 124.25611],
+          [8.29387, 124.25646],
+          [8.2919, 124.25722],
+          [8.29271, 124.25868],
+        ];
+
+        var DALIPUGACROSSINGKALUBIHONCoordinates = [
+          [8.29856, 124.25714],
+          [8.29997, 124.25857],
+          [8.30246, 124.25902],
+          [8.30388, 124.25773],
+          [8.30527, 124.25703],
+          [8.30575, 124.25583],
+          [8.30571, 124.25461],
+          [8.30354, 124.25464],
+          [8.30184, 124.25446],
+          [8.29942, 124.25451],
+          [8.29897, 124.25651],
+        ];
+
+        var DALIPUGAPROPERCoordinates = [
+          [8.30527, 124.25704],
+          [8.30741, 124.25855],
+          [8.3115, 124.25746],
+          [8.3134, 124.25531],
+          [8.31342, 124.25319],
+          [8.31288, 124.2515],
+          [8.31181, 124.25196],
+          [8.31181, 124.25251],
+          [8.31148, 124.25256],
+          [8.31127, 124.25215],
+          [8.30858, 124.25283],
+          [8.30676, 124.25371],
+          [8.30571, 124.25461],
+          [8.30575, 124.25583],
+        ];
+
+        var PAITANCoordinates = [
+          [8.31297, 124.2558],
+          [8.31424, 124.25812],
+          [8.31583, 124.25891],
+          [8.31769, 124.25677],
+          [8.31904, 124.25431],
+          [8.32028, 124.25183],
+          [8.32011, 124.25002],
+          [8.31957, 124.24835],
+          [8.31892, 124.24876],
+          [8.31823, 124.24913],
+          [8.31725, 124.24966],
+          [8.31646, 124.25005],
+          [8.31566, 124.25049],
+          [8.3151, 124.25077],
+          [8.31416, 124.25102],
+          [8.31288, 124.2515],
+          [8.31342, 124.25319],
+          [8.3134, 124.2553],
+        ];
+
+        var MAPALADCoordinates = [
+          [8.31983, 124.25274],
+          [8.32311, 124.25372],
+          [8.32536, 124.25142],
+          [8.32576, 124.24982],
+          [8.32606, 124.24795],
+          [8.326, 124.24619],
+          [8.32505, 124.24634],
+          [8.32466, 124.24641],
+          [8.32347, 124.24643],
+          [8.32245, 124.2469],
+          [8.32157, 124.24731],
+          [8.32062, 124.24777],
+          [8.31957, 124.24835],
+          [8.32011, 124.25002],
+          [8.32028, 124.25183],
+        ];
+
+        var BOUNDARYLUGAITILIGANCoordinates = [
+          [8.32555, 124.25067],
+          [8.32881, 124.25044],
+          [8.33067, 124.24919],
+          [8.33158, 124.24816],
+          [8.33178, 124.2473],
+          [8.33031, 124.24697],
+          [8.32945, 124.24655],
+          [8.32868, 124.24622],
+          [8.32826, 124.24608],
+          [8.32767, 124.24603],
+          [8.32676, 124.24606],
+          [8.326, 124.24619],
+          [8.32606, 124.24795],
+          [8.32576, 124.24983],
+        ];
+
+        // Create the polygon[8.31983, 124.25274],
+        const polygonsData = [
+          { coordinates: cityProperCoordinates, areaName: "City Proper" },
+          { coordinates: MSUIITCoordinates, areaName: "MSU-IIT" },
+          {
+            coordinates: TRAFFICLIGHTTAMBOCoordinates,
+            areaName: "Traffic Light Tambo",
+          },
+          { coordinates: TAMBOGERONACoordinates, areaName: "Tambo Gerona" },
+          {
+            coordinates: BARINAUTHIGHWAYCoordinates,
+            areaName: "Barinaut Highway",
+          },
+          {
+            coordinates: VALDERAMACoordinates,
+            areaName: "Valderama",
+          },
+          {
+            coordinates: STAFILOMENACoordinates,
+            areaName: "Sta Filomena",
+          },
+          {
+            coordinates: ACMACCoordinates,
+            areaName: "Acmac Brgy Hall",
+          },
+          {
+            coordinates: KIWALANCoordinates,
+            areaName: "Purok 7 Kiwalan",
+          },
+          {
+            coordinates: PILMICOCoordinates,
+            areaName: "Pilmico",
+          },
+          {
+            coordinates: TAGIBOCoordinates,
+            areaName: "Tag-ibo",
+          },
+          {
+            coordinates: DALIPUGACROSSINGKALUBIHONCoordinates,
+            areaName: "Dalipuga Crossing Kalubihon",
+          },
+          {
+            coordinates: DALIPUGAPROPERCoordinates,
+            areaName: "Dalipuga Proper",
+          },
+          {
+            coordinates: PAITANCoordinates,
+            areaName: "Paitan",
+          },
+          {
+            coordinates: MAPALADCoordinates,
+            areaName: "Mapalad",
+          },
+          {
+            coordinates: BOUNDARYLUGAITILIGANCoordinates,
+            areaName: "Boundary Lugait-Iligan",
+          },
+        ];
+
+        // Array to store polygon objects
+        const polygons = [];
+
+        // Function to create and add polygons to the map
+        polygonsData.forEach((data) => {
+          const polygon = L.polygon(data.coordinates, {
+            areaName: data.areaName,
+          }).addTo(map);
+          polygons.push(polygon);
+        });
+
+        // Adding event listeners
+        polygons.forEach((polygon) => {
+          polygon.on("mouseover", onPolygonMouseOver);
+          polygon.on("mouseout", onPolygonMouseOut);
+        });
 
         // Function to check if a point is inside a polygon
         function isPointInPolygon(point, polygon) {
@@ -597,45 +896,65 @@
           var currentArea = null;
 
           // Check if the clicked location is within any of the polygons
-          if (isPointInPolygon(clickedLatLng, cityProperPolygon)) {
-            currentArea = "City Proper";
-          } else if (isPointInPolygon(clickedLatLng, MSUIITPolygon)) {
-            currentArea = "MSU-IIT";
-          } else {
-            console.log("Clicked outside defined areas");
+          polygons.some((polygon) => {
+            if (isPointInPolygon(clickedLatLng, polygon)) {
+              currentArea = polygon.options.areaName;
+              return true;
+            }
+            return false;
+          });
+
+          // Function to calculate regular fare
+          function calculateRegularFare(distance) {
+            if (distance < 4) {
+              return 13; // Minimum fare for 4km
+            } else {
+              return 13 + (distance - 4) * 1.5; // Add 1.5php for each additional kilometer
+            }
           }
 
           if (currentArea) {
             console.log("Clicked in:", currentArea);
-            if (!firstClick) {
-              firstClick = { latlng: clickedLatLng, area: currentArea };
-              console.log(`First click: ${currentArea}`);
-            } else if (!secondClick) {
-              secondClick = { latlng: clickedLatLng, area: currentArea };
-              console.log(`Second click: ${currentArea}`);
+          } else {
+            console.log("Clicked outside defined areas");
+          }
 
-              // Calculate the fare
+          if (!firstClick) {
+            firstClick = { latlng: clickedLatLng, area: currentArea };
+            console.log(`First click: ${currentArea || "Outside areas"}`);
+          } else if (!secondClick) {
+            secondClick = { latlng: clickedLatLng, area: currentArea };
+            console.log(`Second click: ${currentArea || "Outside areas"}`);
+
+            if (firstClick.area && secondClick.area) {
+              // Calculate the fare between defined areas
               const fare = faredata[firstClick.area][secondClick.area];
               console.log(
                 `Fare from ${firstClick.area} to ${secondClick.area}: ${fare}`
               );
-
-              // Update the fare container
               updateFareOverlay(fare);
-
-              // Add the route using Leaflet Routing Machine
-              if (routeControl) {
-                map.removeControl(routeControl);
-              }
-              routeControl = L.Routing.control({
-                waypoints: [firstClick.latlng, secondClick.latlng],
-                routeWhileDragging: true,
-              }).addTo(map);
-
-              // Reset the clicks
-              firstClick = null;
-              secondClick = null;
+            } else {
+              // Calculate fare based on distance for clicks outside the defined areas
+              const distance =
+                map.distance(firstClick.latlng, secondClick.latlng) / 1000; // Convert meters to kilometers
+              const regularFare = calculateRegularFare(distance);
+              console.log(`Distance: ${distance.toFixed(2)} km`);
+              console.log(`Regular fare: ${regularFare}`);
+              updateFareOverlay(regularFare);
             }
+
+            //Add the route using Leaflet Routing Machine
+            if (routeControl) {
+              map.removeControl(routeControl);
+            }
+            routeControl = L.Routing.control({
+              waypoints: [firstClick.latlng, secondClick.latlng],
+              routeWhileDragging: true,
+            }).addTo(map);
+
+            // Reset the clicks
+            firstClick = null;
+            secondClick = null;
           }
         });
 
