@@ -66,7 +66,7 @@
             <a
               href="#"
               style="
-                justify-content: center;
+                /* justify-content: center; */
                 align-items: center;
                 margin-top: 10px;
               "
@@ -203,6 +203,7 @@
                   <tr style="text-align: center">
                     <td>No.</td>
                     <td>Barangay Name</td>
+                    <td>Passengers</td>
                     <td>Action</td>
                   </tr>
                 </thead>
@@ -456,48 +457,71 @@
         }
       });
 
-    $("#myTable").DataTable({
-      autoWidth: false,
-      responsive: true,
-      scrollX: true,
+    // Initialize DataTable
+    $(document).ready(function () {
+      $("#myTable").DataTable({
+        autoWidth: false,
+        responsive: true,
+        scrollX: true,
+      });
+
+      // Call populateTable function to initially populate the table
+      populateTable();
+
+      // Subscribe to real-time updates using onSnapshot
+      const unsubscribe = onSnapshot(collection(db, "Barangay"), (snapshot) => {
+        // When a change occurs, re-populate the table with updated data
+        populateTable();
+      });
     });
 
-    function populateTable() {
-      getDocs(query(collection(db, "Barangay"), orderBy("brgy_name")))
-        .then((barangayListSnapshot) => {
-          var count = 1;
-          // Get a reference to the DataTable instance
-          var dataTable = $("#myTable").DataTable();
-          // Clear the table before repopulating with new data
-          dataTable.clear().draw();
-          // Iterate over each document in the collection
-          barangayListSnapshot.forEach((barangayListDoc) => {
-            var barangayListData = barangayListDoc.data();
-            var brgy_name = barangayListData.brgy_name;
-            // Add data to the table
-            dataTable.row
-              .add([
-                count,
-                brgy_name,
-                '<center><button type="button" class="btn btn-good btn-edit" style="margin-right: 7px !important;">Edit</button><button type="button" class="btn btn-bad btn-delete">Delete</button></center>',
-              ])
-              .draw(false);
-            count++;
-          });
-        })
-        .catch((error) => {
-          console.log("Error fetching documents: ", error);
-        });
+    async function getUserCounts() {
+      const userCounts = {};
+      const userCollection = query(collection(db, "users"));
+      const userSnapshot = await getDocs(userCollection);
+
+      userSnapshot.forEach((doc) => {
+        const data = doc.data();
+        const userbarangay = data.barangay;
+        if (userCounts[userbarangay]) {
+          userCounts[userbarangay]++;
+        } else {
+          userCounts[userbarangay] = 1;
+        }
+      });
+
+      return userCounts;
     }
 
-    // Call populateTable function to initially populate the table
-    populateTable();
+    async function populateTable() {
+      try {
+        const barangayListSnapshot = await getDocs(
+          query(collection(db, "Barangay"), orderBy("brgy_name"))
+        );
+        const userCounts = await getUserCounts();
+        const dataTable = $("#myTable").DataTable();
+        dataTable.clear().draw();
+        let count = 1;
 
-    // Subscribe to real-time updates using onSnapshot
-    const unsubscribe = onSnapshot(collection(db, "Barangay"), (snapshot) => {
-      // When a change occurs, re-populate the table with updated data
-      populateTable();
-    });
+        barangayListSnapshot.forEach((barangayListDoc) => {
+          const barangayListData = barangayListDoc.data();
+          const brgy_name = barangayListData.brgy_name;
+          const passengers = userCounts[brgy_name] || 0;
+
+          dataTable.row
+            .add([
+              count,
+              brgy_name,
+              passengers,
+              '<center><button type="button" class="btn btn-good btn-edit" style="margin-right: 7px !important;">Edit</button><button type="button" class="btn btn-bad btn-delete">Delete</button></center>',
+            ])
+            .draw(false);
+          count++;
+        });
+      } catch (error) {
+        console.log("Error fetching documents: ", error);
+      }
+    }
 
     //Save the update
     $("#update").on("click", async function (event) {
