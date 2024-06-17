@@ -253,14 +253,14 @@
             </a>
           </li>
 
-          <li>
+          <!-- <li>
             <a href="browseroute.html">
               <span class="icon">
                 <ion-icon name="location-outline"></ion-icon>
               </span>
               <span class="title">Trip Estimator</span>
             </a>
-          </li>
+          </li> -->
 
           <li>
             <a href="#">
@@ -285,7 +285,8 @@
           <h3>Profile</h3>
           <img id="user-profile-pic" src="#" />
           <div id="user-name">Display Name:</div>
-          <div id="user-info" style="padding-top: 20px">
+          <div id="user-barangay" style="padding-top: 10px">Barangay:</div>
+          <div id="user-info" style="padding-top: 10px">
             User info will display here.
           </div>
           <button id="edit-button">Edit Profile</button>
@@ -321,6 +322,30 @@
           id="display-name-input"
           placeholder="Enter display name"
         />
+
+        <select
+          class="form-select"
+          id="select-barangay"
+          style="max-width: 300px"
+        >
+          <option selected>Select Location</option>
+          <option value="Acmac">Acmac</option>
+          <option value="Bagong Silang">Bagong Silang</option>
+          <option value="Dalipuga">Dalipuga</option>
+          <option value="Hinaplanon">Hinaplanon</option>
+          <option value="Kiwalan">Kiwalan</option>
+          <option value="Poblacion">Poblacion</option>
+          <option value="San Miguel">San Miguel</option>
+          <option value="San Roque">San Roque</option>
+          <option value="Santa Filomena">Santa Filomena</option>
+          <option value="Santiago">Santiago</option>
+          <option value="Santo Rosario">Santo Rosario</option>
+          <option value="Saray">Saray</option>
+          <option value="Tibanga">Tibanga</option>
+          <option value="Tomas Cabili">Tomas Cabili</option>
+          <option value="Villa Verde">Villa Verde</option>
+          <option value="Others">Others</option>
+        </select>
         <input type="file" id="profile-pic-input" accept="image/*" />
 
         <button id="save-button">Save</button>
@@ -437,7 +462,9 @@
                 const userData = docSnapshot.data();
                 // Update user profile information
                 document.getElementById("user-name").textContent =
-                  userData.name;
+                  "Display Name: " + userData.name;
+                document.getElementById("user-barangay").textContent =
+                  "Barangay: " + userData.barangay;
                 if (userData.profilePicture) {
                   const profilePicURL = userData.profilePicture;
                   console.log("Profile Picture URL:", profilePicURL);
@@ -451,6 +478,7 @@
                 setDoc(userDocRef, {
                   email: email,
                   name: "New User",
+                  barangay: "",
                   profilePicture: "",
                 })
                   .then(() => {
@@ -567,6 +595,7 @@
         .addEventListener("click", function () {
           const displayName =
             document.getElementById("display-name-input").value;
+          const barangayname = document.getElementById("select-barangay").value;
           const profilePicFile =
             document.getElementById("profile-pic-input").files[0];
           document.getElementById("user-name").textContent =
@@ -577,7 +606,10 @@
           getDoc(userDocRef)
             .then((docSnapshot) => {
               if (docSnapshot.exists()) {
-                updateDoc(userDocRef, { name: displayName })
+                updateDoc(userDocRef, {
+                  name: displayName,
+                  barangay: barangayname,
+                })
                   .then(() => {
                     console.log(
                       "Display name updated successfully in Firestore."
