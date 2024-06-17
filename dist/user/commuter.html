@@ -95,6 +95,7 @@
         .fare-container {
           top: 3px; /* Adjust top position */
           font-size: 15px; /* Decreased font size */
+          line-height: 0.9;
         }
       }
 
@@ -216,14 +217,14 @@
             </a>
           </li>
 
-          <li>
+          <!-- <li>
             <a href="browseroute.html">
               <span class="icon">
                 <ion-icon name="location-outline"></ion-icon>
               </span>
               <span class="title">Trip Estimator</span>
             </a>
-          </li>
+          </li> -->
 
           <li>
             <a href="#">
@@ -451,16 +452,24 @@
       const db = getFirestore(app);
       const auth = getAuth(app);
 
-      function updateFareOverlay(fareAmount) {
+      function updateFareOverlay(fareAmount, discount) {
         const fareContainer = document.getElementById("fare-container");
         if (fareAmount > 0) {
-          fareContainer.innerHTML = `<b> Your Fare: is  ₱${fareAmount.toFixed(
-            2
-          )} </b>`;
+          if (discount === 0) {
+            fareContainer.innerHTML = `<b> Your Fare: is  ₱${fareAmount.toFixed(
+              2
+            )} </b>`;
+          } else {
+            fareContainer.innerHTML = `<b> Regular Fare is: ₱${fareAmount.toFixed(
+              2
+            )} | Discounted Fare is: ₱${discount.toFixed(2)}`;
+          }
         } else {
           fareContainer.innerHTML = "";
         }
       }
+
+      let routeControl = null;
 
       // Load map after page is ready
       document.addEventListener("DOMContentLoaded", function () {
@@ -888,7 +897,6 @@
         // Track the first and second clicks
         let firstClick = null;
         let secondClick = null;
-        let routeControl = null;
 
         // Add a click event listener to the map
         map.on("click", function (e) {
@@ -913,6 +921,13 @@
             }
           }
 
+          function discountFare(amount) {
+            let discountValue = amount * 0.2;
+            let discountedAmount = amount - discountValue;
+            let roundedAmount = Math.round(discountedAmount);
+            return roundedAmount;
+          }
+
           if (currentArea) {
             console.log("Clicked in:", currentArea);
           } else {
@@ -928,19 +943,23 @@
 
             if (firstClick.area && secondClick.area) {
               // Calculate the fare between defined areas
+
               const fare = faredata[firstClick.area][secondClick.area];
+              const discountAmount = discountFare(fare);
               console.log(
                 `Fare from ${firstClick.area} to ${secondClick.area}: ${fare}`
               );
-              updateFareOverlay(fare);
+              console.log(discountAmount);
+              updateFareOverlay(fare, discountAmount);
             } else {
+              const nodiscount = 0;
               // Calculate fare based on distance for clicks outside the defined areas
               const distance =
                 map.distance(firstClick.latlng, secondClick.latlng) / 1000; // Convert meters to kilometers
               const regularFare = calculateRegularFare(distance);
               console.log(`Distance: ${distance.toFixed(2)} km`);
               console.log(`Regular fare: ${regularFare}`);
-              updateFareOverlay(regularFare);
+              // updateFareOverlay(regularFare, nodiscount);
             }
 
             //Add the route using Leaflet Routing Machine
@@ -973,9 +992,17 @@
           var modal = new bootstrap.Modal(
             document.getElementById("latLngModal")
           );
-          modal.show();
+
+          if (routeControl) {
+            alert(
+              "You cannot use this function if you are browsing a route. Please refresh"
+            );
+          } else {
+            modal.show();
+          }
+
           // } else {
-          //   alert("Please click on the map to select a location first.");
+          //
           // }
         }
 
@@ -1137,8 +1164,9 @@
                   marker.bindPopup(
                     `Location: ${data.commuterlocation}<br>Destination: ${data.to}<br>Number of Commuters: ${commuternumber}`
                   );
+                  const zerodiscount = 0;
                   markers[id] = marker;
-                  updateFareOverlay(data.fare);
+                  updateFareOverlay(data.fare, zerodiscount);
                 } else {
                   // If the display is false, remove the marker from the map
                   if (markers[id]) {
@@ -1151,7 +1179,7 @@
                 if (markers[id]) {
                   map.removeLayer(markers[id]);
                   delete markers[id];
-                  updateFareOverlay(0);
+                  updateFareOverlay(0, 0);
                 }
               }
             });
@@ -1382,7 +1410,8 @@
                 // Hide the modal after the update is successful
                 var modalEl = document.getElementById("latLngModal");
                 var modalInstance = bootstrap.Modal.getInstance(modalEl);
-                updateFareOverlay(commuterfare);
+
+                updateFareOverlay(commuterfare, 0);
                 modalInstance.hide();
               });
             } else {
@@ -1401,7 +1430,7 @@
               // close the modal programmatically after selection
               var modalEl = document.getElementById("latLngModal");
               var modalInstance = bootstrap.Modal.getInstance(modalEl);
-              updateFareOverlay(commuterfare);
+              updateFareOverlay(commuterfare, 0);
               modalInstance.hide();
             }
           });
