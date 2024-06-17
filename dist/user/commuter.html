@@ -871,6 +871,13 @@
           polygon.on("mouseout", onPolygonMouseOut);
         });
 
+        function discountFare(amount) {
+          let discountValue = amount * 0.2;
+          let discountedAmount = amount - discountValue;
+          let roundedAmount = Math.round(discountedAmount);
+          return roundedAmount;
+        }
+
         // Function to check if a point is inside a polygon
         function isPointInPolygon(point, polygon) {
           var polyPoints = polygon.getLatLngs()[0];
@@ -911,71 +918,107 @@
             }
             return false;
           });
-
-          // Function to calculate regular fare
-          function calculateRegularFare(distance) {
-            if (distance < 4) {
-              return 13; // Minimum fare for 4km
-            } else {
-              return 13 + (distance - 4) * 1.5; // Add 1.5php for each additional kilometer
-            }
-          }
-
-          function discountFare(amount) {
-            let discountValue = amount * 0.2;
-            let discountedAmount = amount - discountValue;
-            let roundedAmount = Math.round(discountedAmount);
-            return roundedAmount;
-          }
-
           if (currentArea) {
             console.log("Clicked in:", currentArea);
-          } else {
-            console.log("Clicked outside defined areas");
-          }
+            if (!firstClick) {
+              firstClick = { latlng: clickedLatLng, area: currentArea };
+              console.log(`First click: ${currentArea}`);
+            } else if (!secondClick) {
+              secondClick = { latlng: clickedLatLng, area: currentArea };
+              console.log(`Second click: ${currentArea}`);
 
-          if (!firstClick) {
-            firstClick = { latlng: clickedLatLng, area: currentArea };
-            console.log(`First click: ${currentArea || "Outside areas"}`);
-          } else if (!secondClick) {
-            secondClick = { latlng: clickedLatLng, area: currentArea };
-            console.log(`Second click: ${currentArea || "Outside areas"}`);
-
-            if (firstClick.area && secondClick.area) {
-              // Calculate the fare between defined areas
-
+              // Calculate the fare
               const fare = faredata[firstClick.area][secondClick.area];
               const discountAmount = discountFare(fare);
               console.log(
                 `Fare from ${firstClick.area} to ${secondClick.area}: ${fare}`
               );
-              console.log(discountAmount);
+
+              // Update the fare container
               updateFareOverlay(fare, discountAmount);
-            } else {
-              const nodiscount = 0;
-              // Calculate fare based on distance for clicks outside the defined areas
-              const distance =
-                map.distance(firstClick.latlng, secondClick.latlng) / 1000; // Convert meters to kilometers
-              const regularFare = calculateRegularFare(distance);
-              console.log(`Distance: ${distance.toFixed(2)} km`);
-              console.log(`Regular fare: ${regularFare}`);
-              // updateFareOverlay(regularFare, nodiscount);
-            }
 
-            //Add the route using Leaflet Routing Machine
-            if (routeControl) {
-              map.removeControl(routeControl);
-            }
-            routeControl = L.Routing.control({
-              waypoints: [firstClick.latlng, secondClick.latlng],
-              routeWhileDragging: true,
-            }).addTo(map);
+              // Add the route using Leaflet Routing Machine
+              if (routeControl) {
+                map.removeControl(routeControl);
+              }
+              routeControl = L.Routing.control({
+                waypoints: [firstClick.latlng, secondClick.latlng],
+                routeWhileDragging: true,
+              }).addTo(map);
 
-            // Reset the clicks
-            firstClick = null;
-            secondClick = null;
+              // Reset the clicks
+              firstClick = null;
+              secondClick = null;
+            }
+          } else {
+            console.log("Clicked outside defined areas");
           }
         });
+
+        //   // Function to calculate regular fare
+        //   function calculateRegularFare(distance) {
+        //     if (distance < 4) {
+        //       return 13; // Minimum fare for 4km
+        //     } else {
+        //       return 13 + (distance - 4) * 1.5; // Add 1.5php for each additional kilometer
+        //     }
+        //   }
+
+        //   function discountFare(amount) {
+        //     let discountValue = amount * 0.2;
+        //     let discountedAmount = amount - discountValue;
+        //     let roundedAmount = Math.round(discountedAmount);
+        //     return roundedAmount;
+        //   }
+
+        //   if (currentArea) {
+        //     console.log("Clicked in:", currentArea);
+        //   } else {
+        //     console.log("Clicked outside defined areas");
+        //   }
+
+        //   if (!firstClick) {
+        //     firstClick = { latlng: clickedLatLng, area: currentArea };
+        //     console.log(`First click: ${currentArea || "Outside areas"}`);
+        //   } else if (!secondClick) {
+        //     secondClick = { latlng: clickedLatLng, area: currentArea };
+        //     console.log(`Second click: ${currentArea || "Outside areas"}`);
+
+        //     if (firstClick.area && secondClick.area) {
+        //       // Calculate the fare between defined areas
+
+        //       const fare = faredata[firstClick.area][secondClick.area];
+        //       const discountAmount = discountFare(fare);
+        //       console.log(
+        //         `Fare from ${firstClick.area} to ${secondClick.area}: ${fare}`
+        //       );
+        //       console.log(discountAmount);
+        //       updateFareOverlay(fare, discountAmount);
+        //     } else {
+        //       const nodiscount = 0;
+        //       // Calculate fare based on distance for clicks outside the defined areas
+        //       const distance =
+        //         map.distance(firstClick.latlng, secondClick.latlng) / 1000; // Convert meters to kilometers
+        //       const regularFare = calculateRegularFare(distance);
+        //       console.log(`Distance: ${distance.toFixed(2)} km`);
+        //       console.log(`Regular fare: ${regularFare}`);
+        //       // updateFareOverlay(regularFare, nodiscount);
+        //     }
+
+        //     //Add the route using Leaflet Routing Machine
+        //     if (routeControl) {
+        //       map.removeControl(routeControl);
+        //     }
+        //     routeControl = L.Routing.control({
+        //       waypoints: [firstClick.latlng, secondClick.latlng],
+        //       routeWhileDragging: true,
+        //     }).addTo(map);
+
+        //     // Reset the clicks
+        //     firstClick = null;
+        //     secondClick = null;
+        //   }
+        // });
 
         // Function to display the modal with the stored coordinates
         function showModalWithCoords() {
