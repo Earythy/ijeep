@@ -469,7 +469,13 @@
         }
       }
 
+      var taxiIcon = L.icon({
+        iconUrl: "../assets/img/car.png",
+        iconSize: [55, 55],
+      });
+
       let routeControl = null;
+      let reusableuserid;
 
       // Load map after page is ready
       document.addEventListener("DOMContentLoaded", function () {
@@ -504,6 +510,46 @@
             .bindPopup("[" + lastClickedLat + "," + " " + lastClickedLng + "],")
             .openPopup();
         }
+
+        // Add animation for the refresh button
+        var refreshButton = L.Control.extend({
+          onAdd: function (map) {
+            var container = L.DomUtil.create(
+              "div",
+              "leaflet-bar leaflet-control leaflet-control-custom"
+            );
+            var button = L.DomUtil.create("button", "", container);
+            button.innerHTML = "Refresh";
+            button.style.backgroundColor = "#c30052"; /* Dark pink background */
+            button.style.borderRadius = "3px"; /* Slightly rounded corners */
+            button.style.padding = "8px 12px";
+            button.style.fontSize = "14px";
+            button.style.color = "#fff"; /* White text color */
+            button.style.cursor = "pointer";
+            button.style.transition =
+              "background-color 0.3s ease"; /* Smooth transition */
+
+            // Add animation on hover
+            button.addEventListener("mouseenter", function () {
+              button.style.backgroundColor =
+                "#ff4081"; /* Lighter pink on hover */
+            });
+
+            button.addEventListener("mouseleave", function () {
+              button.style.backgroundColor =
+                "#c30052"; /* Restore original color on mouse leave */
+            });
+
+            // Refresh map on click
+            button.addEventListener("click", function () {
+              location.reload();
+            });
+
+            return container;
+          },
+        });
+
+        map.addControl(new refreshButton({ position: "topleft" }));
 
         // when map is clicked, a marker is shown in the map
         map.on("click", onMapClick);
@@ -918,6 +964,8 @@
             }
             return false;
           });
+
+          //check if the clicked location is inside the polygon
           if (currentArea) {
             console.log("Clicked in:", currentArea);
             if (!firstClick) {
@@ -941,10 +989,34 @@
               if (routeControl) {
                 map.removeControl(routeControl);
               }
+
               routeControl = L.Routing.control({
                 waypoints: [firstClick.latlng, secondClick.latlng],
-                routeWhileDragging: true,
+                routeWhileDragging: false,
+                draggableWaypoints: false,
+                addWaypoints: false,
               }).addTo(map);
+              let startMarker;
+
+              startMarker = L.marker(
+                [firstClick.latlng.lat, firstClick.latlng.lng],
+                {
+                  icon: taxiIcon,
+                }
+              ).addTo(map);
+
+              routeControl.on("routesfound", function (e) {
+                var routes = e.routes;
+                console.log(routes);
+
+                var routeCoordinates = routes[0].coordinates;
+
+                routeCoordinates.forEach(function (coord, index) {
+                  setTimeout(function () {
+                    startMarker.setLatLng([coord.lat, coord.lng]);
+                  }, 100 * index);
+                });
+              });
 
               // Reset the clicks
               firstClick = null;
@@ -1063,6 +1135,7 @@
       onAuthStateChanged(auth, (user) => {
         if (user) {
           console.log(user.uid);
+          reusableuserid = user.uid;
         } else {
           window.location.href = "logincommuter.html"; // Change "/login" to your login route
         }
@@ -1369,11 +1442,6 @@
             console.log("How many commuters: ", howmany);
             console.log("The fair is", commuterfare);
 
-            var taxiIcon = L.icon({
-              iconUrl: "../assets/img/car.png",
-              iconSize: [55, 55],
-            });
-
             var taomarker = L.icon({
               iconUrl: "../assets/img/person-marker.png",
               iconSize: [55, 55],
@@ -1609,134 +1677,6 @@
         });
       });
 
-      // Update the onAuthStateChanged function to fetch user profile information
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          userId = user.uid;
-          const email = user.email;
-          document.getElementById(
-            "user-info"
-          ).textContent = `Logged in as ${email}`;
-
-          const userDocRef = doc(db, "users", user.uid);
-
-          getDoc(userDocRef)
-            .then((docSnapshot) => {
-              if (docSnapshot.exists()) {
-                const userData = docSnapshot.data();
-                // Update user profile information
-                document.getElementById("user-name").textContent =
-                  userData.name;
-                if (userData.profilePicture) {
-                  const profilePicURL = userData.profilePicture;
-                  console.log("Profile Picture URL:", profilePicURL);
-                  document.getElementById("user-profile-pic").src =
-                    profilePicURL;
-                  document.getElementById("profile-icon").src = profilePicURL; // update the navigation icon
-                }
-              } else {
-                console.log("User profile not found in user data.");
-                // If the user profile document doesn't exist, create it with default values
-                setDoc(userDocRef, {
-                  email: email,
-                  name: "New User",
-                  profilePicture: "",
-                })
-                  .then(() => {
-                    console.log("User profile created successfully.");
-                    // Now that the profile document is created, you can update the display name
-                    document.getElementById("user-name").textContent =
-                      "Display Name: New User";
-                  })
-                  .catch((error) => {
-                    console.error("Error creating user profile:", error);
-                  });
-              }
-            })
-            .catch((error) => {
-              console.error("Error fetching user profile:", error);
-            });
-          // Enable edit button
-          document.getElementById("edit-button").disabled = false;
-        } else {
-          document.getElementById("user-info").textContent = "Not logged in";
-          console.log("User is signed out");
-          // Disable edit button
-          document.getElementById("edit-button").disabled = true;
-        }
-
-        const collectionRef = query(
-          collection(db, "userlogging"),
-          where("userId", "==", user.uid)
-        );
-
-        let table;
-
-        onSnapshot(collectionRef, (snapshot) => {
-          const dataset = [];
-
-          snapshot.forEach((doc) => {
-            //all data inside userlogging
-            const data = doc.data();
-
-            //formatting to readable date
-            const date = new Date(
-              data.date.seconds * 1000 + data.date.nanoseconds / 1000000
-            );
-            const options = {
-              hour: "2-digit",
-              minute: "2-digit",
-              second: "2-digit",
-            };
-            const formattedDate = date.toLocaleString("en-US", options);
-
-            // Generate a unique ID for the row
-            const rowId = doc.id;
-
-            dataset.push([
-              rowId, // Add the unique ID for the row
-              data.commuterlocation,
-              data.to,
-              data.fare,
-              data.howmany,
-              formattedDate,
-              // '<center><button type="button" class="btn btn-good btn-edit" style="margin-right: 7px !important;">Edit</button><button type="button" class="btn btn-bad btn-delete">Delete</button></center>',
-            ]);
-          });
-
-          // Sort dataset by date in descending order
-          dataset.sort((a, b) => new Date(b[5]) - new Date(a[5]));
-
-          // Destroy the existing DataTable instance if it exists
-          if (table) {
-            table.destroy();
-          }
-
-          // Reinitialize the DataTable with the sorted data
-          table = new DataTable("#logging", {
-            columns: [
-              { title: "DT_RowId" }, // Hidden column for the row ID
-              { title: "Location" },
-              { title: "Destination" },
-              { title: "Fare" },
-              { title: "Number" },
-              { title: "Date" },
-              // { title: "Action" },
-            ],
-            data: dataset,
-            // retrieve: true,
-            paging: true,
-            searching: true,
-            order: [[5, "desc"]], // Sort by the Date column in descending order
-            columnDefs: [
-              { targets: 0, visible: false }, // Hide the DT_RowId column
-            ],
-            responsive: true,
-            autoWidth: false,
-            scrollX: true,
-          });
-        });
-      });
       onAuthStateChanged(auth, (user) => {
         if (user) {
           const userDocRef = doc(db, "users", user.uid);
@@ -1764,11 +1704,11 @@
             querySnapshot.forEach(async (docSnapshot) => {
               await deleteDoc(doc(db, "commutermark", docSnapshot.id));
             });
-            alert("Booking deleted successfully.");
+            alert("Routing Location deleted successfully.");
             console.log("Marker(s) deleted successfully.");
           } else {
-            alert("No booking found.");
-            console.log("No booking found.");
+            alert("No location added found.");
+            console.log("No location added found.");
           }
         }
 
