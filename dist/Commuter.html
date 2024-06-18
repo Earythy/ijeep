@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>iJeep</title>
     <!-- ======= Styles ====== -->
-    <link rel="stylesheet" href="assets/css/style.css" />
+    <link rel="stylesheet" href="/dist/assets/css/style.css" />
     <link
       rel="stylesheet"
       href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css"
@@ -139,49 +139,55 @@
     <!-- =============== Navigation ================ -->
     <div class="navcontainer">
       <div class="navigation">
-        <ul>
+        <ul style="padding-left: 0">
           <li>
             <a href="#">
               <span class="icon">
-                <ion-icon name="bus"></ion-icon>
+                <ion-icon name="speedometer"></ion-icon>
               </span>
               <span class="title">iJeep</span>
             </a>
           </li>
 
           <li>
-            <a href="dashboard.html">
+            <a href="/dist/user/userprofile.html">
               <span class="icon">
-                <ion-icon name="home-outline"></ion-icon>
+                <!---<ion-icon name="person-outline"></ion-icon>-->
+                <img
+                  id="profile-icon"
+                  src="default_profile_picture.png"
+                  alt=""
+                  style="width: 25px; height: 25px; border-radius: 50%"
+                />
               </span>
-              <span class="title">Dashboard</span>
+              <span class="title">Profile</span>
             </a>
           </li>
 
           <li>
-            <a href="map.html">
+            <a href="commuter.html">
               <span class="icon">
-                <ion-icon name="map-outline"></ion-icon>
+                <ion-icon name="log-in-outline"></ion-icon>
               </span>
-              <span class="title">Map</span>
+              <span class="title">Book a Route</span>
             </a>
           </li>
 
           <li>
-            <a href="records.html">
+            <a href="trackroute1.html">
               <span class="icon">
-                <ion-icon name="server-outline"></ion-icon>
+                <ion-icon name="bus-outline"></ion-icon>
               </span>
-              <span class="title">Mobility Data</span>
+              <span class="title">Where are the Jeeps?</span>
             </a>
           </li>
 
           <li>
-            <a href="charts.html">
+            <a href="browseroute.html">
               <span class="icon">
-                <ion-icon name="analytics"></ion-icon>
+                <ion-icon name="location-outline"></ion-icon>
               </span>
-              <span class="title">Visualizations</span>
+              <span class="title">Trip Estimator</span>
             </a>
           </li>
 
@@ -195,7 +201,6 @@
           </li>
         </ul>
       </div>
-
       <!-- ========================= Main ==================== -->
       <div class="main">
         <div class="topbar">
@@ -211,55 +216,12 @@
             <button id="showCoordsBtn" type="button" class="btn btn-info me-3">
               Add Location
             </button>
-            <!-- <select id="routeFilter" class="form-select">
-              <option value="all">Filter Route</option>
-              <option value="Dalipuga">Dalipuga</option>
-              <option value="Luinab">Luinab</option>
-              <option value="Tambo">Tambo</option>
-              <option value="Santiago">Santiago</option>
-            </select> -->
           </div>
         </div>
 
         <!-- =============== MAP ============= -->
         <div id="map"></div>
       </div>
-      <!-- <div class="leaflet-bottom leaflet-left p-3 bg-white shadow">
-            <h4>Legend</h4>
-            <div class="row">
-              <div class="col-auto">
-                <img
-                  src="assets/img/yellowmarker.png"
-                  alt="Marker"
-                  style="width: 20px; height: 20px"
-                />
-              </div>
-              <div class="col">Route 1</div>
-            </div>
-            <div class="row">
-              <div class="col-auto">
-                <img
-                  src="assets/img/redmarker.png"
-                  alt="Marker"
-                  style="width: 20px; height: 20px"
-                />
-              </div>
-              <div class="col">Route 2</div>
-            </div>
-            <div class="row">
-              <div class="col-auto">
-                <img
-                  src="assets/img/tealmarker.png"
-                  alt="Marker"
-                  style="width: 20px; height: 20px"
-                />
-              </div>
-              <div class="col">Route 3</div>
-            </div> -->
-      <!-- Add more routes as needed -->
-      <!-- </div> -->
-
-      <!-- Button to Open Modal -->
 
       <div
         class="modal fade"
@@ -444,7 +406,7 @@
         appId: "1:1098693151947:web:c0ce3c093e75ae8cbe1f4e",
         measurementId: "G-71SRN52DX4",
       };
-      import { fare } from "./assets/js/fare.js";
+      import { fare } from "/dist/assets/js/fare.js";
 
       // Initialize Firebase
       const app = initializeApp(firebaseConfig);
@@ -547,45 +509,45 @@
 
         // Icons
         const redIcon = new L.Icon({
-          iconUrl: "assets/img/redmarker.png",
+          iconUrl: "/dist/assets/img/redmarker.png",
           iconSize: [37, 41],
           iconAnchor: [18, 41],
           popupAnchor: [1, -34],
           tooltipAnchor: [16, -28],
-          shadowUrl: "assets/img/shadowmarker.png",
+          shadowUrl: "/dist/assets/img/shadowmarker.png",
           shadowSize: [41, 41],
           shadowAnchor: [13, 41],
         });
 
         const tealIcon = new L.Icon({
-          iconUrl: "assets/img/tealmarker.png",
+          iconUrl: "/dist/assets/img/tealmarker.png",
           iconSize: [37, 41],
           iconAnchor: [18, 41],
           popupAnchor: [1, -34],
           tooltipAnchor: [16, -28],
-          shadowUrl: "assets/img/shadowmarker.png",
+          shadowUrl: "/dist/assets/img/shadowmarker.png",
           shadowSize: [41, 41],
           shadowAnchor: [13, 41],
         });
 
         const greenIcon = new L.Icon({
-          iconUrl: "assets/img/greenmarker.png",
+          iconUrl: "/dist/assets/img/greenmarker.png",
           iconSize: [37, 41],
           iconAnchor: [18, 41],
           popupAnchor: [1, -34],
           tooltipAnchor: [16, -28],
-          shadowUrl: "assets/img/shadowmarker.png",
+          shadowUrl: "/dist/assets/img/shadowmarker.png",
           shadowSize: [41, 41],
           shadowAnchor: [13, 41],
         });
 
         const yellowIcon = new L.Icon({
-          iconUrl: "assets/img/yellowmarker.png",
+          iconUrl: "/dist/assets/img/yellowmarker.png",
           iconSize: [37, 41],
           iconAnchor: [18, 41],
           popupAnchor: [1, -34],
           tooltipAnchor: [16, -28],
-          shadowUrl: "assets/img/shadowmarker.png",
+          shadowUrl: "/dist/assets/img/shadowmarker.png",
           shadowSize: [41, 41],
           shadowAnchor: [13, 41],
         });
@@ -648,23 +610,6 @@
           });
         }
 
-        // filterMarker(user.uid);
-
-        //when clicked, reflect the changes to the map based on the selected route
-        // document
-        //   .getElementById("routeFilter")
-        //   .addEventListener("change", function () {
-        //     selectedlocation = this.value;
-        //     map.eachLayer(function (layer) {
-        //       if (layer instanceof L.Marker) {
-        //         map.removeLayer(layer);
-        //       }
-        //     });
-        //     filterMarker();
-        //   });
-
-        // Real-time listener for changes to the "commutermark" collection
-        // based on user.uid
         function setupRealtimeListener() {
           const collectionRef = query(
             collection(db, "commutermark"),
@@ -1086,15 +1031,162 @@
           });
         });
       });
+
+      // Update the onAuthStateChanged function to fetch user profile information
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          userId = user.uid;
+          const email = user.email;
+          document.getElementById(
+            "user-info"
+          ).textContent = `Logged in as ${email}`;
+
+          const userDocRef = doc(db, "users", user.uid);
+
+          getDoc(userDocRef)
+            .then((docSnapshot) => {
+              if (docSnapshot.exists()) {
+                const userData = docSnapshot.data();
+                // Update user profile information
+                document.getElementById("user-name").textContent =
+                  userData.name;
+                if (userData.profilePicture) {
+                  const profilePicURL = userData.profilePicture;
+                  console.log("Profile Picture URL:", profilePicURL);
+                  document.getElementById("user-profile-pic").src =
+                    profilePicURL;
+                  document.getElementById("profile-icon").src = profilePicURL; // update the navigation icon
+                }
+              } else {
+                console.log("User profile not found in user data.");
+                // If the user profile document doesn't exist, create it with default values
+                setDoc(userDocRef, {
+                  email: email,
+                  name: "New User",
+                  profilePicture: "",
+                })
+                  .then(() => {
+                    console.log("User profile created successfully.");
+                    // Now that the profile document is created, you can update the display name
+                    document.getElementById("user-name").textContent =
+                      "Display Name: New User";
+                  })
+                  .catch((error) => {
+                    console.error("Error creating user profile:", error);
+                  });
+              }
+            })
+            .catch((error) => {
+              console.error("Error fetching user profile:", error);
+            });
+          // Enable edit button
+          document.getElementById("edit-button").disabled = false;
+        } else {
+          document.getElementById("user-info").textContent = "Not logged in";
+          console.log("User is signed out");
+          // Disable edit button
+          document.getElementById("edit-button").disabled = true;
+        }
+
+        const collectionRef = query(
+          collection(db, "userlogging"),
+          where("userId", "==", user.uid)
+        );
+
+        let table;
+
+        onSnapshot(collectionRef, (snapshot) => {
+          const dataset = [];
+
+          snapshot.forEach((doc) => {
+            //all data inside userlogging
+            const data = doc.data();
+
+            //formatting to readable date
+            const date = new Date(
+              data.date.seconds * 1000 + data.date.nanoseconds / 1000000
+            );
+            const options = {
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+            };
+            const formattedDate = date.toLocaleString("en-US", options);
+
+            // Generate a unique ID for the row
+            const rowId = doc.id;
+
+            dataset.push([
+              rowId, // Add the unique ID for the row
+              data.commuterlocation,
+              data.to,
+              data.fare,
+              data.howmany,
+              formattedDate,
+              // '<center><button type="button" class="btn btn-good btn-edit" style="margin-right: 7px !important;">Edit</button><button type="button" class="btn btn-bad btn-delete">Delete</button></center>',
+            ]);
+          });
+
+          // Sort dataset by date in descending order
+          dataset.sort((a, b) => new Date(b[5]) - new Date(a[5]));
+
+          // Destroy the existing DataTable instance if it exists
+          if (table) {
+            table.destroy();
+          }
+
+          // Reinitialize the DataTable with the sorted data
+          table = new DataTable("#logging", {
+            columns: [
+              { title: "DT_RowId" }, // Hidden column for the row ID
+              { title: "Location" },
+              { title: "Destination" },
+              { title: "Fare" },
+              { title: "Number" },
+              { title: "Date" },
+              // { title: "Action" },
+            ],
+            data: dataset,
+            // retrieve: true,
+            paging: true,
+            searching: true,
+            order: [[5, "desc"]], // Sort by the Date column in descending order
+            columnDefs: [
+              { targets: 0, visible: false }, // Hide the DT_RowId column
+            ],
+            responsive: true,
+            autoWidth: false,
+            scrollX: true,
+          });
+        });
+      });
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          const userDocRef = doc(db, "users", user.uid);
+
+          getDoc(userDocRef).then((docSnapshot) => {
+            if (docSnapshot.exists()) {
+              const userData = docSnapshot.data();
+              if (userData.profilePicture) {
+                const profilePicURL = userData.profilePicture;
+                console.log("Profile Picture", profilePicURL);
+                document.getElementById("profile-icon").src = profilePicURL;
+              }
+            }
+          });
+        } else {
+          window.location.href = "login.html";
+        }
+      });
     </script>
 
     <script>
       // Attach event listener to the "Confirm Selection" button
     </script>
     <!-- =========== Scripts =========  -->
-    <script src="assets/js/main.js"></script>
+    <script src="/dist/assets/js/main.js"></script>
     <!-- <script src="assets/js/fare.js"></script> -->
-    <script type="module" src="assets/js/fare.js"></script>
+    <script type="module" src="/dist/assets/js/fare.js"></script>
     <!-- ====== ionicons ======= -->
     <script
       type="module"
