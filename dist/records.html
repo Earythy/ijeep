@@ -136,7 +136,7 @@
             <a
               href="#"
               style="
-                justify-content: center;
+                /* justify-content: center; */
                 align-items: center;
                 margin-top: 10px;
               "
@@ -278,7 +278,7 @@
                       <td>Barangay</td>
                       <td>Year</td>
                       <td>Population</td>
-                      <td>Area</td>
+                      <td>Area (km<sup>2</sup>)</td>
                       <td>Density</td>
                       <td>Action</td>
                     </tr>
@@ -651,8 +651,26 @@
           populateTable();
         });
 
+      async function getUserCounts() {
+        const userCounts = {};
+        const userCollection = query(collection(db, "users"));
+        const userSnapshot = await getDocs(userCollection);
+
+        userSnapshot.forEach((doc) => {
+          const data = doc.data();
+          const userbarangay = data.barangay;
+          if (userCounts[userbarangay]) {
+            userCounts[userbarangay]++;
+          } else {
+            userCounts[userbarangay] = 1;
+          }
+        });
+
+        return userCounts;
+      }
+
       // Function to populate the table with Mobility Data
-      function populateTable() {
+      async function populateTable() {
         var queryRef;
         if (
           document.getElementById("brgy_filter").value !== "All Barangays" &&
@@ -690,39 +708,40 @@
         } else {
           queryRef = query(collection(db, "Mobility"), orderBy("brgy_name"));
         }
-        getDocs(queryRef)
-          .then((mobilityListSnapshot) => {
-            var count = 1;
-            var dataTable = $("#myTable").DataTable();
-            dataTable.clear().draw();
 
-            mobilityListSnapshot.forEach((mobilityListDoc) => {
-              var id = mobilityListDoc.id;
-              var mobilityListData = mobilityListDoc.data();
-              var brgy_name = mobilityListData.brgy_name;
-              var year = mobilityListData.year;
-              var population = mobilityListData.population;
-              var area = mobilityListData.area;
-              var density = mobilityListData.density;
+        try {
+          const mobilityListSnapshot = await getDocs(queryRef);
+          const userCounts = await getUserCounts();
+          const dataTable = $("#myTable").DataTable();
+          dataTable.clear().draw();
+          let count = 1;
 
-              dataTable.row
-                .add([
-                  id,
-                  count,
-                  brgy_name,
-                  year,
-                  population,
-                  area,
-                  density,
-                  '<center><button type="button" class="btn btn-good btn-edit" style="margin-right: 7px !important;">Edit</button><button type="button" class="btn btn-bad btn-delete">Delete</button></center>',
-                ])
-                .draw(false);
-              count++;
-            });
-          })
-          .catch((error) => {
-            console.log("Error fetching documents: ", error);
+          mobilityListSnapshot.forEach((mobilityListDoc) => {
+            const id = mobilityListDoc.id;
+            const mobilityListData = mobilityListDoc.data();
+            const brgy_name = mobilityListData.brgy_name;
+            const year = mobilityListData.year;
+            const passengers = userCounts[brgy_name] || 0; // Use userCounts for passengers
+            const area = mobilityListData.area;
+            const density = mobilityListData.density;
+
+            dataTable.row
+              .add([
+                id,
+                count,
+                brgy_name,
+                year,
+                passengers, // Update this line to use passengers
+                area,
+                density,
+                '<center><button type="button" class="btn btn-good btn-edit" style="margin-right: 7px !important;">Edit</button><button type="button" class="btn btn-bad btn-delete">Delete</button></center>',
+              ])
+              .draw(false);
+            count++;
           });
+        } catch (error) {
+          console.log("Error fetching documents: ", error);
+        }
       }
 
       // Initial population of the table
